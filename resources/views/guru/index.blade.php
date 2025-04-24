@@ -49,9 +49,11 @@
                 {{-- <input type="text" id="search" placeholder="Cari Guru" class="form-control mb-3"> --}}
                 <div class="card">
                   <div class="card-body">
+                    @if (auth()->user()->role_name === 'Admin' )
                     <div class="mb-3 d-flex justify-content-between align-items-center">
                       <input type="text" id="search" placeholder="🔍 Cari guru..." class="form-control w-50 shadow-sm">
                     </div>
+                    @endif
 
                 <div class="table-responsive">
                   <table id="guruTable" class="table table-bordered table-striped">
@@ -63,7 +65,7 @@
                         <th>Alamat</th>
                         <th>Jenis Kelamin</th>
                         <th>Telepon</th>
-                        @if(auth()->user()->role_name === 'Admin')
+                        @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
                           <th>Aksi</th>
                         @endif
                       </tr>
@@ -77,7 +79,7 @@
                           <td>{{ $g->alamat }}</td>
                           <td>{{ $g->jenis_kelamin }}</td>
                           <td>{{ $g->telepon }}</td>
-                          @if(auth()->user()->role_name === 'Admin')
+                          @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
                             <td>
                               <a href="javascript:void(0)" onclick="confirmView('{{ route('guru.show', $g->id) }}')" class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
                                 <i class="fas fa-eye"></i> Lihat
@@ -86,6 +88,8 @@
                                 onclick="confirmEdit('{{ route('guru.edit', $g->id) }}')">
                                 <i class="fas fa-edit"></i> Edit
                               </button>
+                              @endif
+                              @if (auth()->user()->role_name === 'Admin' )
                               <form action="{{ route('guru.destroy', $g->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')

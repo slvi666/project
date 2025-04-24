@@ -36,22 +36,41 @@
       <div class="card">
         <div class="card-body">
 
-          <!-- Search & Filter -->
-          <div class="mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <input type="text" id="search" placeholder="🔍 Cari pengguna..." class="form-control w-50 shadow-sm">
+          <div class="d-flex flex-wrap justify-content-start align-items-center gap-3 mb-3">
 
+            <!-- Search Box -->
+            <input type="text" id="search" placeholder="🔍 Cari pengguna..." 
+                   class="form-control shadow-sm rounded-pill" style="max-width: 300px;">
+          
+            <!-- Filter Dropdown -->
             <form method="GET" action="{{ route('registrasi.index') }}" class="d-flex align-items-center gap-2">
-              <label for="role" class="me-2 mb-0">Filter Pengguna:</label>
-              <select name="role" id="role" class="form-select shadow-sm" onchange="this.form.submit()">
-                <option value="">Semua</option>
-                @foreach (['admin', 'guru', 'siswa', 'calon_siswa', 'Orang Tua'] as $role)
-                  <option value="{{ $role }}" {{ request('role') == $role ? 'selected' : '' }}>
-                    {{ ucfirst(str_replace('_', ' ', $role)) }}
-                  </option>
-                @endforeach
-              </select>
+              <div class="input-group shadow-sm rounded-pill" style="overflow: hidden; max-width: 300px;">
+          
+                <!-- Label Filter -->
+                <span class="input-group-text text-white fw-semibold" 
+                      style="background: linear-gradient(90deg, #0d6efd, #3f8efc); border: none;">
+                  <i class="fas fa-filter me-1"></i> Filter
+                </span>
+          
+                <!-- Dropdown Role -->
+                <select name="role" id="role" class="form-select border-0" onchange="this.form.submit()" style="border-left: 1px solid #ddd;">
+                  <option value="">Semua</option>
+                  @foreach (['admin', 'guru', 'siswa', 'calon_siswa', 'Orang Tua'] as $role)
+                    <option value="{{ $role }}" {{ request('role') == $role ? 'selected' : '' }}>
+                      {{ ucfirst(str_replace('_', ' ', $role)) }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+          
+              <!-- Reset Button -->
               @if(request('role'))
-                <a href="{{ route('registrasi.index') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
+                <a href="{{ route('registrasi.index') }}" 
+                  class="btn shadow-sm d-flex align-items-center justify-content-center rounded-circle"
+                  style="width: 44px; height: 44px; background-color: #faed3b; color: #575848; font-size: 1.2rem;"
+                  data-bs-toggle="tooltip" data-bs-placement="top" title="Reset Filter">
+                  <i class="fas fa-redo-alt"></i>
+                </a>
               @endif
             </form>
           </div>
@@ -125,6 +144,76 @@
 
 <!-- Custom JavaScript -->
 <script>
+//Pagination
+document.addEventListener("DOMContentLoaded", function () {
+  const table = document.getElementById("usersTable");
+  const searchInput = document.getElementById("search");
+  const rows = table.getElementsByTagName("tr");
+  const pagination = document.getElementById("pagination");
+  let currentPage = 1;
+  const rowsPerPage = 5;
+  let totalPages = Math.ceil((rows.length - 1) / rowsPerPage);
+
+  function showPage(page) {
+    const start = (page - 1) * rowsPerPage + 1;
+    const end = start + rowsPerPage;
+    for (let i = 1; i < rows.length; i++) {
+      rows[i].style.display = (i >= start && i < end) ? "" : "none";
+    }
+  }
+
+  function setupPagination() {
+    pagination.innerHTML = `
+      <button class="btn btn-sm btn-outline-primary" id="prev">&laquo;</button>
+      <span class="mx-2" id="pageInfo"></span>
+      <button class="btn btn-sm btn-outline-primary" id="next">&raquo;</button>
+    `;
+
+    document.getElementById("prev").addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+        updatePaginationUI();
+      }
+    });
+
+    document.getElementById("next").addEventListener("click", () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+        updatePaginationUI();
+      }
+    });
+
+    updatePaginationUI();
+  }
+
+  function updatePaginationUI() {
+    document.getElementById("pageInfo").textContent = `Halaman ${currentPage} dari ${totalPages}`;
+    document.getElementById("prev").disabled = currentPage === 1;
+    document.getElementById("next").disabled = currentPage === totalPages;
+  }
+
+  searchInput.addEventListener("keyup", function () {
+    const filter = searchInput.value.toLowerCase();
+    let visibleRows = 0;
+
+    for (let i = 1; i < rows.length; i++) {
+      const text = rows[i].textContent.toLowerCase();
+      const match = text.includes(filter);
+      rows[i].style.display = match ? "" : "none";
+      if (match) visibleRows++;
+    }
+
+    currentPage = 1;
+    totalPages = Math.ceil(visibleRows / rowsPerPage);
+    showPage(currentPage);
+    setupPagination();
+  });
+
+  showPage(currentPage);
+  setupPagination();
+});
   
   // Filter pencarian berdasarkan keyword
   document.getElementById('search').addEventListener('keyup', function () {

@@ -6,11 +6,11 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0 text-primary">Daftar Mata Pelajaran</h1>
+          <h1 class="m-0 text-primary">Daftar Jadwal Pelajaran</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item active">Daftar Mata Pelajaran</li>
+            <li class="breadcrumb-item active">Daftar Jadwal Pelajaran</li>
           </ol>
         </div>
       </div>
@@ -21,7 +21,7 @@
     <div class="container-fluid">
       <div class="card shadow-lg rounded-4">
         <div class="card-header bg-gradient-info text-white rounded-top">
-          <h3 class="card-title">Daftar Mata Pelajaran</h3>
+          <h3 class="card-title">Daftar Jadwal Pelajaran</h3>
         </div>
 
         <div class="card-body">
