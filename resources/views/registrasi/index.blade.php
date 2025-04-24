@@ -104,7 +104,17 @@
 
 <!-- Custom Scripts -->
 <script>
-  function confirmAdd(url) {
+  document.getElementById('search').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll('#usersTable tbody tr');
+
+    rows.forEach(row => {
+      let text = row.textContent.toLowerCase();
+      row.style.display = text.includes(filter) ? '' : 'none';
+    });
+  });
+ 
+ function confirmAdd(url) {
   Swal.fire({
     title: 'Anda ingin menambah pengguna baru?',
     text: "Anda akan diarahkan ke halaman pendaftaran.",
