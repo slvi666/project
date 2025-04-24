@@ -61,7 +61,7 @@
                       <option value="guru">Guru</option>
                       <option value="Admin">Admin</option>
                       <option value="Orang Tua">Orang Tua</option>
-                      <option value="Perpustakaan">Perpustakaan</option>
+                      {{-- <option value="Perpustakaan">Perpustakaan</option> --}}
                   </select>
                 </div>
 

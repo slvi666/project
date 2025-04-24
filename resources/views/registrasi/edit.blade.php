@@ -69,7 +69,7 @@
                       <option value="guru" {{ $registrasi->role_name === 'guru' ? 'selected' : '' }}>Guru</option>
                       <option value="Admin" {{ $registrasi->role_name === 'Admin' ? 'selected' : '' }}>Admin</option>
                       <option value="Orang Tua" {{ $registrasi->role_name === 'Orang Tua' ? 'selected' : '' }}>Orang Tua</option>
-                      <option value="Perpustakaan" {{ $registrasi->role_name === 'Perpustakaan' ? 'selected' : '' }}>Perpustakaan</option>
+                      {{-- <option value="Perpustakaan" {{ $registrasi->role_name === 'Perpustakaan' ? 'selected' : '' }}>Perpustakaan</option> --}}
                   </select>
                 </div>
 

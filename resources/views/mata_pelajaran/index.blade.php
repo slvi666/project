@@ -6,7 +6,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Daftar Mata Pelajaran</h1>
+          <h1 class="m-0 text-primary">Daftar Mata Pelajaran</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -19,15 +19,11 @@
 
   <section class="content">
     <div class="container-fluid">
-      <div class="card">
-        <div class="card-header">
+      <div class="card shadow-lg rounded-4">
+        <div class="card-header bg-gradient-info text-white rounded-top">
           <h3 class="card-title">Daftar Mata Pelajaran</h3>
-          @if (auth()->user()->role_name === 'Admin')
-          <div class="card-tools">
-            <a href="{{ route('mata-pelajaran.create') }}" class="btn btn-primary">+ Tambah Mata Pelajaran</a>
-          </div>
-          @endif
         </div>
+
         <div class="card-body">
           @if(session('success'))
             <script>
@@ -40,10 +36,25 @@
             </script>
           @endif
 
+          <!-- Search + Add Button -->
+          <div class="row mb-3 d-flex justify-content-between align-items-center">
+            <div class="col-md-6">
+              <input type="text" id="search" placeholder="Cari Mata Pelajaran" class="form-control rounded-pill">
+            </div>
+            @if (auth()->user()->role_name === 'Admin')
+            <div class="col-md-3 text-md-end mt-2 mt-md-0">
+              <a href="#" class="btn btn-primary btn-sm rounded-pill"
+                onclick="confirmNavigate('{{ route('mata-pelajaran.create') }}', 'Tambah Mata Pelajaran?')">
+                <i class="fas fa-plus-circle me-2"></i> Tambah Mata Pelajaran
+              </a>
+            </div>
+            @endif
+          </div>
+
           <!-- Filter Dropdowns -->
           <div class="row mb-3">
             <div class="col-md-4">
-              <select id="filterMapel" class="form-control">
+              <select id="filterMapel" class="form-control rounded-pill">
                 <option value="">Semua Mapel</option>
                 @foreach($data->unique('subject.subject_name') as $item)
                   <option value="{{ $item->subject->subject_name }}">{{ $item->subject->subject_name }}</option>
@@ -51,7 +62,7 @@
               </select>
             </div>
             <div class="col-md-4">
-              <select id="filterKelas" class="form-control">
+              <select id="filterKelas" class="form-control rounded-pill">
                 <option value="">Semua Kelas</option>
                 @foreach($data->unique('subject.class_name') as $item)
                   <option value="{{ $item->subject->class_name }}">{{ $item->subject->class_name }}</option>
@@ -59,7 +70,7 @@
               </select>
             </div>
             <div class="col-md-4">
-              <select id="filterGuru" class="form-control">
+              <select id="filterGuru" class="form-control rounded-pill">
                 <option value="">Semua Guru</option>
                 @foreach($data->unique('guru.name') as $item)
                   <option value="{{ $item->guru->name }}">{{ $item->guru->name }}</option>
@@ -68,9 +79,7 @@
             </div>
           </div>
 
-          <!-- Search Box -->
-          <input type="text" id="search" placeholder="Cari Mata Pelajaran" class="form-control mb-3">
-
+          <!-- Table -->
           <table id="mapelTable" class="table table-bordered table-striped">
             <thead class="bg-primary text-white">
               <tr>
@@ -94,12 +103,18 @@
                 <td>{{ $item->waktu_mulai }} - {{ $item->waktu_berakhir }}</td>
                 <td>
                   @if (auth()->user()->role_name === 'Admin')
-                    <a href="{{ route('mata-pelajaran.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                  <a href="#" class="btn btn-warning btn-sm rounded-pill"
+                    onclick="confirmNavigate('{{ route('mata-pelajaran.edit', $item->id) }}', 'Edit data ini?')">
+                    <i class="fas fa-edit me-1"></i> Edit
+                  </a>
                   @endif
                   @if (auth()->user()->role_name === 'guru')
-                    <a href="{{ route('absensi.create', $item->id) }}" class="btn btn-primary btn-sm mt-1">Input Absensi</a>
+                    <a href="{{ route('absensi.create', $item->id) }}" class="btn btn-primary btn-sm mt-1 rounded-pill">Input Absensi</a>
                   @endif
-                    <a href="{{ route('absensi.index', $item->id) }}" class="btn btn-info btn-sm mt-1">Lihat Absensi</a>
+                  <a href="#" class="btn btn-info btn-sm mt-1 rounded-pill"
+                    onclick="confirmNavigate('{{ route('absensi.index', $item->id) }}', 'Lihat absensi kelas ini?')">
+                    <i class="fas fa-eye me-1"></i> Lihat Absensi
+                  </a>
                 </td>
               </tr>
               @endforeach
@@ -141,7 +156,7 @@
       for (let i = 1; i <= pageCount; i++) {
         let btn = document.createElement("button");
         btn.innerText = i;
-        btn.className = "btn btn-sm btn-secondary mx-1";
+        btn.className = "btn btn-sm btn-secondary mx-1 rounded-pill";
         btn.onclick = function () { currentPage = i; showPage(i); };
         pagination.appendChild(btn);
       }
@@ -179,19 +194,37 @@
     filterAll();
   });
 
-  function confirmDelete(form) {
+  // function confirmDelete(form) {
+  //   Swal.fire({
+  //     title: 'Yakin ingin menghapus?',
+  //     text: "Data ini akan hilang secara permanen!",
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Ya, hapus!',
+  //     cancelButtonText: 'Batal'
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       form.submit();
+  //     }
+  //   });
+  // }
+
+  function confirmNavigate(url, message = 'Yakin ingin melanjutkan?') {
     Swal.fire({
-      title: 'Yakin ingin menghapus?',
-      text: "Data ini akan hilang secara permanen!",
-      icon: 'warning',
+      title: 'Konfirmasi',
+      text: message,
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya',
       cancelButtonText: 'Batal'
     }).then((result) => {
       if (result.isConfirmed) {
-        form.submit();
+        window.location.href = url;
       }
     });
   }
+</script>
 </script>
 @endsection

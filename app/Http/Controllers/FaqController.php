@@ -58,4 +58,10 @@ class FaqController extends Controller
 
         return redirect()->route('faq.index')->with('success', 'FAQ berhasil dihapus.');
     }
+
+    public function show($id)
+    {
+        $faq = Faq::findOrFail($id);
+        return view('faq.show', compact('faq'));
+    }
 }

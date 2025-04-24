@@ -38,7 +38,7 @@
                   <tr>
                     <th class="font-weight-bold">Status</th>
                     <td>
-                      <span class="badge bg-{{ $pengumuman->status == 'aktif' ? 'success' : 'warning' }} rounded-pill">
+                      <span class="badge bg-{{ $pengumuman->status == 'aktif' ? 'success' : 'danger' }} rounded-pill">
                         {{ ucfirst($pengumuman->status) }}
                       </span>
                     </td>

@@ -26,7 +26,9 @@
                 <h3 class="card-title">Daftar Guru</h3>
                 <div class="card-tools">
                   @if(auth()->user()->role_name === 'Admin')
-                    <a href="{{ route('guru.create') }}" class="btn btn-primary btn-sm">Tambah Guru Baru</a>
+                  <a href="javascript:void(0)" onclick="confirmAdd('{{ route('guru.create') }}')" class="btn btn-success shadow-sm">
+                    <i class="fas fa-user-plus"></i> Tambah Guru Baru
+                  </a>
                   @endif
                 </div>
               </div>
@@ -44,7 +46,12 @@
                   </script>
                 @endif
 
-                <input type="text" id="search" placeholder="Cari Guru" class="form-control mb-3">
+                {{-- <input type="text" id="search" placeholder="Cari Guru" class="form-control mb-3"> --}}
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-3 d-flex justify-content-between align-items-center">
+                      <input type="text" id="search" placeholder="🔍 Cari guru..." class="form-control w-50 shadow-sm">
+                    </div>
 
                 <div class="table-responsive">
                   <table id="guruTable" class="table table-bordered table-striped">
@@ -72,12 +79,20 @@
                           <td>{{ $g->telepon }}</td>
                           @if(auth()->user()->role_name === 'Admin')
                             <td>
-                              <button type="button" class="btn btn-info btn-sm" onclick="confirmView('{{ route('guru.show', $g->id) }}')">Detail</button>
-                              <button type="button" class="btn btn-warning btn-sm" onclick="confirmEdit('{{ route('guru.edit', $g->id) }}')">Edit</button>
-                              <form action="{{ route('guru.destroy', $g->id) }}" method="POST" style="display:inline;">
+                              <a href="javascript:void(0)" onclick="confirmView('{{ route('guru.show', $g->id) }}')" class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
+                                <i class="fas fa-eye"></i> Lihat
+                              </a>
+                              <button class="btn btn-warning btn-sm rounded-pill shadow-sm me-1"
+                                onclick="confirmEdit('{{ route('guru.edit', $g->id) }}')">
+                                <i class="fas fa-edit"></i> Edit
+                              </button>
+                              <form action="{{ route('guru.destroy', $g->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(this.form)">Hapus</button>
+                                <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm"
+                                        onclick="confirmDelete(this.form)">
+                                  <i class="fas fa-trash"></i> Hapus
+                                </button>
                               </form>
                             </td>
                           @endif
@@ -137,6 +152,21 @@
       showPage(1);
       setupPagination();
     });
+
+    function confirmAdd(url) {
+    Swal.fire({
+      title: 'Tambah Guru Baru?',
+      text: "Anda akan diarahkan ke halaman tambah guru.",
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Lanjutkan',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  }
 
     function confirmDelete(form) {
       Swal.fire({

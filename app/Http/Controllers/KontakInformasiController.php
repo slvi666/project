@@ -66,4 +66,10 @@ class KontakInformasiController extends Controller
         return redirect()->route('kontak-informasi.index')
             ->with('success', 'Data kontak berhasil dihapus.');
     }
+
+    public function show($id)
+    {
+        $kontak = KontakInformasi::findOrFail($id);
+        return view('KontakInformasi.show', compact('kontak'));
+    }
 }

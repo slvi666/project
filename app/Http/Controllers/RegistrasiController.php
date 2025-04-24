@@ -13,10 +13,19 @@ class RegistrasiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = Registrasi::all(); // Fetch all users
-        return view('registrasi.index', compact('users')); // Return view with users data
+        $role = $request->query('role');
+
+        $query = Registrasi::query();
+
+        if ($role) {
+            $query->where('role_name', $role);
+        }
+
+        $users = $query->get();
+
+        return view('registrasi.index', compact('users', 'role'));
     }
 
     /**

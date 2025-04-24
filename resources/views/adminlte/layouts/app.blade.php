@@ -140,10 +140,7 @@ body {
             <i class="fas fa-user-circle nav-icon"></i> <!-- Change to user icon -->
             <p>Data Pengguna</p>
           </a>          
-          <a href="#" class="nav-link">
-            <i class="fas fa-clipboard-list nav-icon"></i> <!-- Change to list icon for reports -->
-            <p>Rekap Data</p>
-          </a>
+          
         </li>
       </ul>
     </li>
