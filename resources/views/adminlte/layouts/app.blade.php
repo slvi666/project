@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ $title ?? "MTSS Al-Munawaroh" }} | Dashboard</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css" rel="stylesheet">
+  
+  <style>
+/* Warna latar belakang utama */
+body {
+    background-color: #F5F5F5 !important;
+    color: black !important;
+}
+
+/* Sidebar */
+.main-sidebar {
+    background-color: #F5F5F5 !important;
+}
+
+/* Warna teks sidebar */
+.nav-sidebar .nav-link {
+    color: black !important;
+    border-radius: 5px;
+}
+
+/* Warna hover */
+.nav-sidebar .nav-link:hover {
+    background-color: #DD88CF !important;
+    color: black !important;
+}
+
+/* Warna item aktif & menu terbuka */
+.nav-sidebar .nav-item.menu-open > .nav-link,
+.nav-sidebar .nav-link.active {
+    background-color: #F5F5F5 !important;
+    color: black !important;
+    
+}
+
+/* Logo & teks brand */
+.brand-link, .brand-text {
+    color: black !important;
+    
+}
+
+/* Warna teks di panel user */
+.user-panel .info a {
+    color: black !important;
+    f
+}
+
+/* Navbar */
+.navbar {
+    background-color: #F5F5F5 !important;
+    border-bottom: 2px solid #DD88CF;
+}
+
+/* Navbar links */
+.navbar .nav-link {
+    color: black !important;
+  
+}
+
+/* Hover efek di navbar */
+.navbar .nav-link:hover {
+    background-color: #DD88CF !important;
+    color: black !important;
+    border-radius: 5px;
+}
+
+  </style>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{ route('home') }}" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">Logout</a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+        </form>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+  
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="{{ route('home') }}" class="brand-link">
+      <img src="{{ asset('main/assets/img/logo-mts.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">{{ $title ?? "MTSS Al-Munawaroh" }}</span>
+    </a>
+  
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">{{ auth()->user()->name }}</a>
+        </div>
+      </div>
+  
+<!-- Sidebar Menu -->
+<nav class="mt-2">
+  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+    @if (auth()->user()->role_name === 'Admin')
+    <li class="nav-header mt-2 py-2">- Assets </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-users-cog"></i> <!-- Change to users cog icon for user management -->
+        <p>
+          Menejemen Pengguna
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('registrasi.index') }}" class="nav-link">
+            <i class="fas fa-user-circle nav-icon"></i> <!-- Change to user icon -->
+            <p>Data Pengguna</p>
+          </a>          
+          <a href="#" class="nav-link">
+            <i class="fas fa-clipboard-list nav-icon"></i> <!-- Change to list icon for reports -->
+            <p>Rekap Data</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+  @endif
+
+  <li class="nav-header mt-2 py-2">-Pengelolaan Data</li>
+    
+  <li class="nav-item">
+    <a href="#" class="nav-link">
+      <i class="nav-icon fas fa-database"></i> <!-- Change to database icon -->
+      <p>
+        Data
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
+      <li class="nav-item">
+        <a href="{{ route('guru.index') }}" class="nav-link">
+          <i class="fas fa-chalkboard-teacher nav-icon"></i> <!-- Change to teacher icon -->
+          <p>Data Guru</p>
+        </a>
+      </li>
+    @endif
+    @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa'|| auth()->user()->role_name === 'Admin')
+      <li class="nav-item">
+        <a href="{{ route('profil_siswa.index') }}" class="nav-link">
+          <i class="fas fa-user-graduate nav-icon"></i> <!-- Change to student icon -->
+          <p>Data Siswa</p>
+        </a>
+      </li> 
+      @endif
+
+      @if (auth()->user()->role_name === 'Admin')
+      <li class="nav-item">
+        <a href="{{ route('pengumuman.index') }}" class="nav-link">
+          <i class="fas fa-bullhorn nav-icon"></i> <!-- Change to announcement icon -->
+          <p>Data Pengumuman</p>
+        </a>
+      </li>    
+      <li class="nav-item">
+        <a href="{{ route('faq.index') }}" class="nav-link">
+          <i class="fas fa-question-circle nav-icon"></i> <!-- Change to FAQ icon -->
+          <p>Data FAQ</p>
+        </a>
+      </li>               
+      <li class="nav-item">
+        <a href="{{ route('kontak-informasi.index') }}" class="nav-link">
+          <i class="fas fa-phone-alt nav-icon"></i> <!-- Change to contact info icon -->
+          <p>Kontak Informasi</p>
+        </a>
+      </li>
+      @endif              
+    </ul>
+  </li>
+  @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa'|| auth()->user()->role_name === 'Admin')
+  <li class="nav-item">
+    <a href="#" class="nav-link">
+      <i class="nav-icon fas fa-calendar-check"></i> <!-- Change to attendance icon -->
+      <p>
+        Laporan Absensi
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="{{ route('absensi.laporan') }}" class="nav-link {{ request()->routeIs('absensi.laporan') ? 'active' : '' }}">
+          <i class="fas fa-list nav-icon"></i> <!-- Change to list icon for reports -->
+          <p>Laporan Absensi</p>
+        </a>
+      </li>
+    </ul>
+  </li>
+  @endif
+  <li class="nav-item">
+    <a href="#" class="nav-link">
+      <i class="nav-icon fas fa-calendar-alt"></i> <!-- Change to academic calendar icon -->
+      <p>
+        Kalender Akademik
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="{{ url('fullcalender') }}" class="nav-link">
+          <i class="fas fa-calendar nav-icon"></i> <!-- Change to calendar icon -->
+          <p>Kalender</p>
+        </a>
+      </li>
+    </ul>
+  </li>
+  @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa'|| auth()->user()->role_name === 'Admin')
+  <li class="nav-header mt-2 py-2">Pembelajaran Sekolah</li>
+  <li class="nav-item">
+    <a href="#" class="nav-link">
+      <i class="nav-icon fas fa-book-open"></i> <!-- Change to learning resources icon -->
+      <p>
+        Media Pembelajaran
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="{{ route('materi.index') }}" class="nav-link">
+          <i class="fas fa-book nav-icon"></i> <!-- Change to material book icon -->
+          <p>Materi</p>
+        </a>
+      </li>
+      @endif
+      @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa')
+      <li class="nav-item">
+        <a href="{{ route('tugas.index') }}" class="nav-link">
+          <i class="fas fa-tasks nav-icon"></i> <!-- Change to tasks icon -->
+          <p>Tugas</p>
+        </a>
+      </li>
+      @endif
+
+      @if (auth()->user()->role_name === 'Admin')
+      <li class="nav-item">
+        <a href="{{ route('subjects.index') }}" class="nav-link">
+          <i class="fas fa-book-reader nav-icon"></i> <!-- Change to subject rekap icon -->
+          <p>Kelas & Pelajaran</p>
+        </a>
+      </li>
+      @endif
+      @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa'|| auth()->user()->role_name === 'Admin'|| auth()->user()->role_name === 'Orang Tua')
+      <li class="nav-item">
+        <a href="{{ route('mata-pelajaran.index') }}" class="nav-link">
+          <i class="fas fa-clock nav-icon"></i> <!-- Change to class schedule icon -->
+          <p>Jadwal Pelajaran</p>
+        </a>
+      </li>
+      @endif
+    </ul>
+  </li>    
+
+  <li class="nav-item">
+    <a href="#" class="nav-link">
+      <i class="nav-icon fas fa-book"></i> <!-- Change to library book icon -->
+      <p>
+        Perpustakan
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="{{ route('buku.index') }}" class="nav-link">
+          <i class="fas fa-bookmark nav-icon"></i> <!-- Change to bookmark icon -->
+          <p>Data Buku</p>
+        </a>
+      </li>
+    </ul>
+  </li>
+
+  @if (auth()->user()->role_name === 'siswa' || auth()->user()->role_name === 'Admin')
+  <li class="nav-header mt-2 py-2">-PPDB</li>
+  <li class="nav-item">
+    <a href="#" class="nav-link">
+      <i class="nav-icon fas fa-user-check"></i> <!-- Change to student registration icon -->
+      <p>
+        PPDB
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="{{ route('formulir.index') }}" class="nav-link">
+          <i class="fas fa-edit nav-icon"></i> <!-- Change to edit icon for forms -->
+          <p>Pendaftaran</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('seleksi-berkas.index') }}" class="nav-link">
+          <i class="fas fa-file-alt nav-icon"></i> <!-- Change to file icon for documents -->
+          <p>Formulir Berkas</p>
+        </a>
+      </li>                
+      <li class="nav-item">
+        <a href="{{ route('laporan.index') }}" class="nav-link">
+          <i class="fas fa-file nav-icon"></i> <!-- Change to report icon -->
+          <p>Laporan Pendaftaran</p>
+        </a>
+      </li>
+    </ul>
+  </li> 
+  @endif
+
+  <li class="nav-header mt-2 py-2">- Logout </li>
+  <li class="nav-item">
+    <a href="#" class="nav-link">
+      <i class="nav-icon fas fa-sign-out-alt"></i> <!-- Change to sign-out icon -->
+      <p>
+        Keluar
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
+          <i class="fas fa-power-off nav-icon"></i> <!-- Change to power off icon for logout -->
+          <p>Keluar</p>
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+          @csrf
+        </form>
+      </li>
+    </ul>
+  </li>
+
+  </ul>
+</nav>
+<!-- /.sidebar-menu -->
+
+
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+  
+  @yield('content')
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
+
+<!-- Di bagian bawah sebelum penutupan </body> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.js"></script>
+</body>
+</html>
