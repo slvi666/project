@@ -65,6 +65,7 @@
             {{-- Pencarian client-side --}}
             <input type="text" id="search" placeholder="Cari Laporan Absensi" class="form-control mb-3">
 
+
             {{-- Tabel --}}
             <div class="table-responsive">
               <table id="absensiTable" class="table table-bordered table-striped table-hover">
@@ -121,56 +122,81 @@
 
   {{-- Script pencarian + pagination --}}
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const table     = document.getElementById("absensiTable");
-      const searchIn  = document.getElementById("search");
-      const rows      = table.getElementsByTagName("tr");
-      const pagination= document.getElementById("pagination");
-      let currentPage = 1;
-      const rowsPerPage = 5;
+    document.addEventListener("DOMContentLoaded", function () {
+    const table = document.getElementById("absensiTable");
+    const searchInput = document.getElementById("search");
+    const pagination = document.getElementById("pagination");
+    const rowsPerPage = 5;
+    let currentPage = 1;
 
-      function showPage(page) {
-        const start = (page - 1) * rowsPerPage + 1;
-        const end   = start + rowsPerPage;
-        for (let i = 1; i < rows.length; i++) {
-          rows[i].style.display = (i >= start && i < end) ? "" : "none";
+    function getVisibleRows() {
+      const allRows = Array.from(table.querySelectorAll("tbody tr"));
+      return allRows.filter(row => row.style.display !== "none");
+    }
+
+    function showPage(page) {
+      const allRows = Array.from(table.querySelectorAll("tbody tr"));
+      const filteredRows = getVisibleRows();
+
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      allRows.forEach(row => row.style.display = "none");
+
+      filteredRows.slice(start, end).forEach(row => {
+        row.style.display = "";
+      });
+    }
+
+    function setupPagination() {
+      const filteredRows = getVisibleRows();
+      const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
+      pagination.innerHTML = "";
+
+      for (let i = 1; i <= pageCount; i++) {
+        const btn = document.createElement("button");
+        btn.innerText = i;
+        btn.className = "btn btn-sm btn-outline-primary mx-1";
+        if (i === currentPage) {
+          btn.classList.add("active");
         }
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          showPage(i);
+          highlightActiveButton();
+        });
+        pagination.appendChild(btn);
       }
 
-      function setupPagination() {
-        pagination.innerHTML = "";
-        const pageCount = Math.ceil((rows.length - 1) / rowsPerPage);
-        for (let i = 1; i <= pageCount; i++) {
-          const btn = document.createElement("button");
-          btn.innerText = i;
-          btn.className = "btn btn-sm btn-outline-primary mx-1";
-          if (i === currentPage) {
-            btn.classList.add("active");
-          }
-          btn.addEventListener("click", () => {
-            currentPage = i;
-            showPage(i);
-          });
-          pagination.appendChild(btn);
-        }
-      }
+      highlightActiveButton();
+    }
 
-      // event search
-      searchIn.addEventListener("keyup", function() {
-        const filter = this.value.toLowerCase();
-        for (let i = 1; i < rows.length; i++) {
-          const text = rows[i].textContent.toLowerCase();
-          rows[i].style.display = text.includes(filter) ? "" : "none";
-        }
-        // reset paging
-        currentPage = 1;
-        setupPagination();
-        showPage(1);
+    function highlightActiveButton() {
+      const buttons = pagination.querySelectorAll("button");
+      buttons.forEach(btn => btn.classList.remove("active"));
+      if (buttons[currentPage - 1]) {
+        buttons[currentPage - 1].classList.add("active");
+      }
+    }
+
+    function filterTable() {
+      const keyword = searchInput.value.toLowerCase();
+      const rows = table.querySelectorAll("tbody tr");
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(keyword) ? "" : "none";
       });
 
-      // inisialisasi
+      currentPage = 1;
       setupPagination();
-      showPage(1);
-    });
+      showPage(currentPage);
+    }
+
+    searchInput.addEventListener("keyup", filterTable);
+
+    setupPagination();
+    showPage(currentPage);
+  });
   </script>
 @endsection

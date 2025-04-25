@@ -24,7 +24,7 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">Daftar Siswa</h3>
-              @if (auth()->user()->role_name === 'Admin' || auth()->user()->role_name === 'siswa')
+              @if (auth()->user()->role_name === 'Admin')
               <div class="card-tools">
                 <a href="javascript:void(0)" onclick="confirmAdd('{{ route('profil_siswa.create') }}')" class="btn btn-success shadow-sm">
                   <i class="fas fa-user-plus"></i> Tambah Siswa
@@ -48,9 +48,11 @@
 
               <div class="card">
                 <div class="card-body">
+                  @if (auth()->user()->role_name === 'Admin')
                   <div class="mb-3 d-flex justify-content-between align-items-center">
                     <input type="text" id="searchInput" placeholder="🔍 Cari siswa..." class="form-control w-50 shadow-sm">
                   </div>
+                  @endif
 
               {{-- <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari siswa..."> --}}
 
@@ -85,11 +87,14 @@
                         <a href="javascript:void(0)" onclick="confirmView('{{ route('profil_siswa.show', $data->id) }}')" class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
                           <i class="fas fa-eye"></i> Detail
                         </a>
-                        @if (auth()->user()->role_name === 'Admin')
+                        @if (auth()->user()->role_name === 'Admin' || auth()->user()->role_name === 'siswa')
                         <button class="btn btn-warning btn-sm rounded-pill shadow-sm me-1"
                                 onclick="confirmEdit('{{ route('profil_siswa.edit', $data->id) }}')">
                           <i class="fas fa-edit"></i> Edit
                         </button>
+                      @endif
+                    
+                      @if (auth()->user()->role_name === 'Admin')
                         <form action="{{ route('profil_siswa.destroy', $data->id) }}" method="POST" class="d-inline">
                           @csrf
                           @method('DELETE')
@@ -99,7 +104,7 @@
                             <i class="fas fa-trash"></i> Hapus
                           </button>
                         </form>
-                        @endif
+                      @endif
                       </td>
                     </tr>
                   @endforeach

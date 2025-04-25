@@ -60,6 +60,11 @@
               </div>
 
               <div class="row mb-3">
+                <div class="col-sm-3 font-weight-bold">Deskripsi</div>
+                <div class="col-sm-9">{{ $tugas->deskripsi }}</div>
+              </div>
+
+              <div class="row mb-3">
                 <div class="col-sm-3 font-weight-bold">File Soal</div>
                 <div class="col-sm-9">
                   @if($tugas->file_soal)
