@@ -111,15 +111,19 @@ class FormulirPendaftaranController extends Controller
             'berkas_sertifikat' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
 
+        // Handle foto
         if ($request->hasFile('foto')) {
-            Storage::disk('public')->delete($formulir->foto);
+            if ($formulir->foto && Storage::disk('public')->exists($formulir->foto)) {
+                Storage::disk('public')->delete($formulir->foto);
+            }
             $fotoPath = $request->file('foto')->store('foto_pendaftar', 'public');
         } else {
             $fotoPath = $formulir->foto;
         }
 
+        // Handle berkas sertifikat
         if ($request->hasFile('berkas_sertifikat')) {
-            if ($formulir->berkas_sertifikat) {
+            if ($formulir->berkas_sertifikat && Storage::disk('public')->exists($formulir->berkas_sertifikat)) {
                 Storage::disk('public')->delete($formulir->berkas_sertifikat);
             }
             $sertifikatPath = $request->file('berkas_sertifikat')->store('sertifikat_pendaftar', 'public');

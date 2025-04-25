@@ -51,7 +51,12 @@
                       <li class="list-group-item"><strong>Asal Sekolah:</strong> {{ $formulir->asal_sekolah }}</li>
                       <li class="list-group-item"><strong>Tahun Lulus:</strong> {{ $formulir->tahun_lulus }}</li>
                       <li class="list-group-item"><strong>Nilai US:</strong> {{ $formulir->nilai_us ?? '-' }}</li>
-                      <li class="list-group-item"><strong>Status:</strong> {{ $formulir->status }}</li>
+                      <li class="list-group-item status-item">
+                        <strong>Status:</strong> 
+                        <span class="badge badge-{{ strtolower($formulir->status) }}">
+                          {{ $formulir->status }}
+                        </span>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -71,7 +76,7 @@
                   <h5>Berkas Sertifikat</h5>
                   @if ($formulir->berkas_sertifikat)
                     <a href="{{ asset('storage/' . $formulir->berkas_sertifikat) }}" class="btn btn-success" target="_blank">
-                      <i class="fas fa-download"></i> Unduh Sertifikat
+                      <i class="fas fa-download"></i> Lihat Sertifikat
                     </a>
                   @else
                     <span class="text-muted">Tidak ada berkas sertifikat</span>
@@ -109,11 +114,31 @@
     </div>
   </div>
 
-<!-- Custom CSS -->
-<style>
-  .foto-hover:hover {
-    transform: scale(1.1);
-    transition: 0.3s;
-  }
-</style>
+  <!-- Custom CSS -->
+  <style>
+    .foto-hover:hover {
+      transform: scale(1.1);
+      transition: 0.3s;
+    }
+
+    .status-item .badge {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .badge-pending {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .badge-ditolak {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .badge-lulus {
+      background-color: #28a745;
+      color: white;
+    }
+  </style>
 @endsection

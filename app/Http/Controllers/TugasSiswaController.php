@@ -152,4 +152,13 @@ class TugasSiswaController extends Controller
         $tugas = TugasSiswa::findOrFail($id);
         return Storage::disk('public')->download($tugas->file_jawaban);
     }
+
+    public function show($id)
+{
+    // Ambil tugas berdasarkan ID
+    $tugas = TugasSiswa::with(['siswa.user', 'guru', 'subject'])->findOrFail($id);
+
+    // Kembalikan ke view 'tugas.show' dengan data tugas
+    return view('tugas.show', compact('tugas'));
+}
 }

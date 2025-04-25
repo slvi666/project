@@ -114,17 +114,37 @@
 
                   <div class="form-group">
                     <label for="foto">Foto</label>
-                    <input type="file" name="foto" class="form-control" accept="image/*" required>
+                    @if ($formulir->foto)
+                      <div class="mb-2">
+                        <img src="{{ asset('storage/' . $formulir->foto) }}" alt="Foto" style="max-width: 150px;">
+                      </div>
+                    @endif
+                    <input type="file" name="foto" class="form-control" accept="image/*">
                   </div>
 
                   <div class="form-group">
                     <label for="berkas_sertifikat">Berkas Sertifikat</label>
+                    @if ($formulir->berkas_sertifikat)
+                      <div class="mb-2">
+                        <a href="{{ asset('storage/' . $formulir->berkas_sertifikat) }}" target="_blank">Lihat Berkas Saat Ini</a>
+                      </div>
+                    @endif
                     <input type="file" name="berkas_sertifikat" class="form-control" accept=".pdf,.doc,.docx">
                   </div>
-
+                  
                   <div class="form-group">
                     <label for="nilai_us">Nilai US</label>
                     <input type="number" name="nilai_us" class="form-control" step="0.01" value="{{ old('nilai_us', $formulir->nilai_us) }}">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="asal_sekolah">Asal Sekolah</label>
+                    <input type="text" name="asal_sekolah" class="form-control" value="{{ old('asal_sekolah', $formulir->asal_sekolah) }}" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="tahun_lulus">Tahun Lulus</label>
+                    <input type="number" name="tahun_lulus" class="form-control" value="{{ old('tahun_lulus', $formulir->tahun_lulus) }}" required>
                   </div>
 
                   <div class="card-footer text-right">
