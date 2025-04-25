@@ -152,138 +152,142 @@ document.addEventListener("DOMContentLoaded", function () {
   const pagination = document.getElementById("pagination");
   let currentPage = 1;
   const rowsPerPage = 5;
-  let totalPages = Math.ceil((rows.length - 1) / rowsPerPage);
+
 
   function showPage(page) {
-    const start = (page - 1) * rowsPerPage + 1;
-    const end = start + rowsPerPage;
-    for (let i = 1; i < rows.length; i++) {
-      rows[i].style.display = (i >= start && i < end) ? "" : "none";
-    }
-  }
-
-  function setupPagination() {
-    pagination.innerHTML = `
-      <button class="btn btn-sm btn-outline-primary" id="prev">&laquo;</button>
-      <span class="mx-2" id="pageInfo"></span>
-      <button class="btn btn-sm btn-outline-primary" id="next">&raquo;</button>
-    `;
-
-    document.getElementById("prev").addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        showPage(currentPage);
-        updatePaginationUI();
-      }
-    });
-
-    document.getElementById("next").addEventListener("click", () => {
-      if (currentPage < totalPages) {
-        currentPage++;
-        showPage(currentPage);
-        updatePaginationUI();
-      }
-    });
-
-    updatePaginationUI();
-  }
-
-  function updatePaginationUI() {
-    document.getElementById("pageInfo").textContent = `Halaman ${currentPage} dari ${totalPages}`;
-    document.getElementById("prev").disabled = currentPage === 1;
-    document.getElementById("next").disabled = currentPage === totalPages;
-  }
-
-  searchInput.addEventListener("keyup", function () {
+    let visibleRows = [];
     const filter = searchInput.value.toLowerCase();
-    let visibleRows = 0;
 
     for (let i = 1; i < rows.length; i++) {
       const text = rows[i].textContent.toLowerCase();
       const match = text.includes(filter);
       rows[i].style.display = match ? "" : "none";
-      if (match) visibleRows++;
+      if (match) visibleRows.push(rows[i]);
     }
 
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    visibleRows.forEach((row, index) => {
+      row.style.display = (index >= start && index < end) ? "" : "none";
+    });
+
+    return visibleRows.length;
+  }
+
+  function updatePaginationUI(totalVisible) {
+    const totalPages = Math.ceil(totalVisible / rowsPerPage);
+    pagination.innerHTML = '';
+
+    if (totalPages <= 1) return;
+
+    const prevButton = document.createElement('button');
+    prevButton.className = 'btn btn-sm btn-outline-primary';
+    prevButton.textContent = '«';
+    prevButton.disabled = currentPage === 1;
+    prevButton.onclick = () => {
+      if (currentPage > 1) {
+        currentPage--;
+        const visibleCount = showPage(currentPage);
+        updatePaginationUI(visibleCount);
+      }
+    };
+
+    const nextButton = document.createElement('button');
+    nextButton.className = 'btn btn-sm btn-outline-primary';
+    nextButton.textContent = '»';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.onclick = () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        const visibleCount = showPage(currentPage);
+        updatePaginationUI(visibleCount);
+      }
+    };
+
+    const pageInfo = document.createElement('span');
+    pageInfo.className = 'mx-2';
+    pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+
+    pagination.appendChild(prevButton);
+    pagination.appendChild(pageInfo);
+    pagination.appendChild(nextButton);
+  }
+
+  function refreshTable() {
     currentPage = 1;
-    totalPages = Math.ceil(visibleRows / rowsPerPage);
-    showPage(currentPage);
-    setupPagination();
-  });
+    const visibleCount = showPage(currentPage);
+    updatePaginationUI(visibleCount);
+  }
 
-  showPage(currentPage);
-  setupPagination();
+  // Event saat search diketik
+  searchInput.addEventListener("keyup", refreshTable);
+
+  // Inisialisasi pertama kali
+  refreshTable();
 });
-  
-  // Filter pencarian berdasarkan keyword
-  document.getElementById('search').addEventListener('keyup', function () {
-    const filter = this.value.toLowerCase();
-    document.querySelectorAll('#usersTable tbody tr').forEach(row => {
-      const text = row.textContent.toLowerCase();
-      row.style.display = text.includes(filter) ? '' : 'none';
-    });
+
+
+// SweetAlert untuk Tambah Pengguna
+function confirmAdd(url) {
+  Swal.fire({
+    title: 'Anda ingin menambah pengguna baru?',
+    text: 'Anda akan diarahkan ke halaman pendaftaran.',
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Lanjutkan',
+    cancelButtonText: 'Batal',
+  }).then(result => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
   });
+}
 
-  // SweetAlert untuk Tambah Pengguna
-  function confirmAdd(url) {
-    Swal.fire({
-      title: 'Anda ingin menambah pengguna baru?',
-      text: 'Anda akan diarahkan ke halaman pendaftaran.',
-      icon: 'info',
-      showCancelButton: true,
-      confirmButtonText: 'Lanjutkan',
-      cancelButtonText: 'Batal',
-    }).then(result => {
-      if (result.isConfirmed) {
-        window.location.href = url;
-      }
-    });
-  }
+// SweetAlert untuk Hapus Pengguna
+function confirmDelete(form) {
+  Swal.fire({
+    title: 'Yakin ingin menghapus?',
+    text: 'Data ini tidak dapat dikembalikan!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, hapus!',
+    cancelButtonText: 'Batal',
+  }).then(result => {
+    if (result.isConfirmed) {
+      form.submit();
+    }
+  });
+}
 
-  // SweetAlert untuk Hapus Pengguna
-  function confirmDelete(form) {
-    Swal.fire({
-      title: 'Yakin ingin menghapus?',
-      text: 'Data ini tidak dapat dikembalikan!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Batal',
-    }).then(result => {
-      if (result.isConfirmed) {
-        form.submit();
-      }
-    });
-  }
+// SweetAlert untuk Edit Pengguna
+function confirmEdit(url) {
+  Swal.fire({
+    title: 'Edit Pengguna?',
+    text: 'Anda akan diarahkan ke halaman edit.',
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Lanjutkan',
+    cancelButtonText: 'Batal',
+  }).then(result => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+}
 
-  // SweetAlert untuk Edit Pengguna
-  function confirmEdit(url) {
-    Swal.fire({
-      title: 'Edit Pengguna?',
-      text: 'Anda akan diarahkan ke halaman edit.',
-      icon: 'info',
-      showCancelButton: true,
-      confirmButtonText: 'Lanjutkan',
-      cancelButtonText: 'Batal',
-    }).then(result => {
-      if (result.isConfirmed) {
-        window.location.href = url;
-      }
-    });
-  }
-
-  // SweetAlert untuk View Detail
-  function confirmView(url) {
-    Swal.fire({
-      title: 'Anda ingin melihat detail?',
-      text: 'Anda akan diarahkan ke halaman detail.',
-      icon: 'info',
-      confirmButtonText: 'Lanjutkan',
-    }).then(result => {
-      if (result.isConfirmed) {
-        window.location.href = url;
-      }
-    });
-  }
+// SweetAlert untuk View Detail
+function confirmView(url) {
+  Swal.fire({
+    title: 'Anda ingin melihat detail?',
+    text: 'Anda akan diarahkan ke halaman detail.',
+    icon: 'info',
+    confirmButtonText: 'Lanjutkan',
+  }).then(result => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+}
 </script>
 @endsection
