@@ -1,3 +1,4 @@
+
 @extends('adminlte.layouts.app')
 
 @section('content')
@@ -68,23 +69,21 @@
                                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#taskAccordion">
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <label>Siswa</label>
-                                                    <select name="siswa_id" class="form-control" required>
-                                                        <option value="">-- Pilih Siswa --</option>
-                                                        @foreach($siswa as $s)
-                                                            <option value="{{ $s->id }}">{{ $s->user->name ?? '-' }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                    <label>Siswa</label><br>
+                                                    @foreach($siswa as $s)
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="siswa_id[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
+                                                            <label class="form-check-label" for="siswa_{{ $s->id }}">
+                                                                {{ $s->user->name ?? '-' }}    ({{ $s->subject->class_name }})
+                                                            </label>
+                                                        </div>
+                                                    @endforeach
+                                                </div>                                                
 
                                                 <div class="form-group">
                                                     <label>Guru</label>
-                                                    <select name="guru_id" class="form-control" required>
-                                                        <option value="">-- Pilih Guru --</option>
-                                                        @foreach($guru as $g)
-                                                            <option value="{{ $g->id }}">{{ $g->nama_guru }}</option>
-                                                        @endforeach
-                                                    </select>
+                                                    <input type="hidden" name="guru_id" value="{{ auth()->user()->guru->id }}">
+                                                    <input type="text" class="form-control" value="{{ auth()->user()->guru->nama_guru }}" readonly>
                                                 </div>
 
                                                 <div class="form-group">
@@ -92,7 +91,7 @@
                                                     <select name="subject_id" class="form-control" required>
                                                         <option value="">-- Pilih Mapel --</option>
                                                         @foreach($subject as $sub)
-                                                            <option value="{{ $sub->id }}">{{ $sub->subject_name }}</option>
+                                                            <option value="{{ $sub->id }}">{{ $sub->subject_name }} - {{ $sub->class_name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>

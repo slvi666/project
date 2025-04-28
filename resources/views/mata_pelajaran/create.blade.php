@@ -26,6 +26,12 @@
             <div class="card-header">
               <h3 class="card-title">Form Tambah Mata Pelajaran</h3>
             </div>
+            @if ($errors->has('msg'))
+    <div class="alert alert-danger">
+        {{ $errors->first('msg') }}
+    </div>
+@endif
+
             <form action="{{ route('mata-pelajaran.store') }}" method="POST">
               @csrf
               <div class="card-body">
@@ -51,13 +57,18 @@
 
                 <div class="form-group">
                   <label for="siswa_ids">Siswa</label>
-                  <select name="siswa_ids[]" class="form-control" multiple required>
-                    @foreach ($siswa as $s)
-                      <option value="{{ $s->id }}">{{ $s->user->name }}</option>
-                    @endforeach
-                  </select>
-                  <small class="text-muted">* Gunakan Ctrl (Windows) / Command (Mac) untuk pilih lebih dari satu</small>
-                </div>
+                  <div class="checkbox-group">
+                      @foreach ($siswa as $s)
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" name="siswa_ids[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
+                              <label class="form-check-label" for="siswa_{{ $s->id }}">
+                                  {{ $s->user->name }} ({{ $s->subject->class_name }})
+                              </label>
+                          </div>
+                      @endforeach
+                  </div>
+                  <small class="text-muted">* Pilih satu atau lebih siswa</small>
+              </div>              
 
                 <div class="form-group">
                   <label>Waktu Mulai</label>

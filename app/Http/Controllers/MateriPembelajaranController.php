@@ -10,10 +10,30 @@ use Illuminate\Support\Facades\Storage;
 
 class MateriPembelajaranController extends Controller
 {
+    // public function index()
+    // {
+    //     $materi = MateriPembelajaran::with('guru', 'subject')->latest()->get();
+    //     return view('MateriPembelajaran.index', compact('materi'));
+    // }
+
     public function index()
     {
-        $materi = MateriPembelajaran::with('guru', 'subject')->latest()->get();
-        return view('MateriPembelajaran.index', compact('materi'));
+        // Ambil daftar kelas unik untuk dropdown filter
+        $kelasList = Subject::select('class_name')->distinct()->orderBy('class_name')->pluck('class_name');
+        
+        // Query dasar
+        $query = MateriPembelajaran::with(['guru', 'subject']);
+        
+        // Filter berdasarkan kelas jika dipilih
+        if(request('kelas')) {
+            $query->whereHas('subject', function($q) {
+                $q->where('class_name', request('kelas'));
+            });
+        }
+        
+        $materi = $query->latest()->get();
+        
+        return view('MateriPembelajaran.index', compact('materi', 'kelasList'));
     }
 
     public function create()

@@ -40,6 +40,11 @@
               </div>
 
               <div class="row mb-3">
+                <div class="col-sm-3 font-weight-bold">Kelas</div>
+                <div class="col-sm-9">{{ $tugas->siswa->subject->class_name ?? '-' }}</div>
+              </div>
+
+              <div class="row mb-3">
                 <div class="col-sm-3 font-weight-bold">Guru</div>
                 <div class="col-sm-9">{{ $tugas->guru->nama_guru }}</div>
               </div>

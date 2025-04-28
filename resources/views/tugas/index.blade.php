@@ -56,6 +56,7 @@
                       <th>No</th>
                       <th>Judul</th>
                       <th>Siswa</th>
+                      <th>Kelas</th>
                       <th>Guru</th>
                       <th>Mapel</th>
                       <th>Deadline</th>
@@ -72,6 +73,7 @@
                       <td class="text-center">{{ $index + 1 }}</td>
                       <td>{{ $item->judul_tugas }}</td>
                       <td>{{ $item->siswa->user->name ?? '-' }}</td>
+                      <td>{{ $item->subject->class_name }}</td>
                       <td>{{ $item->guru->nama_guru }}</td>
                       <td>{{ $item->subject->subject_name }}</td>
                       <td>{{ $item->deadline }}</td>

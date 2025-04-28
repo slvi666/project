@@ -100,7 +100,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{ $jadwal->subject->nama }}</td>
+                      <td>{{ $jadwal->subject->subject_name }}</td>
                       <td>{{ $jadwal->guru->name }}</td>
                       <td>{{ $jadwal->hari }}</td>
                       <td>{{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }}</td>

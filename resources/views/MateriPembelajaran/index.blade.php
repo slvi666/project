@@ -40,6 +40,7 @@
                 </script>
               @endif
 
+              {{-- Search --}}
               <div class="mb-3 d-flex justify-content-between align-items-center">
                 <input type="text" id="search" placeholder="🔍 Cari Materi..." class="form-control w-50 shadow-sm rounded-pill px-3">
                 @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
@@ -48,6 +49,70 @@
                   <i class="fas fa-plus-circle me-1"></i> Tambah Materi
                 </a>
                 @endif
+              </div>
+
+              {{-- <div class="d-flex flex-wrap justify-content-start align-items-center gap-3 mb-3">
+                <!-- Filter Dropdown -->
+                <form method="GET" action="{{ route('registrasi.index') }}" class="d-flex align-items-center gap-2">
+                  <div class="input-group shadow-sm rounded-pill" style="overflow: hidden; max-width: 300px;">
+              
+                    <!-- Label Filter -->
+                    <span class="input-group-text text-white fw-semibold" 
+                          style="background: linear-gradient(90deg, #0d6efd, #3f8efc); border: none;">
+                      <i class="fas fa-filter me-1"></i> Filter
+                    </span>
+              
+                    <!-- Dropdown Role -->
+                    <select name="role" id="role" class="form-select border-0" onchange="this.form.submit()" style="border-left: 1px solid #ddd;">
+                      <option value="">Semua</option>
+                      @foreach (['admin', 'guru', 'siswa', 'calon_siswa', 'Orang Tua'] as $role)
+                        <option value="{{ $role }}" {{ request('role') == $role ? 'selected' : '' }}>
+                          {{ ucfirst(str_replace('_', ' ', $role)) }}
+                        </option>
+                      @endforeach
+                    </select>
+                  </div>
+              
+                  <!-- Reset Button -->
+                  @if(request('role'))
+                    <a href="{{ route('registrasi.index') }}" 
+                      class="btn shadow-sm d-flex align-items-center justify-content-center rounded-circle"
+                      style="width: 44px; height: 44px; background-color: #faed3b; color: #575848; font-size: 1.2rem;"
+                      data-bs-toggle="tooltip" data-bs-placement="top" title="Reset Filter">
+                      <i class="fas fa-redo-alt"></i>
+                    </a>
+                  @endif
+                </form>
+              </div> --}}
+
+              <div class="d-flex flex-wrap justify-content-start align-items-center gap-3 mb-3">
+                <!-- Filter Dropdown Kelas Saja -->
+                <form method="GET" action="{{ route('materi.index') }}" class="d-flex align-items-center gap-2">
+                  <div class="input-group shadow-sm rounded-pill" style="overflow: hidden; max-width: 300px;">
+                    <span class="input-group-text text-white fw-semibold" 
+                          style="background: linear-gradient(90deg, #0d6efd, #3f8efc); border: none;">
+                      <i class="fas fa-school me-1"></i> Kelas
+                    </span>
+                    <select name="kelas" id="kelas" class="form-select border-0" onchange="this.form.submit()">
+                      <option value="">Semua Kelas</option>
+                      @foreach ($kelasList as $kelas)
+                        <option value="{{ $kelas }}" {{ request('kelas') == $kelas ? 'selected' : '' }}>
+                          {{ $kelas }}
+                        </option>
+                      @endforeach
+                    </select>
+                  </div>
+              
+                  <!-- Reset Button (muncul hanya ketika filter aktif) -->
+                  @if(request('kelas'))
+                    <a href="{{ route('materi.index') }}" 
+                       class="btn shadow-sm d-flex align-items-center justify-content-center rounded-circle"
+                       style="width: 44px; height: 44px; background-color: #faed3b; color: #575848;"
+                       title="Reset Filter">
+                      <i class="fas fa-redo-alt"></i>
+                    </a>
+                  @endif
+                </form>
               </div>
 
               <div class="table-responsive">
@@ -65,9 +130,20 @@
                   </thead>
                   <tbody>
                     @foreach($materi as $index => $m)
+                      @if(auth()->user()->role_name === 'guru' && $m->guru_id !== auth()->user()->id)
+                        <!-- Skip this materi if the logged-in user is a guru and the guru_id doesn't match -->
+                        @continue
+                      @endif
+                      
                       <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
-                        <td>{{ $m->guru->name ?? '-' }}</td>
+                        <td class="text-center">
+                          @if($m->guru)
+                            <span class="badge bg-success">{{ $m->guru->name }}</span>
+                          @else
+                            <span class="badge bg-secondary">-</span>
+                          @endif
+                        </td>
                         <td>{{ $m->subject->subject_name ?? '-' }}</td>
                         <td>{{ $m->subject->class_name ?? '-' }}</td>
                         <td class="text-truncate" style="max-width: 250px;">{{ Str::limit($m->deskripsi, 80, '...') }}</td>
@@ -102,6 +178,7 @@
                       </tr>
                     @endforeach
                   </tbody>
+                  
                 </table>
               </div>
 

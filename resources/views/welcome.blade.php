@@ -49,7 +49,7 @@
           <li><a href="#team">Team</a></li>
           <li><a href="#contact">Contact</a></li>
           <a href="{{ route('login') }}" class="btn btn-primary text-light rounded-pill py-2 px-4 ms-3">Login</a>
-          <a href="{{ route('register') }}" class="btn btn-light text-dark rounded-pill py-2 px-4 ms-3">Daftar</a>
+          {{-- <a href="{{ route('register') }}" class="btn btn-light text-dark rounded-pill py-2 px-4 ms-3">Daftar</a> --}}
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -99,60 +99,85 @@
     </section><!-- /Hero Section -->
 
     <!-- About Section -->
-    <section id="about" class="about section">
-  
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row align-items-xl-center gy-5">
-  
-          <div class="col-xl-5 content">
-            <h3>About Us</h3>
-            <h2>MTSS AL-MUNAWAROH</h2>
-            <p>Sistem ini dirancang untuk membantu pengelolaan sekolah, mulai dari administrasi, akademik, hingga laporan antara guru, siswa, dan orang tua. Dengan teknologi terkini, kami berkomitmen untuk meningkatkan mutu pendidikan.</p>
-            <a href="{{ route('login') }}" class="read-more"><span>Selengkapnya</span><i class="bi bi-arrow-right"></i></a>
-          </div>
-  
-          <div class="col-xl-7">
-            <div class="row gy-4 icon-boxes">
-  
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="icon-box">
-                  <i class="bi bi-display"></i>
-                  <h3>Sistem Terintegrasi</h3>
-                  <p>Menyediakan sistem untuk proses PPDB, media pembelajaran, dan perpustakaan berbasis online dalam satu tempat.</p>
-                </div>
-              </div> <!-- End Icon Box -->
-  
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
-                <div class="icon-box">
-                  <i class="bi bi-people"></i>
-                  <h3>Interaksi Guru & Siswa</h3>
-                  <p>Memudahkan komunikasi antara guru, siswa, dan orang tua melalui sistem ini.</p>
-                </div>
-              </div> <!-- End Icon Box -->
-  
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
-                <div class="icon-box">
-                  <i class="bi bi-clipboard-check"></i>
-                  <h3>Monitoring & Evaluasi</h3>
-                  <p>Orang tua dan guru dapat memantau perkembangan akademik siswa secara real-time dengan sistem pelaporan yang transparan.</p>
-                </div>
-              </div> <!-- End Icon Box -->
-  
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
-                <div class="icon-box">
-                  <i class="bi bi-cloud-upload"></i>
-                  <h3>Akses Fleksibel</h3>
-                  <p>Sistem berbasis online memungkinkan akses kapan saja dan di mana saja, mendukung pembelajaran yang lebih dinamis.</p>
-                </div>
-              </div> <!-- End Icon Box -->
-  
-            </div>
-          </div>
-  
+<section id="about" class="about section py-5">
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row align-items-center gy-5">
+
+      <div class="col-xl-5">
+        <div class="content">
+          <h3 class="section-title mb-3 text-primary">Tentang Kami</h3>
+          <h2 class="school-name mb-4 fw-bold">MTSS AL-MUNAWAROH</h2>
+          <p class="mb-4 text-muted">
+            Kami menghadirkan sistem modern untuk mendukung pengelolaan sekolah — dari administrasi dan akademik. 
+            Berbasis teknologi terkini, kami berkomitmen meningkatkan mutu pendidikan menuju masa depan yang lebih cerah.
+          </p>
+          <a href="{{ route('login') }}" class="btn btn-primary">
+            Selengkapnya <i class="bi bi-arrow-right ms-2"></i>
+          </a>
         </div>
       </div>
-  
-    </section><!-- /About Section -->
+
+      <div class="col-xl-7">
+        <div class="row gy-4">
+
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="icon-box p-4 shadow-sm rounded-4 h-100">
+              <div class="icon mb-3">
+                <i class="bi bi-display fs-2 text-primary"></i>
+              </div>
+              <h5 class="fw-bold">Sistem Terintegrasi</h5>
+              <p class="text-muted small">
+                Semua layanan penting seperti PPDB dan media pembelajaran tersedia dalam satu sistem.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="icon-box p-4 shadow-sm rounded-4 h-100">
+              <div class="icon mb-3">
+                <i class="bi bi-people fs-2 text-primary"></i>
+              </div>
+              <h5 class="fw-bold">Interaksi Guru & Siswa</h5>
+              <p class="text-muted small">
+                Menyederhanakan komunikasi antara guru dan siswa  melalui sistem yang mudah diakses.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="icon-box p-4 shadow-sm rounded-4 h-100">
+              <div class="icon mb-3">
+                <i class="bi bi-clipboard-check fs-2 text-primary"></i>
+              </div>
+              <h5 class="fw-bold">Monitoring & Evaluasi</h5>
+              <p class="text-muted small">
+                Pantau perkembangan akademik siswa secara real-time dengan laporan yang akurat dan transparan.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="icon-box p-4 shadow-sm rounded-4 h-100">
+              <div class="icon mb-3">
+                <i class="bi bi-cloud-upload fs-2 text-primary"></i>
+              </div>
+              <h5 class="fw-bold">Akses Fleksibel</h5>
+              <p class="text-muted small">
+                Dengan sistem ini, pembelajaran dan administrasi dapat diakses kapan saja dan di mana saja.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+<!-- /About Section -->
+
 
 
    <!-- Features Section -->
@@ -273,7 +298,7 @@
             <i class="bi bi-journal-richtext"></i>
             <div class="stats-item">
               <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-              <p>Projects</p>
+              <p>Total Guru</p>
             </div>
           </div><!-- End Stats Item -->
 
@@ -281,7 +306,7 @@
             <i class="bi bi-headset"></i>
             <div class="stats-item">
               <span data-purecounter-start="0" data-purecounter-end="1463" data-purecounter-duration="1" class="purecounter"></span>
-              <p>Hours Of Support</p>
+              <p>Total Materi</p>
             </div>
           </div><!-- End Stats Item -->
 
@@ -299,83 +324,93 @@
 
     </section><!-- /Stats Section -->
 
-    <!-- Details Section -->
-    <section id="details" class="details section">
+ <!-- Visi dan Misi Section -->
+<section id="visi-misi" class="details section" style="background: #f9f9f9; padding: 60px 0;">
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Details</h2>
-        <div><span>Check Our Details</span> <span class="description-title"></span></div>
-      </div><!-- End Section Title -->
+  <!-- Section Title -->
+  <div class="container section-title text-center" data-aos="fade-up">
+    <h2 class="mb-3">Visi dan Misi</h2>
+    <p class="description">
+      Membentuk insan berilmu, beriman, dan berakhlakul karimah yang mampu menghadapi tantangan global.
+    </p>
+  </div>
+  <!-- End Section Title -->
 
-      <div class="container">
+  <div class="container">
 
-        <div class="row gy-4 align-items-center features-item">
-          <div class="col-md-5 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="100">
-            <img src="{{ asset('main/assets/img/gambar-1.jpg') }}" class="img-fluid" alt="E-Learning Interaktif">
-          </div>
-          <div class="col-md-7" data-aos="fade-up" data-aos-delay="100">
-            <h3>E-Learning Interaktif</h3>
-            <p class="fst-italic">
-              MTSS AL-MUNAWAROH menyediakan sistem pembelajaran interaktif dengan materi yang bisa diakses kapan saja dan di mana saja.
-            </p>
-            <ul>
-              <li><i class="bi bi-check"></i> <span>Materi pembelajaran dan tugas.</span></li>
-              <li><i class="bi bi-check"></i> <span>Akses mudah melalui perangkat komputer dan mobile.</span></li>
-              <li><i class="bi bi-check"></i> <span>Materi ajar yang diperbarui secara berkala.</span></li>
-            </ul>
-          </div>
-        </div><!-- Features Item -->
+    <!-- Visi -->
+<div class="row gy-5 align-items-center mb-5">
+  <div class="col-md-6" data-aos="fade-right" data-aos-delay="100">
+    <img src="{{ asset('main/assets/img/detai-4.png') }}" class="img-fluid rounded shadow" alt="Visi MTSS AL-MUNAWAROH">
+  </div>
+  <div class="col-md-6" data-aos="fade-left" data-aos-delay="200">
+    <div class="visi-box bg-white p-4 rounded shadow">
+      <h3 class="mb-3">Visi</h3> <!-- Hapus text-primary juga kalau mau benar-benar netral -->
+      <p class="fst-italic fs-5">
+        <strong>"Mewujudkan generasi rabbani,</strong> berjiwa Qur’ani yang berbekal Iman dan Taqwa (IMTAQ) serta Ilmu Pengetahuan dan Teknologi (IPTEK)."
+      </p>
+    </div>
+  </div>
+</div>
+<!-- End Visi -->
 
-        <div class="row gy-4 align-items-center features-item">
-          <div class="col-md-5 order-1 order-md-2 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="200">
-            <img src="{{ asset('main/assets/img/gambar-3.jpg') }}" class="img-fluid" alt="Manajemen Nilai & Absensi">
-          </div>
-          <div class="col-md-7 order-2 order-md-1" data-aos="fade-up" data-aos-delay="200">
-            <h3>Manajemen Absensi</h3>
-            <p class="fst-italic">
-              Guru dapat mengelola absensi siswa dengan mudah melalui sistem.
-            </p>
-            <p>
-              Absensi kehadiran siswa dapat langsung diinput ke dalam sistem dan dapat diakses oleh orang tua serta siswa sendiri.
-            </p>
-          </div>
-        </div><!-- Features Item -->
 
-        <div class="row gy-4 align-items-center features-item">
-          <div class="col-md-5 d-flex align-items-center" data-aos="zoom-out">
-            <img src="{{ asset('main/assets/img/gambar-2.jpg') }}" class="img-fluid" alt="Forum Diskusi & Komunikasi">
-          </div>
-          <div class="col-md-7" data-aos="fade-up">
-            <h3>Perpustakaan Digital</h3>
-            <p>Sistem ini menyediakan bacaan buku digital yang memungkinkan siswa untuk membaca buku secara digital.</p>
-            <ul>
-              <li><i class="bi bi-check"></i> <span>Akses mudah ke dunia literasi!</span></li>
-              <li><i class="bi bi-check"></i> <span>Tempat terbaik untuk menjelajahi ilmu pengetahuan tanpa batas!</span></li>
-              <li><i class="bi bi-check"></i> <span>Jelajahi dunia pengetahuan dengan koleksi buku digital.</span></li>
-            </ul>
-          </div>
-        </div><!-- Features Item -->
+    <!-- Misi -->
+    <div class="row gy-4 text-center" data-aos="fade-up" data-aos-delay="300">
 
-        <div class="row gy-4 align-items-center features-item">
-          <div class="col-md-5 order-1 order-md-2 d-flex align-items-center" data-aos="zoom-out">
-            <img src="{{ asset('main/assets/img/gambar-4.jpg') }}" class="img-fluid" alt="Keamanan & Privasi">
-          </div>
-          <div class="col-md-7 order-2 order-md-1" data-aos="fade-up">
-            <h3>Keamanan & Privasi</h3>
-            <p class="fst-italic">
-              Data pengguna tetap aman serta kontrol akses yang ketat.
-            </p>
-            <p>
-              Sistem ini dirancang dengan teknologi keamanan terbaru untuk memastikan data akademik dan informasi pribadi siswa tetap terjaga.
-            </p>
-          </div>
-        </div><!-- Features Item -->
+      <h3 class="mb-5">Misi</h3>
 
+      <!-- Misi Item 1 -->
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+        <div class="card p-4 border-0 shadow-sm h-100">
+          <div class="icon mb-3">
+            <i class="bi bi-heart-fill text-danger fs-1"></i>
+          </div>
+          <h5 class="card-title">Inovasi Belajar</h5>
+          <p class="card-text">1.	Menjadi lembaga pendidikan yang kompeten.</p>
+        </div>
       </div>
 
-    </section><!-- /Details Section -->
+      <!-- Misi Item 2 -->
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+        <div class="card p-4 border-0 shadow-sm h-100">
+          <div class="icon mb-3">
+            <i class="bi bi-lightbulb-fill text-warning fs-1"></i>
+          </div>
+          <h5 class="card-title">Inovasi Belajar</h5>
+          <p class="card-text">2.	Meningkatkan Profesionalisme kinerja Tenaga Pendidik dan Tenaga Kependdikan</p>
+        </div>
+      </div>
 
+      <!-- Misi Item 3 -->
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+        <div class="card p-4 border-0 shadow-sm h-100">
+          <div class="icon mb-3">
+            <i class="bi bi-award-fill text-success fs-1"></i>
+          </div>
+          <h5 class="card-title">Prestasi Global</h5>
+          <p class="card-text">3.	Menginternalisasikan nilai-nilai Islami dalam pembelajaran.</p>
+        </div>
+      </div>
+
+      <!-- Misi Item 4 -->
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+        <div class="card p-4 border-0 shadow-sm h-100">
+          <div class="icon mb-3">
+            <i class="bi bi-people-fill text-primary fs-1"></i>
+          </div>
+          <h5 class="card-title">Kepedulian Sosial</h5>
+          <p class="card-text">4.	Memberikan layanan pendidikan Islami dan yang berkualitas.</p>
+        </div>
+      </div>
+
+    </div>
+    <!-- End Misi -->
+
+  </div>
+
+</section>
+<!-- End Visi dan Misi Section -->
 
     <!-- Gallery Section -->
     <section id="gallery" class="gallery section">
@@ -460,7 +495,7 @@
 
     </section><!-- /Gallery Section -->
 
-    <!-- Testimonials Section -->
+    {{-- <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials section dark-background">
 
       <img src="{{ asset('main/assets/img/testimonials-bg.jpg') }}" class="testimonials-bg" alt="">
@@ -571,7 +606,7 @@
 
       </div>
 
-    </section><!-- /Testimonials Section -->
+    </section><!-- /Testimonials Section --> --}}
 
     <!-- Team Section -->
     <section id="team" class="team section">

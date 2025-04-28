@@ -28,15 +28,13 @@
           <form action="{{ route('materi.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <div class="form-group">
-              <label for="guru_id">Guru</label>
-              <select name="guru_id" class="form-control" required>
-                <option value="">-- Pilih Guru --</option>
-                @foreach($guru as $g)
-                  <option value="{{ $g->id }}">{{ $g->name }}</option>
-                @endforeach
-              </select>
-            </div>
+            <input type="hidden" name="guru_id" value="{{ auth()->user()->id }}">
+
+              <!-- Kalau mau ditampilkan nama gurunya tapi tidak editable -->
+              <div class="form-group">
+                  <label>Guru</label>
+                  <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
+              </div>
 
             <div class="form-group">
               <label for="subject_id">Mata Pelajaran</label>

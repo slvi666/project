@@ -43,3 +43,5 @@ class MateriPembelajaran extends Model
         'siswa_ids' => 'array',
     ];
 }
+
+

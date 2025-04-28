@@ -124,232 +124,226 @@ body {
 <!-- Sidebar Menu -->
 <nav class="mt-2">
   <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
     @if (auth()->user()->role_name === 'Admin')
-    <li class="nav-header mt-2 py-2">- Assets </li>
+    <li class="nav-header mt-2 py-2">- Assets</li>
     <li class="nav-item">
       <a href="#" class="nav-link">
-        <i class="nav-icon fas fa-users-cog"></i> <!-- Change to users cog icon for user management -->
-        <p>
-          Menejemen Pengguna
-          <i class="right fas fa-angle-left"></i>
-        </p>
+        <i class="nav-icon fas fa-users-cog"></i>
+        <p>Menejemen Pengguna<i class="right fas fa-angle-left"></i></p>
       </a>
       <ul class="nav nav-treeview">
         <li class="nav-item">
           <a href="{{ route('registrasi.index') }}" class="nav-link">
-            <i class="fas fa-user-circle nav-icon"></i> <!-- Change to user icon -->
+            <i class="fas fa-user-circle nav-icon"></i>
             <p>Data Pengguna</p>
-          </a>          
-          
+          </a>
         </li>
       </ul>
     </li>
-  @endif
-
-  <li class="nav-header mt-2 py-2">-Pengelolaan Data</li>
-    
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-database"></i> <!-- Change to database icon -->
-      <p>
-        Data
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
-      <li class="nav-item">
-        <a href="{{ route('guru.index') }}" class="nav-link">
-          <i class="fas fa-chalkboard-teacher nav-icon"></i> <!-- Change to teacher icon -->
-          <p>Data Guru</p>
-        </a>
-      </li>
     @endif
-    @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa'|| auth()->user()->role_name === 'Admin')
-      <li class="nav-item">
-        <a href="{{ route('profil_siswa.index') }}" class="nav-link">
-          <i class="fas fa-user-graduate nav-icon"></i> <!-- Change to student icon -->
-          <p>Data Siswa</p>
-        </a>
-      </li> 
-      @endif
 
-      @if (auth()->user()->role_name === 'Admin')
-      <li class="nav-item">
-        <a href="{{ route('pengumuman.index') }}" class="nav-link">
-          <i class="fas fa-bullhorn nav-icon"></i> <!-- Change to announcement icon -->
-          <p>Data Pengumuman</p>
-        </a>
-      </li>    
-      <li class="nav-item">
-        <a href="{{ route('faq.index') }}" class="nav-link">
-          <i class="fas fa-question-circle nav-icon"></i> <!-- Change to FAQ icon -->
-          <p>Data FAQ</p>
-        </a>
-      </li>               
-      <li class="nav-item">
-        <a href="{{ route('kontak-informasi.index') }}" class="nav-link">
-          <i class="fas fa-phone-alt nav-icon"></i> <!-- Change to contact info icon -->
-          <p>Kontak Informasi</p>
-        </a>
-      </li>
-      @endif              
-    </ul>
-  </li>
-  @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa'|| auth()->user()->role_name === 'Admin')
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-calendar-check"></i> <!-- Change to attendance icon -->
-      <p>
-        Laporan Absensi
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ route('absensi.laporan') }}" class="nav-link {{ request()->routeIs('absensi.laporan') ? 'active' : '' }}">
-          <i class="fas fa-list nav-icon"></i> <!-- Change to list icon for reports -->
-          <p>Laporan Absensi</p>
-        </a>
-      </li>
-    </ul>
-  </li>
-  @endif
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-calendar-alt"></i> <!-- Change to academic calendar icon -->
-      <p>
-        Kalender Akademik
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ url('fullcalender') }}" class="nav-link">
-          <i class="fas fa-calendar nav-icon"></i> <!-- Change to calendar icon -->
-          <p>Kalender</p>
-        </a>
-      </li>
-    </ul>
-  </li>
-  @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa'|| auth()->user()->role_name === 'Admin')
-  <li class="nav-header mt-2 py-2">Pembelajaran Sekolah</li>
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-book-open"></i> <!-- Change to learning resources icon -->
-      <p>
-        Media Pembelajaran
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ route('materi.index') }}" class="nav-link">
-          <i class="fas fa-book nav-icon"></i> <!-- Change to material book icon -->
-          <p>Materi</p>
-        </a>
-      </li>
-      @endif
-      @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa')
-      <li class="nav-item">
-        <a href="{{ route('tugas.index') }}" class="nav-link">
-          <i class="fas fa-tasks nav-icon"></i> <!-- Change to tasks icon -->
-          <p>Tugas</p>
-        </a>
-      </li>
-      @endif
+    <li class="nav-header mt-2 py-2">- Pengelolaan Data</li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-database"></i>
+        <p>Data<i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        @if (in_array(auth()->user()->role_name, ['siswa', 'Admin', 'calon_siswa']))
+        <li class="nav-item">
+          <a href="{{ route('formulir.index') }}" class="nav-link">
+            <i class="fas fa-calendar nav-icon"></i>
+            <p>Pendaftaran</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('seleksi-berkas.index') }}" class="nav-link">
+            <i class="fas fa-file-alt nav-icon"></i>
+            <p>Formulir Berkas</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('laporan.index') }}" class="nav-link">
+            <i class="fas fa-file nav-icon"></i>
+            <p>Laporan Pendaftaran</p>
+          </a>
+        </li>
+        @endif
 
-      @if (auth()->user()->role_name === 'Admin')
-      <li class="nav-item">
-        <a href="{{ route('subjects.index') }}" class="nav-link">
-          <i class="fas fa-book-reader nav-icon"></i> <!-- Change to subject rekap icon -->
-          <p>Kelas & Pelajaran</p>
-        </a>
-      </li>
-      @endif
-      @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'siswa'|| auth()->user()->role_name === 'Admin'|| auth()->user()->role_name === 'Orang Tua')
-      <li class="nav-item">
-        <a href="{{ route('mata-pelajaran.index') }}" class="nav-link">
-          <i class="fas fa-clock nav-icon"></i> <!-- Change to class schedule icon -->
-          <p>Jadwal Pelajaran</p>
-        </a>
-      </li>
-      @endif
-    </ul>
-  </li>    
+        @if (in_array(auth()->user()->role_name, ['guru', 'Admin']))
+        <li class="nav-item">
+          <a href="{{ route('guru.index') }}" class="nav-link">
+            <i class="fas fa-chalkboard-teacher nav-icon"></i>
+            <p>Data Guru</p>
+          </a>
+        </li>
+        @endif
 
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-book"></i> <!-- Change to library book icon -->
-      <p>
-        Perpustakan
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ route('buku.index') }}" class="nav-link">
-          <i class="fas fa-bookmark nav-icon"></i> <!-- Change to bookmark icon -->
-          <p>Data Buku</p>
-        </a>
-      </li>
-    </ul>
-  </li>
+        @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin']))
+        <li class="nav-item">
+          <a href="{{ route('profil_siswa.index') }}" class="nav-link">
+            <i class="fas fa-user-graduate nav-icon"></i>
+            <p>Data Siswa</p>
+          </a>
+        </li>
+        @endif
 
-  @if (auth()->user()->role_name === 'siswa' || auth()->user()->role_name === 'Admin')
-  <li class="nav-header mt-2 py-2">-PPDB</li>
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-user-check"></i> <!-- Change to student registration icon -->
-      <p>
-        PPDB
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ route('formulir.index') }}" class="nav-link">
-          <i class="fas fa-edit nav-icon"></i> <!-- Change to edit icon for forms -->
-          <p>Pendaftaran</p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="{{ route('seleksi-berkas.index') }}" class="nav-link">
-          <i class="fas fa-file-alt nav-icon"></i> <!-- Change to file icon for documents -->
-          <p>Formulir Berkas</p>
-        </a>
-      </li>                
-      <li class="nav-item">
-        <a href="{{ route('laporan.index') }}" class="nav-link">
-          <i class="fas fa-file nav-icon"></i> <!-- Change to report icon -->
-          <p>Laporan Pendaftaran</p>
-        </a>
-      </li>
-    </ul>
-  </li> 
-  @endif
+        @if (auth()->user()->role_name === 'Admin')
+        <li class="nav-item">
+          <a href="{{ route('pengumuman.index') }}" class="nav-link">
+            <i class="fas fa-bullhorn nav-icon"></i>
+            <p>Data Pengumuman</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('faq.index') }}" class="nav-link">
+            <i class="fas fa-question-circle nav-icon"></i>
+            <p>Data FAQ</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('kontak-informasi.index') }}" class="nav-link">
+            <i class="fas fa-phone-alt nav-icon"></i>
+            <p>Kontak Informasi</p>
+          </a>
+        </li>
+        @endif
+      </ul>
+    </li>
 
-  <li class="nav-header mt-2 py-2">- Logout </li>
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-sign-out-alt"></i> <!-- Change to sign-out icon -->
-      <p>
-        Keluar
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
-          <i class="fas fa-power-off nav-icon"></i> <!-- Change to power off icon for logout -->
-          <p>Keluar</p>
-        </a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-          @csrf
-        </form>
-      </li>
-    </ul>
-  </li>
+    @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin']))
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-calendar-check"></i>
+        <p>Laporan Absensi<i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('absensi.laporan') }}" class="nav-link {{ request()->routeIs('absensi.laporan') ? 'active' : '' }}">
+            <i class="fas fa-list nav-icon"></i>
+            <p>Laporan Absensi</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+    @endif
+
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-calendar-alt"></i>
+        <p>Kalender Akademik<i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ url('fullcalender') }}" class="nav-link">
+            <i class="fas fa-calendar nav-icon"></i>
+            <p>Kalender</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin']))
+    <li class="nav-header mt-2 py-2">Pembelajaran Sekolah</li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-book-open"></i>
+        <p>Media Pembelajaran<i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('materi.index') }}" class="nav-link">
+            <i class="fas fa-book nav-icon"></i>
+            <p>Materi</p>
+          </a>
+        </li>
+
+        @if (in_array(auth()->user()->role_name, ['guru', 'siswa']))
+        <li class="nav-item">
+          <a href="{{ route('tugas.index') }}" class="nav-link">
+            <i class="fas fa-tasks nav-icon"></i>
+            <p>Tugas</p>
+          </a>
+        </li>
+        @endif
+
+        @if (auth()->user()->role_name === 'Admin')
+        <li class="nav-item">
+          <a href="{{ route('subjects.index') }}" class="nav-link">
+            <i class="fas fa-book-reader nav-icon"></i>
+            <p>Kelas & Pelajaran</p>
+          </a>
+        </li>
+        @endif
+
+        @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin', 'Orang Tua']))
+        <li class="nav-item">
+          <a href="{{ route('mata-pelajaran.index') }}" class="nav-link">
+            <i class="fas fa-clock nav-icon"></i>
+            <p>Jadwal Pelajaran</p>
+          </a>
+        </li>
+        @endif
+      </ul>
+    </li>
+    @endif
+
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-book"></i>
+        <p>Perpustakaan<i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('buku.index') }}" class="nav-link">
+            <i class="fas fa-bookmark nav-icon"></i>
+            <p>Data Buku</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    {{-- @if (in_array(auth()->user()->role_name, ['siswa', 'Admin']))
+    <li class="nav-header mt-2 py-2">- PPDB</li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-user-check"></i>
+        <p>PPDB<i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('formulir.index') }}" class="nav-link">
+            <i class="fas fa-edit nav-icon"></i>
+            <p>Pendaftaran</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('seleksi-berkas.index') }}" class="nav-link">
+            <i class="fas fa-file-alt nav-icon"></i>
+            <p>Formulir Berkas</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('laporan.index') }}" class="nav-link">
+            <i class="fas fa-file nav-icon"></i>
+            <p>Laporan Pendaftaran</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+    @endif --}}
+
+    <li class="nav-header mt-2 py-2">- Logout</li>
+    <li class="nav-item">
+      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
+        <i class="nav-icon fas fa-sign-out-alt"></i>
+        <p>Keluar</p>
+      </a>
+      <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+      </form>
+    </li>
 
   </ul>
 </nav>

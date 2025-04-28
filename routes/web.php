@@ -40,7 +40,10 @@ Route::get('/', function () {
 
 // Rute untuk halaman home yang akan memanggil HomeController
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::resource('registrasi', RegistrasiController::class);
+
+Route::middleware(['auth', 'isAdmin'])->group(function () {
+    Route::resource('registrasi', RegistrasiController::class);
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('buku', BukuController::class);
@@ -53,7 +56,7 @@ Route::controller(FullCalenderController::class)->group(function () {
     Route::post('fullcalenderAjax', 'ajax');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::resource('subjects', SubjectController::class);
 });
 // bagian subject

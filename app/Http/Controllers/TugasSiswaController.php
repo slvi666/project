@@ -10,65 +10,72 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 
 class TugasSiswaController extends Controller
 {
     public function index()
-    {
-        // Cek peran pengguna yang login
-        if (auth()->user()->role_name === 'siswa') {
-            // Jika yang login adalah siswa, ambil tugas yang terkait dengan siswa tersebut
-            $tugas = TugasSiswa::with('siswa', 'guru', 'subject')
-                ->where('siswa_id', auth()->user()->id) // filter berdasarkan siswa_id
-                ->latest()
-                ->get();
-        } elseif (auth()->user()->role_name === 'guru') {
-            // Jika yang login adalah guru, ambil tugas yang terkait dengan guru tersebut
-            $guruId = auth()->user()->guru->id; // Ambil ID guru berdasarkan user_id
-            $tugas = TugasSiswa::with('siswa', 'guru', 'subject')
-                ->where('guru_id', $guruId) // filter berdasarkan guru_id
-                ->latest()
-                ->get();
-        } else {
-            // Jika bukan siswa atau guru, ambil semua tugas
-            $tugas = TugasSiswa::with('siswa', 'guru', 'subject')->latest()->get();
-        }
-
-        return view('tugas.index', compact('tugas'));
+{
+    if (auth()->user()->role_name === 'siswa') {
+        $siswaId = auth()->user()->siswa->id;
+        $tugas = TugasSiswa::with('siswa', 'guru', 'subject')
+        ->where('siswa_id', $siswaId)
+        ->latest()
+        ->get();
+        // dd($siswaId);   
+    } elseif (auth()->user()->role_name === 'guru') {
+        $guruId = auth()->user()->guru->id;
+        $tugas = TugasSiswa::with('siswa', 'guru', 'subject')
+            ->where('guru_id', $guruId)
+            ->latest()
+            ->get();
+    } else {
+        $tugas = TugasSiswa::with('siswa', 'guru', 'subject')->latest()->get();
     }
+    // dd($tugas);
 
+    return view('tugas.index', compact('tugas'));
+}
 
-    public function create()
-    {
-        $siswa = Siswa::all();
-        $guru = Guru::all();
-        $subject = Subject::all();
-        return view('tugas.create', compact('siswa', 'guru', 'subject'));
-    }
+public function create()
+{
+    $siswa = Siswa::all();
+    $guru = Guru::all();
+    $subject = Subject::all();
+    $authGuruId = Auth::user()->guru_id; // Assuming the user has a `guru_id` column
+
+    return view('tugas.create', compact('siswa', 'guru', 'subject', 'authGuruId'));
+}
+
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'siswa_id' => 'required',
-            'guru_id' => 'required',
-            'subject_id' => 'required',
-            'judul_tugas' => 'required',
-            'tanggal_diberikan' => 'required|date',
-            'deadline' => 'required|date',
-            'file_soal' => 'nullable|file|mimes:pdf,doc,docx',
-            'nilai_tugas' => 'nullable|integer', // Tambahan validasi nilai
-        ]);
+{
+    $request->validate([
+        'siswa_id' => 'required|array', // Memastikan siswa_id adalah array
+        'siswa_id.*' => 'exists:siswa,id', // Validasi ID siswa yang dipilih ada di database
+        'guru_id' => 'required',
+        'subject_id' => 'required',
+        'judul_tugas' => 'required',
+        'tanggal_diberikan' => 'required|date',
+        'deadline' => 'required|date',
+        'file_soal' => 'nullable|file|mimes:pdf,doc,docx',
+        'nilai_tugas' => 'nullable|integer',
+    ]);
 
-        $data = $request->all();
+    $data = $request->except('siswa_id'); // Menyimpan data selain siswa_id
 
-        if ($request->hasFile('file_soal')) {
-            $data['file_soal'] = $request->file('file_soal')->store('tugas', 'public');
-        }
-
-        TugasSiswa::create($data);
-
-        return redirect()->route('tugas.index')->with('success', 'Tugas berhasil ditambahkan');
+    if ($request->hasFile('file_soal')) {
+        $data['file_soal'] = $request->file('file_soal')->store('tugas', 'public');
     }
+
+    foreach ($request->siswa_id as $siswaId) {
+        // Simpan tugas untuk setiap siswa
+        TugasSiswa::create(array_merge($data, ['siswa_id' => $siswaId]));
+    }
+
+    return redirect()->route('tugas.index')->with('success', 'Tugas berhasil ditambahkan');
+}
 
 
     public function edit($id)
@@ -82,6 +89,7 @@ class TugasSiswaController extends Controller
 
     public function update(Request $request, $id)
     {
+        
         $tugas = TugasSiswa::findOrFail($id);
 
         $request->validate([

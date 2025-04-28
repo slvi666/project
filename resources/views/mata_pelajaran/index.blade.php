@@ -98,18 +98,34 @@
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $item->subject->subject_name }}</td>
                 <td>{{ $item->subject->class_name }}</td>
-                <td>{{ $item->guru->name }}</td>
+                <td class="text-center">
+                  @if($item->guru)
+                    <span class="badge bg-success">{{ $item->guru->name }}</span> <!-- Jika ada guru, tampilkan dengan badge hijau -->
+                  @else
+                    <span class="badge bg-secondary">-</span> <!-- Jika tidak ada guru, tampilkan badge abu-abu -->
+                  @endif
+                </td>
                 <td>{{ $item->hari }}</td>
-                <td>{{ $item->waktu_mulai }} - {{ $item->waktu_berakhir }}</td>
+                <td>{{ substr($item->waktu_mulai, 0, 5) }} - {{ substr($item->waktu_berakhir, 0, 5) }}</td>
                 <td>
                   @if (auth()->user()->role_name === 'Admin')
                   <a href="#" class="btn btn-warning btn-sm rounded-pill"
                     onclick="confirmNavigate('{{ route('mata-pelajaran.edit', $item->id) }}', 'Edit data ini?')">
                     <i class="fas fa-edit me-1"></i> Edit
                   </a>
+                  <!-- Tombol Hapus -->
+                  <button type="button" class="btn btn-danger btn-sm mt-1 rounded-pill" onclick="hapusData({{ $item->id }})">
+                    <i class="fas fa-trash-alt me-1"></i> Hapus
+                  </button>
+                  <form id="delete-form-{{ $item->id }}" action="{{ route('mata-pelajaran.destroy', $item->id) }}" method="POST" style="display: none;">
+                    @csrf
+                    @method('DELETE')
+                  </form>
                   @endif
                   @if (auth()->user()->role_name === 'guru')
-                    <a href="{{ route('absensi.create', $item->id) }}" class="btn btn-primary btn-sm mt-1 rounded-pill">Input Absensi</a>
+                    <button type="button" class="btn btn-primary btn-sm mt-1 rounded-pill" onclick="konfirmasiAbsensi('{{ route('absensi.create', $item->id) }}')">
+                      Input Absensi
+                    </button>
                   @endif
                   <a href="#" class="btn btn-info btn-sm mt-1 rounded-pill"
                     onclick="confirmNavigate('{{ route('absensi.index', $item->id) }}', 'Lihat absensi kelas ini?')">
@@ -194,20 +210,22 @@
     filterAll();
   });
 
-  // function confirmDelete(form) {
-  //   Swal.fire({
-  //     title: 'Yakin ingin menghapus?',
-  //     text: "Data ini akan hilang secara permanen!",
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Ya, hapus!',
-  //     cancelButtonText: 'Batal'
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       form.submit();
-  //     }
-  //   });
-  // }
+  function hapusData(id) {
+    Swal.fire({
+      title: 'Yakin ingin menghapus?',
+      text: "Data yang dihapus tidak bisa dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('delete-form-' + id).submit();
+      }
+    });
+  }
 
   function confirmNavigate(url, message = 'Yakin ingin melanjutkan?') {
     Swal.fire({
@@ -218,6 +236,23 @@
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  }
+
+  function konfirmasiAbsensi(url) {
+    Swal.fire({
+      title: 'Input Absensi?',
+      text: "Anda akan masuk ke halaman input absensi!",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Lanjut',
       cancelButtonText: 'Batal'
     }).then((result) => {
       if (result.isConfirmed) {

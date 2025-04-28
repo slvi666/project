@@ -53,14 +53,18 @@
 
             <div class="mb-3">
               <label for="siswa_ids" class="form-label">Siswa</label>
-              <select name="siswa_ids[]" class="form-control" multiple required>
+              <div>
                 @foreach ($siswa as $s)
-                  <option value="{{ $s->id }}" {{ in_array($s->id, $data->siswa_ids) ? 'selected' : '' }}>
-                    {{ $s->user->name }}
-                  </option>
+                  <div class="form-check">
+                    <input type="checkbox" name="siswa_ids[]" class="form-check-input" value="{{ $s->id }}"
+                      {{ in_array($s->id, $data->siswa_ids) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="siswa_ids">
+                      {{ $s->user->name }}
+                    </label>
+                  </div>
                 @endforeach
-              </select>
-            </div>
+              </div>
+            </div>            
 
             <div class="mb-3">
               <label>Waktu Mulai</label>

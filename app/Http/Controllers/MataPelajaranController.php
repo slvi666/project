@@ -55,6 +55,25 @@ class MataPelajaranController extends Controller
             'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
         ]);
 
+        // Cek apakah ada jadwal bentrok
+    $bentrok = MataPelajaran::where('hari', $request->hari)
+    ->where('guru_id', $request->guru_id)
+    ->where(function($query) use ($request) {
+        $query->whereBetween('waktu_mulai', [$request->waktu_mulai, $request->waktu_berakhir])
+              ->orWhereBetween('waktu_berakhir', [$request->waktu_mulai, $request->waktu_berakhir])
+              ->orWhere(function($query) use ($request) {
+                  $query->where('waktu_mulai', '<=', $request->waktu_mulai)
+                        ->where('waktu_berakhir', '>=', $request->waktu_berakhir);
+              });
+    })
+    ->exists();
+    // dd($bentrok);
+
+
+if ($bentrok) {
+    return back()->withErrors(['msg' => 'Jadwal bentrok dengan jadwal lain.'])->withInput();
+}
+
         MataPelajaran::create([
             'subject_id' => $request->subject_id,
             'guru_id' => $request->guru_id,
@@ -89,6 +108,23 @@ class MataPelajaranController extends Controller
             'waktu_berakhir' => 'required',
             'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
         ]);
+        $bentrok = MataPelajaran::where('hari', $request->hari)
+        ->where('guru_id', $request->guru_id)
+        ->where(function($query) use ($request) {
+            $query->whereBetween('waktu_mulai', [$request->waktu_mulai, $request->waktu_berakhir])
+                  ->orWhereBetween('waktu_berakhir', [$request->waktu_mulai, $request->waktu_berakhir])
+                  ->orWhere(function($query) use ($request) {
+                      $query->where('waktu_mulai', '<=', $request->waktu_mulai)
+                            ->where('waktu_berakhir', '>=', $request->waktu_berakhir);
+                  });
+        })
+        ->exists();
+        // dd($bentrok);
+    
+    
+    if ($bentrok) {
+        return back()->withErrors(['msg' => 'Jadwal bentrok dengan jadwal lain.'])->withInput();
+    }
 
         $data = MataPelajaran::findOrFail($id);
         $data->update([
