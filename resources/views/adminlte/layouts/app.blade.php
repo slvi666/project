@@ -150,7 +150,7 @@ body {
         <p>Data<i class="right fas fa-angle-left"></i></p>
       </a>
       <ul class="nav nav-treeview">
-        @if (in_array(auth()->user()->role_name, ['siswa', 'Admin', 'calon_siswa']))
+        @if (in_array(auth()->user()->role_name, ['siswa', 'calon_siswa']))
         <li class="nav-item">
           <a href="{{ route('formulir.index') }}" class="nav-link">
             <i class="fas fa-calendar nav-icon"></i>
@@ -304,7 +304,7 @@ body {
       </ul>
     </li>
 
-    {{-- @if (in_array(auth()->user()->role_name, ['siswa', 'Admin']))
+    @if (in_array(auth()->user()->role_name, [ 'Admin']))
     <li class="nav-header mt-2 py-2">- PPDB</li>
     <li class="nav-item">
       <a href="#" class="nav-link">
@@ -332,7 +332,7 @@ body {
         </li>
       </ul>
     </li>
-    @endif --}}
+    @endif
 
     <li class="nav-header mt-2 py-2">- Logout</li>
     <li class="nav-item">
