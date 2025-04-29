@@ -70,17 +70,17 @@
                         <td>{{ $formulir->user->name }}</td>
                         <td>{{ $formulir->user->email }}</td>
                         <td>{{ $formulir->nik }}</td>
-                        <td>{{ $formulir->tempat_lahir }}, {{ $formulir->tanggal_lahir }}</td>
+                        <td>{{ $formulir->tempat_lahir }}, {{ \Carbon\Carbon::parse($formulir->tanggal_lahir)->format('d-m-Y') }}</td>
                         <td>{{ $formulir->jenis_kelamin }}</td>
                         <td>{{ $formulir->no_hp }}</td>
                         <td class="text-center">
                           <span class="badge 
-    {{ 
-      $formulir->status === 'Lulus' ? 'bg-success' : 
-      ($formulir->status === 'Tidak Lulus' ? 'bg-danger' : 'bg-primary') 
-    }}">
-    {{ $formulir->status }}
-  </span>
+                          {{ 
+                            $formulir->status === 'Lulus' ? 'bg-success' : 
+                            ($formulir->status === 'Tidak Lulus' ? 'bg-danger' : 'bg-primary') 
+                          }}">
+                          {{ $formulir->status }}
+                        </span>
                         </td>
                         <td class="text-center">
                           <a href="javascript:void(0);" 

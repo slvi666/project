@@ -42,13 +42,13 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="#hero" class="active">Home</a></li>
-          <li><a href="#about">About</a></li>
+          <li><a href="#hero" class="active">Beranda</a></li>
+          <li><a href="#about">Tentang Kami</a></li>
           {{-- <li><a href="#features">Features</a></li> --}}
-          <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#team">Team</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <a href="{{ route('login') }}" class="btn btn-primary text-light rounded-pill py-2 px-4 ms-3">Login</a>
+          <li><a href="#gallery">Dokumentasi</a></li>
+          <li><a href="#team">Pengajar</a></li>
+          <li><a href="#contact">Kontak</a></li>
+          <a href="{{ route('login') }}" class="btn btn-primary text-light rounded-pill py-2 px-4 ms-3">Masuk</a>
           {{-- <a href="{{ route('register') }}" class="btn btn-light text-dark rounded-pill py-2 px-4 ms-3">Daftar</a> --}}
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -112,9 +112,9 @@
             Kami menghadirkan sistem modern untuk mendukung pengelolaan sekolah — dari administrasi dan akademik. 
             Berbasis teknologi terkini, kami berkomitmen meningkatkan mutu pendidikan menuju masa depan yang lebih cerah.
           </p>
-          <a href="{{ route('login') }}" class="btn btn-primary">
+          {{-- <a href="{{ route('login') }}" class="btn btn-primary">
             Selengkapnya <i class="bi bi-arrow-right ms-2"></i>
-          </a>
+          </a> --}}
         </div>
       </div>
 
@@ -324,93 +324,90 @@
 
     </section><!-- /Stats Section -->
 
- <!-- Visi dan Misi Section -->
-<section id="visi-misi" class="details section" style="background: #f9f9f9; padding: 60px 0;">
+    <!-- Visi dan Misi Section -->
+    <section id="visi-misi" class="details section" style="background: #f9f9f9; padding: 60px 0;">
 
-  <!-- Section Title -->
-  <div class="container section-title text-center" data-aos="fade-up">
-    <h2 class="mb-3">Visi dan Misi</h2>
-    <p class="description">
-      Membentuk insan berilmu, beriman, dan berakhlakul karimah yang mampu menghadapi tantangan global.
-    </p>
-  </div>
-  <!-- End Section Title -->
+      <!-- Section Title -->
+      <div class="text-center mb-5">
+        <h2 class="fw-bold">Visi Misi</h2>
+        <p class="text-muted">Membentuk generasi unggul dengan nilai Qur'ani dan penguasaan IPTEK</p>
+    </div>
+      <!-- End Section Title -->
 
-  <div class="container">
+      <div class="container">
 
-    <!-- Visi -->
-<div class="row gy-5 align-items-center mb-5">
-  <div class="col-md-6" data-aos="fade-right" data-aos-delay="100">
-    <img src="{{ asset('main/assets/img/detai-4.png') }}" class="img-fluid rounded shadow" alt="Visi MTSS AL-MUNAWAROH">
-  </div>
-  <div class="col-md-6" data-aos="fade-left" data-aos-delay="200">
-    <div class="visi-box bg-white p-4 rounded shadow">
-      <h3 class="mb-3">Visi</h3> <!-- Hapus text-primary juga kalau mau benar-benar netral -->
-      <p class="fst-italic fs-5">
-        <strong>"Mewujudkan generasi rabbani,</strong> berjiwa Qur’ani yang berbekal Iman dan Taqwa (IMTAQ) serta Ilmu Pengetahuan dan Teknologi (IPTEK)."
-      </p>
+        <!-- Visi -->
+        <div class="row gy-5 align-items-center mb-5">
+          <div class="col-md-6" data-aos="fade-right" data-aos-delay="100">
+            <img src="{{ asset('main/assets/img/visi.png') }}" class="img-fluid rounded-4 shadow" alt="Visi MTSS AL-MUNAWAROH">
+          </div>
+          <div class="col-md-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="visi-box bg-white p-5 rounded-4 shadow-sm">
+              <h3 class="mb-4 text-primary">Visi</h3>
+              <p class="fst-italic fs-5">
+                <strong>"Mewujudkan generasi rabbani,</strong> berjiwa Qur’ani yang berbekal Iman dan Taqwa (IMTAQ) serta Ilmu Pengetahuan dan Teknologi (IPTEK)."
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- End Visi -->
+
+       <!-- Misi -->
+<div class="row gy-5 text-center" data-aos="fade-up" data-aos-delay="300">
+  <h3 class="mb-5 text-primary">Misi</h3>
+
+  <!-- Misi Item 1 -->
+  <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+    <div class="card mission-card h-100 p-4 border-0 rounded-4 shadow-sm" data-color="danger">
+      <div class="icon mb-3 text-danger fs-1">
+        <i class="bi bi-heart-fill"></i>
+      </div>
+      <h5 class="card-title mb-3">Inovasi Belajar</h5>
+      <p class="card-text small">Menjadi lembaga pendidikan yang kompeten.</p>
     </div>
   </div>
+
+  <!-- Misi Item 2 -->
+  <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+    <div class="card mission-card h-100 p-4 border-0 rounded-4 shadow-sm" data-color="warning">
+      <div class="icon mb-3 text-warning fs-1">
+        <i class="bi bi-lightbulb-fill"></i>
+      </div>
+      <h5 class="card-title mb-3">Profesionalisme</h5>
+      <p class="card-text small">Meningkatkan profesionalisme kinerja tenaga pendidik dan kependidikan.</p>
+    </div>
+  </div>
+
+  <!-- Misi Item 3 -->
+  <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+    <div class="card mission-card h-100 p-4 border-0 rounded-4 shadow-sm" data-color="success">
+      <div class="icon mb-3 text-success fs-1">
+        <i class="bi bi-award-fill"></i>
+      </div>
+      <h5 class="card-title mb-3">Nilai Islami</h5>
+      <p class="card-text small">Menginternalisasikan nilai-nilai Islami dalam pembelajaran.</p>
+    </div>
+  </div>
+
+  <!-- Misi Item 4 -->
+  <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+    <div class="card mission-card h-100 p-4 border-0 rounded-4 shadow-sm" data-color="primary">
+      <div class="icon mb-3 text-primary fs-1">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <h5 class="card-title mb-3">Pelayanan Berkualitas</h5>
+      <p class="card-text small">Memberikan layanan pendidikan Islami yang berkualitas.</p>
+    </div>
+  </div>
+
 </div>
-<!-- End Visi -->
+<!-- End Misi -->
 
-
-    <!-- Misi -->
-    <div class="row gy-4 text-center" data-aos="fade-up" data-aos-delay="300">
-
-      <h3 class="mb-5">Misi</h3>
-
-      <!-- Misi Item 1 -->
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-        <div class="card p-4 border-0 shadow-sm h-100">
-          <div class="icon mb-3">
-            <i class="bi bi-heart-fill text-danger fs-1"></i>
-          </div>
-          <h5 class="card-title">Inovasi Belajar</h5>
-          <p class="card-text">1.	Menjadi lembaga pendidikan yang kompeten.</p>
-        </div>
       </div>
 
-      <!-- Misi Item 2 -->
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-        <div class="card p-4 border-0 shadow-sm h-100">
-          <div class="icon mb-3">
-            <i class="bi bi-lightbulb-fill text-warning fs-1"></i>
-          </div>
-          <h5 class="card-title">Inovasi Belajar</h5>
-          <p class="card-text">2.	Meningkatkan Profesionalisme kinerja Tenaga Pendidik dan Tenaga Kependdikan</p>
-        </div>
-      </div>
+    </section>
+    <!-- End Visi dan Misi Section -->
 
-      <!-- Misi Item 3 -->
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
-        <div class="card p-4 border-0 shadow-sm h-100">
-          <div class="icon mb-3">
-            <i class="bi bi-award-fill text-success fs-1"></i>
-          </div>
-          <h5 class="card-title">Prestasi Global</h5>
-          <p class="card-text">3.	Menginternalisasikan nilai-nilai Islami dalam pembelajaran.</p>
-        </div>
-      </div>
-
-      <!-- Misi Item 4 -->
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
-        <div class="card p-4 border-0 shadow-sm h-100">
-          <div class="icon mb-3">
-            <i class="bi bi-people-fill text-primary fs-1"></i>
-          </div>
-          <h5 class="card-title">Kepedulian Sosial</h5>
-          <p class="card-text">4.	Memberikan layanan pendidikan Islami dan yang berkualitas.</p>
-        </div>
-      </div>
-
-    </div>
-    <!-- End Misi -->
-
-  </div>
-
-</section>
-<!-- End Visi dan Misi Section -->
 
     <!-- Gallery Section -->
     <section id="gallery" class="gallery section">
@@ -418,7 +415,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Gallery</h2>
-        <div><span>Check Our</span> <span class="description-title">Gallery</span></div>
+        <div><span>Dokumentasi</span> <span class="description-title">Sekolah</span></div>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -613,8 +610,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Team</h2>
-        <div><span>Check Our</span> <span class="description-title">Team</span></div>
+        <h2>Pengajar</h2>
+        <div><span>Team</span> <span class="description-title">Pengajar</span></div>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -778,7 +775,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Contact</h2>
-        <div><span>Check Our</span> <span class="description-title">Contact</span></div>
+        <div><span>Hubungi</span> <span class="description-title">Kami</span></div>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade" data-aos-delay="100">
@@ -837,7 +834,7 @@
                   <div class="error-message"></div>
                   <div class="sent-message">Your message has been sent. Thank you!</div>
 
-                  <button type="submit">Send Message</button>
+                  <button type="submit">Kirim</button>
                 </div>
 
               </div>
@@ -941,5 +938,43 @@
     <script src="{{ asset('main/assets/js/main.js') }}"></script>
 
 </body>
+<style>
+  /* Efek Umum Hover */
+  .mission-card {
+    transition: all 0.4s ease;
+  }
 
+  .mission-card:hover {
+    transform: translateY(-10px) scale(1.05);
+  }
+
+  /* Efek Glow Berdasarkan data-color */
+  .mission-card[data-color="danger"]:hover {
+    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4); /* red */
+  }
+  
+  .mission-card[data-color="warning"]:hover {
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4); /* yellow */
+  }
+  
+  .mission-card[data-color="success"]:hover {
+    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4); /* green */
+  }
+  
+  .mission-card[data-color="primary"]:hover {
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.4); /* blue */
+  }
+  .section-title h2 {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+  .section-title .description-title {
+    color: #0d6efd; /* Bootstrap primary color */
+  }
+  .section-title div {
+    font-size: 1.1rem;
+    margin-top: 10px;
+  }
+  
+</style>
 </html>

@@ -69,9 +69,9 @@
 
         @if (Route::has('password.request'))
           <p class="mb-2 text-center">
-            <a href="{{ route('password.request') }}" class="text-secondary">
+            {{-- <a href="{{ route('password.request') }}" class="text-secondary">
               <i class="fas fa-key mr-1"></i> Lupa Password?
-            </a>
+            </a> --}}
           </p>
         @endif
 
