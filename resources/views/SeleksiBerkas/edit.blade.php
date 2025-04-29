@@ -82,6 +82,7 @@
                     <div class="form-group">
                       <label for="user_id" class="font-weight-semibold text-dark">Nama Pengguna</label>
                       <input type="text" name="user_id" value="{{ auth()->user()->id }}" hidden>
+                      <input type="hidden" name="formulir_pendaftaran_id" value="{{ $seleksiBerkas->formulir_pendaftaran_id }}">
                       <input type="text" class="form-control rounded-pill" value="{{ auth()->user()->name }}" readonly>
                     </div>
 

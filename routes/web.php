@@ -59,6 +59,8 @@ Route::controller(FullCalenderController::class)->group(function () {
 Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::resource('subjects', SubjectController::class);
 });
+Route::put('seleksi-berkas/{seleksiBerkas}', [SeleksiBerkasController::class, 'update'])->name('seleksi-berkas.update');
+
 // bagian subject
 
 Route::middleware(['auth'])->group(function () {
