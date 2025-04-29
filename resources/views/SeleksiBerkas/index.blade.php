@@ -30,11 +30,12 @@
               <div class="mb-3 d-flex justify-content-between align-items-center">
                 <!-- Search Input on Left -->
                 <input type="text" id="searchBerkas" class="form-control w-50 shadow-sm rounded-pill px-3" placeholder="🔍 Cari...">
-                
+                @if (auth()->user()->role_name === 'calon_siswa')
                 <!-- Add Data Button on Right -->
                 <a href="{{ route('seleksi-berkas.create') }}" class="btn btn-primary shadow-sm rounded-pill ms-3">
                   <i class="fas fa-plus-circle me-1"></i> Tambah Data
                 </a>
+                @endif
               </div>
 
               <div class="table-responsive">
@@ -57,9 +58,11 @@
                           <a href="{{ route('seleksi-berkas.show', $item->id) }}" class="btn btn-info btn-sm rounded-pill me-1 shadow-sm">
                             <i class="fas fa-eye"></i> Lihat
                           </a>
+                          @if (auth()->user()->role_name === 'calon_siswa')
                           <a href="{{ route('seleksi-berkas.edit', $item->id) }}" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm">
                             <i class="fas fa-edit"></i> Edit
                           </a>
+                          @endif
                         </td>
                         
                       </tr>

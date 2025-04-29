@@ -13,9 +13,16 @@ class SeleksiBerkasController extends Controller
     // Menampilkan semua data seleksi berkas
     public function index()
     {
-        $data = SeleksiBerkas::with(['user', 'formulirPendaftaran'])
-            ->orderBy('created_at', 'desc') // Opsional: urutkan berdasarkan tanggal terbaru
-            ->paginate(10); // Menampilkan 10 data per halaman
+        $user = Auth::user();
+
+        $query = SeleksiBerkas::with(['user', 'formulirPendaftaran'])
+            ->orderBy('created_at', 'desc');
+
+        if ($user->role_name === 'calon_siswa') {
+            $query->where('user_id', $user->id); // hanya data milik user ini
+        }
+
+        $data = $query->paginate(10);
     
         return view('SeleksiBerkas.index', compact('data'));
     }
