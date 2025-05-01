@@ -120,7 +120,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   document.getElementById('absensiForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
 
     Swal.fire({
       title: 'Simpan Absensi?',
@@ -132,8 +132,18 @@
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // Submit the form if confirmed
         this.submit();
+      }
+    });
+  });
+
+  // Tambah efek aktif di baris tabel saat radio dipilih
+  document.querySelectorAll('.btn-check').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const row = this.closest('tr');
+      if (row) {
+        row.classList.add('table-active');
+        setTimeout(() => row.classList.remove('table-active'), 500);
       }
     });
   });

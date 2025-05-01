@@ -64,6 +64,54 @@
                                                         <label>Deskripsi</label>
                                                         <textarea name="deskripsi" class="form-control">{{ $tugas->deskripsi }}</textarea>
                                                     </div>
+                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card">
+                                            <div class="card-header" id="headingTwo">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                        <i class="fas fa-users"></i> Informasi Tugas
+                                                    </button>
+                                                </h5>
+                                            </div>
+                                        
+                                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#taskAccordion">
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label>Siswa</label><br>
+                                                        @foreach($siswa as $s)
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="siswa_id[]" value="{{ $s->id }}" 
+                                                                    id="siswa_{{ $s->id }}" 
+                                                                    @if(in_array($s->id, $tugas->siswa->pluck('id')->toArray())) checked @endif>
+                                                                <label class="form-check-label" for="siswa_{{ $s->id }}">
+                                                                    {{ $s->user->name ?? '-' }} ({{ $s->subject->class_name }})
+                                                                </label>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>                                                
+                                        
+                                                    <div class="form-group">
+                                                        <label>Guru</label>
+                                                        <input type="hidden" name="guru_id" value="{{ auth()->user()->guru->id }}">
+                                                        <input type="text" class="form-control" value="{{ auth()->user()->guru->nama_guru }}" readonly>
+                                                    </div>
+                                        
+                                                    <div class="form-group">
+                                                        <label>Mata Pelajaran</label>
+                                                        <select name="subject_id" class="form-control" required>
+                                                            <option value="">-- Pilih Mapel --</option>
+                                                            @foreach($subject as $sub)
+                                                                <option value="{{ $sub->id }}" 
+                                                                    @if($sub->id == $tugas->subject_id) selected @endif>
+                                                                    {{ $sub->subject_name }} - {{ $sub->class_name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -110,7 +158,9 @@
                                                         <label>File Soal (kosongkan jika tidak diganti)</label>
                                                         <input type="file" name="file_soal" class="form-control">
                                                         @if($tugas->file_soal)
-                                                            <a href="{{ route('tugas.download.soal', $tugas->id) }}" class="btn btn-sm btn-info mt-2">Download File Soal</a>
+                                                            <a href="{{ asset('storage/' . $tugas->file_soal) }}" target="_blank" class="btn btn-sm btn-info mt-2">
+                                                                Lihat File Soal
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -131,7 +181,9 @@
                                     @endif
 
                                     @if($tugas->file_jawaban)
-                                        <a href="{{ route('tugas.download.jawaban', $tugas->id) }}" class="btn btn-sm btn-success mt-2">Download Jawaban</a>
+                                        <a href="{{ asset('storage/' . $tugas->file_jawaban) }}" target="_blank" class="btn btn-sm btn-success mt-2">
+                                            Lihat Jawaban
+                                        </a>
                                     @endif
                                 </div>
                             </div>

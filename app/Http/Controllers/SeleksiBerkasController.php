@@ -18,9 +18,10 @@ class SeleksiBerkasController extends Controller
         $query = SeleksiBerkas::with(['user', 'formulirPendaftaran'])
             ->orderBy('created_at', 'desc');
 
-        if ($user->role_name === 'calon_siswa') {
-            $query->where('user_id', $user->id); // hanya data milik user ini
-        }
+            if (!in_array($user->role_name, ['Admin'])) {
+                // Role selain admin hanya bisa melihat data milik sendiri
+                $query->where('user_id', $user->id);
+            }
 
         $data = $query->paginate(10);
     

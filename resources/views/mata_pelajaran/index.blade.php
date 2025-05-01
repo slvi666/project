@@ -36,13 +36,16 @@
             </script>
           @endif
 
-          <!-- Search + Add Button -->
-          <div class="row mb-3 d-flex justify-content-between align-items-center">
-            <div class="col-md-6">
+          <!-- Search + Reset + Add Button -->
+          <div class="row mb-3 align-items-center">
+            <div class="col-md-9 d-flex gap-2">
               <input type="text" id="search" placeholder="Cari Mata Pelajaran" class="form-control rounded-pill">
+              <button id="resetFilters" class="btn btn-info btn-sm rounded-pill">
+                <i class="fas fa-undo me-2"></i> Reset
+              </button>
             </div>
             @if (auth()->user()->role_name === 'Admin')
-            <div class="col-md-3 text-md-end mt-2 mt-md-0">
+            <div class="col-md-3 text-end mt-2 mt-md-0">
               <a href="#" class="btn btn-primary btn-sm rounded-pill"
                 onclick="confirmNavigate('{{ route('mata-pelajaran.create') }}', 'Tambah Mata Pelajaran?')">
                 <i class="fas fa-plus-circle me-2"></i> Tambah Mata Pelajaran
@@ -152,6 +155,14 @@
     let currentPage = 1;
     let rowsPerPage = 5;
     let pagination = document.getElementById("pagination");
+
+    document.getElementById("resetFilters").addEventListener("click", function () {
+    document.getElementById("filterMapel").value = "";
+    document.getElementById("filterKelas").value = "";
+    document.getElementById("filterGuru").value = "";
+    document.getElementById("search").value = "";
+    filterAll(); // Refresh tampilan tabel
+  });
 
     function showPage(page) {
       let start = (page - 1) * rowsPerPage + 1;

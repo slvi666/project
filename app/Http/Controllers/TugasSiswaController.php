@@ -88,30 +88,15 @@ public function create()
     }
 
     public function update(Request $request, $id)
-    {
-        
-        $tugas = TugasSiswa::findOrFail($id);
+{
+    $tugas = TugasSiswa::findOrFail($id);
+    $today = Carbon::now()->toDateString();
 
+    // Jika role adalah siswa
+    if (auth()->user()->role_name === 'siswa') {
         $request->validate([
-            'judul_tugas' => 'required',
-            'tanggal_diberikan' => 'required|date',
-            'deadline' => 'required|date',
-            'file_soal' => 'nullable|file|mimes:pdf,doc,docx',
             'file_jawaban' => 'nullable|file|mimes:pdf,doc,docx',
-            'nilai_tugas' => 'nullable|integer', // Tambahan validasi nilai
         ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('file_soal')) {
-            if ($tugas->file_soal) {
-                Storage::disk('public')->delete($tugas->file_soal);
-            }
-            $data['file_soal'] = $request->file('file_soal')->store('tugas', 'public');
-        }
-
-        // Cek deadline sebelum mengizinkan upload jawaban
-        $today = Carbon::now()->toDateString();
 
         if ($request->hasFile('file_jawaban')) {
             if ($today > $tugas->deadline) {
@@ -122,14 +107,52 @@ public function create()
                 Storage::disk('public')->delete($tugas->file_jawaban);
             }
 
-            $data['file_jawaban'] = $request->file('file_jawaban')->store('tugas', 'public');
-            $data['status'] = 'sudah_dikumpulkan';
+            $path = $request->file('file_jawaban')->store('tugas', 'public');
+            $tugas->file_jawaban = $path;
+            $tugas->status = 'sudah_dikumpulkan';
+            $tugas->save();
         }
 
-        $tugas->update($data);
-
-        return redirect()->route('tugas.index')->with('success', 'Tugas berhasil diperbarui');
+        return redirect()->route('tugas.index')->with('success', 'Jawaban berhasil diunggah');
     }
+
+    // Jika role adalah guru
+    $request->validate([
+        'judul_tugas' => 'required',
+        'tanggal_diberikan' => 'required|date',
+        'deadline' => 'required|date',
+        'file_soal' => 'nullable|file|mimes:pdf,doc,docx',
+        'file_jawaban' => 'nullable|file|mimes:pdf,doc,docx',
+        'nilai_tugas' => 'nullable|integer',
+    ]);
+
+    $data = $request->all();
+
+    if ($request->hasFile('file_soal')) {
+        if ($tugas->file_soal) {
+            Storage::disk('public')->delete($tugas->file_soal);
+        }
+        $data['file_soal'] = $request->file('file_soal')->store('tugas', 'public');
+    }
+
+    if ($request->hasFile('file_jawaban')) {
+        if ($today > $tugas->deadline) {
+            return redirect()->back()->with('error', 'Deadline telah lewat. Upload jawaban tidak diperbolehkan.');
+        }
+
+        if ($tugas->file_jawaban) {
+            Storage::disk('public')->delete($tugas->file_jawaban);
+        }
+
+        $data['file_jawaban'] = $request->file('file_jawaban')->store('tugas', 'public');
+        $data['status'] = 'sudah_dikumpulkan';
+    }
+
+    $tugas->update($data);
+
+    return redirect()->route('tugas.index')->with('success', 'Tugas berhasil diperbarui');
+}
+
 
 
     public function destroy($id)

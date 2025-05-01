@@ -77,9 +77,17 @@ class AbsensiController extends Controller
     {
         $mataPelajaran = MataPelajaran::with(['subject', 'guru'])->get(); // semua mata pelajaran
 
+        // Ambil semua nama kelas unik dari relasi subject
+        $kelasList = $mataPelajaran
+        ->pluck('subject.class_name')
+        ->filter()
+        ->unique()
+        ->sort()
+        ->values();
+
         $query = Absensi::with(['siswa.user', 'mataPelajaran.subject', 'mataPelajaran.guru']);
 
-        // Filter opsional
+        
         if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
         }
@@ -92,9 +100,16 @@ class AbsensiController extends Controller
             $query->where('mata_pelajaran_id', $request->mata_pelajaran_id);
         }
 
+        if ($request->filled('kelas')) {
+            $query->whereHas('mataPelajaran.subject', function ($q) use ($request) {
+                $q->where('class_name', $request->kelas);
+            });
+        }
+    
+
         $absensi = $query->orderBy('tanggal', 'desc')->get();
 
-        return view('absensi.laporan_absensi', compact('absensi', 'mataPelajaran'));
+        return view('absensi.laporan_absensi', compact('absensi', 'mataPelajaran', 'kelasList'));
     }
 
     public function cetak(Request $request, $id)

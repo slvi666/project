@@ -30,8 +30,12 @@
             <form method="GET" action="{{ route('absensi.laporan') }}" class="mb-4">
               <div class="row">
                 <div class="col-md-3">
-                  <label><i class="fas fa-calendar-alt"></i> Tanggal</label>
-                  <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="form-control">
+                  <label><i class="fas fa-calendar-alt"></i> Tanggal Mulai</label>
+                  <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="form-control">
+                </div>
+                <div class="col-md-3">
+                  <label><i class="fas fa-calendar-alt"></i> Tanggal Akhir</label>
+                  <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="form-control">
                 </div>
                 <div class="col-md-3">
                   <label><i class="fas fa-check-circle"></i> Status</label>
@@ -44,36 +48,60 @@
                   </select>
                 </div>
                 <div class="col-md-3">
-                    <label><i class="fas fa-book"></i> Mata Pelajaran</label>
-                    <select name="mata_pelajaran_id" class="form-control">
-                      <option value="">-- Semua --</option>
-                      @foreach($mataPelajaran as $mp)
-                        <option value="{{ $mp->id }}" {{ request('mata_pelajaran_id') == $mp->id ? 'selected' : '' }}>
-                          {{ optional($mp->subject)->subject_name ?? '-' }} - 
-                          {{ optional(optional($mp->guru)->user)->name ?? '-' }}
-                        </option>
-                      @endforeach
-                    </select>
-                  </div>
-                
+                  <label><i class="fas fa-book"></i> Mata Pelajaran</label>
+                  <select name="mata_pelajaran_id" class="form-control">
+                    <option value="">-- Semua --</option>
+                    @foreach($mataPelajaran as $mp)
+                      <option value="{{ $mp->id }}" {{ request('mata_pelajaran_id') == $mp->id ? 'selected' : '' }}>
+                        {{ optional($mp->subject)->subject_name ?? '-' }} - 
+                        {{ optional(optional($mp->guru)->user)->name ?? '-' }}
+                      </option>
+                    @endforeach
+                  </select>
+                </div>
+
                 <div class="col-md-3 d-flex align-items-end">
                   <button type="submit" class="btn btn-primary w-100">Filter</button>
-                  <!-- Reset Button -->
                   <a href="{{ route('absensi.laporan') }}" class="btn btn-secondary w-100 ml-2">Reset</a>
-                    {{-- Cek apakah user memiliki role admin --}}
-                    @if (auth()->user()->role_name === 'Admin')
-                    <div class="col-sm-6 text-left">
-                      <button onclick="printReport()" class="btn btn-danger"><i class="fas fa-print"></i> Cetak</button>
-                    </div>
-                  @endif
+                  @if(auth()->user()->role_name === 'Admin')
+                  <div class="col-sm-6 text-right">
+                    <button onclick="printReport()" class="btn btn-info">
+                      <i class="fas fa-print"></i> Cetak Laporan
+                    </button>
+                  </div>
+                @endif
                 </div>
               </div>
             </form>
 
             {{-- Pencarian client-side --}}
-            <input type="text" id="search" placeholder="Cari Laporan Absensi" class="form-control mb-3">
+            <input type="text" id="search" placeholder="Cari Nama Siswa atau Mata Pelajaran" class="form-control mb-3">
+            {{-- Filter Kelas --}}
+            <form method="GET" action="{{ route('absensi.laporan') }}" class="d-flex align-items-center gap-2 mb-3">
+              <div class="input-group shadow-sm rounded-pill" style="overflow: hidden; max-width: 300px;">
+                <span class="input-group-text text-white fw-semibold" 
+                      style="background: linear-gradient(90deg, #0d6efd, #3f8efc); border: none;">
+                  <i class="fas fa-school me-1"></i> Kelas
+                </span>
+                <select name="kelas" id="kelas" class="form-select border-0" onchange="this.form.submit()">
+                  <option value="">Semua Kelas</option>
+                  @foreach ($kelasList as $kelas)
+                    <option value="{{ $kelas }}" {{ request('kelas') == $kelas ? 'selected' : '' }}>
+                      {{ $kelas }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
 
-            
+              @if(request('kelas'))
+                <a href="{{ route('absensi.laporan') }}" 
+                  class="btn shadow-sm d-flex align-items-center justify-content-center rounded-circle"
+                  style="width: 44px; height: 44px; background-color: #faed3b; color: #575848;"
+                  title="Reset Filter">
+                  <i class="fas fa-redo-alt"></i>
+                </a>
+              @endif
+            </form>
             {{-- Tabel --}}
             <div class="table-responsive">
               <table id="absensiTable" class="table table-bordered table-striped table-hover">
@@ -82,6 +110,7 @@
                     <th>No</th>
                     <th>Tanggal</th>
                     <th>Nama Siswa</th>
+                    <th>Kelas</th>
                     <th>Mata Pelajaran</th>
                     <th>Status</th>
                   </tr>
@@ -92,6 +121,7 @@
                       <td>{{ $index + 1 }}</td>
                       <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y H:i') }}</td>
                       <td>{{ optional(optional($item->siswa)->user)->name ?? '-' }}</td>
+                      <td>{{ optional(optional($item->mataPelajaran)->subject)->class_name ?? '-' }}</td>
                       <td>
                         {{ 
                           optional(
@@ -207,13 +237,16 @@
       showPage(currentPage);
     });
 
-    
-  function printReport() {
+    function printReport() {
     // Menampilkan indikator loading sebelum pencetakan dimulai
     var loading = document.createElement("div");
     loading.className = "loading-indicator";
     loading.innerHTML = "Sedang menyiapkan laporan untuk dicetak...";
     document.body.appendChild(loading);
+
+    // Menangkap nilai tanggal mulai dan tanggal akhir
+    var tanggalMulai = document.querySelector('input[name="tanggal_mulai"]').value;
+    var tanggalAkhir = document.querySelector('input[name="tanggal_akhir"]').value;
 
     // Menyimpan konten yang ingin dicetak
     var content = document.getElementById("absensiTable").outerHTML;
@@ -222,7 +255,7 @@
     var printWindow = window.open('', '', 'height=600,width=800');
 
     // Menambahkan CSS agar tabel terlihat rapi saat dicetak
-    printWindow.document.write('<html><head><title>Laporan Absensi</title>');
+    printWindow.document.write('<html><head><title>absensi</title>');
     printWindow.document.write('<style>');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; }');
     printWindow.document.write('table, th, td { border: 1px solid black; }');
@@ -231,7 +264,8 @@
     printWindow.document.write('</head><body>');
     
     // Menambahkan header laporan
-    printWindow.document.write('<h2>Laporan Absensi Siswa per Tanggal ' + document.querySelector('input[name="tanggal"]').value + '</h2>');
+    printWindow.document.write('<h2>Laporan Absensi Siswa</h2>');
+    printWindow.document.write('<p><strong>Periode:</strong> ' + new Intl.DateTimeFormat('id-ID').format(new Date(tanggalMulai)) + ' - ' + new Intl.DateTimeFormat('id-ID').format(new Date(tanggalAkhir)) + '</p>');
     
     // Menambahkan tabel
     printWindow.document.write(content);

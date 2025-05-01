@@ -163,12 +163,12 @@ body {
             <p>Formulir Berkas</p>
           </a>
         </li>
-        <li class="nav-item">
+        {{-- <li class="nav-item">
           <a href="{{ route('laporan.index') }}" class="nav-link">
             <i class="fas fa-file nav-icon"></i>
             <p>Laporan Pendaftaran</p>
           </a>
-        </li>
+        </li> --}}
         @endif
 
         @if (in_array(auth()->user()->role_name, ['guru', 'Admin']))
@@ -229,6 +229,7 @@ body {
     </li>
     @endif
 
+    @if (in_array(auth()->user()->role_name, ['siswa', 'guru', 'Admin']))
     <li class="nav-item">
       <a href="#" class="nav-link">
         <i class="nav-icon fas fa-calendar-alt"></i>
@@ -243,6 +244,7 @@ body {
         </li>
       </ul>
     </li>
+    @endif
 
     @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin']))
     <li class="nav-header mt-2 py-2">Pembelajaran Sekolah</li>
@@ -289,6 +291,7 @@ body {
     </li>
     @endif
 
+    @if (in_array(auth()->user()->role_name, ['siswa', 'guru', 'Admin']))
     <li class="nav-item">
       <a href="#" class="nav-link">
         <i class="nav-icon fas fa-book"></i>
@@ -303,6 +306,7 @@ body {
         </li>
       </ul>
     </li>
+    @endif
 
     @if (in_array(auth()->user()->role_name, [ 'Admin']))
     <li class="nav-header mt-2 py-2">- PPDB</li>

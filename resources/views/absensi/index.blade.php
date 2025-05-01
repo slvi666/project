@@ -29,6 +29,7 @@
 
             <div class="card-body">
               {{-- Cetak PDF --}}
+              @if(in_array(auth()->user()->role_name, ['Admin', 'guru']))
               <form method="GET" action="{{ route('absensi.cetak', $mataPelajaran->id) }}" target="_blank" class="mb-4 p-3 bg-light rounded shadow-sm">
                 <div class="row g-2">
                   <div class="col-md-3">
@@ -53,6 +54,7 @@
                   </div>
                 </div>
               </form>
+              @endif
 
               {{-- Alert SweetAlert --}}
               @if(session('success'))

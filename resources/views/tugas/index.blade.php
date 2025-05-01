@@ -41,7 +41,7 @@
               @endif
 
               <div class="mb-3 d-flex justify-content-between align-items-center">
-                <input type="text" id="search" placeholder="🔍 Cari Tugas..." class="form-control w-50 shadow-sm rounded-pill px-3">
+                <input type="text" id="search" placeholder="🔍 Cari ..." class="form-control w-50 shadow-sm rounded-pill px-3">
                 @if (auth()->user()->role_name === 'guru')
                 <a href="javascript:void(0)" onclick="confirmAdd('{{ route('tugas.create') }}')" class="btn btn-primary text-light fw-bold shadow-sm rounded-pill px-4">
                   <i class="fas fa-plus-circle me-1"></i> Tambah Tugas
@@ -61,8 +61,8 @@
                       <th>Mapel</th>
                       <th>Deadline</th>
                       <th>Status</th>
-                      <th>File Soal</th>
-                      <th>File Jawaban</th>
+                      <th>Soal</th>
+                      <th>Jawaban</th>
                       <th>Nilai</th>
                       <th>Aksi</th>
                     </tr>
@@ -74,23 +74,47 @@
                       <td>{{ $item->judul_tugas }}</td>
                       <td>{{ $item->siswa->user->name ?? '-' }}</td>
                       <td>{{ $item->subject->class_name }}</td>
-                      <td>{{ $item->guru->nama_guru }}</td>
+                      <td>
+                        <span class="badge bg-info text-dark">{{ $item->guru->nama_guru }}</span>
+                      </td>
                       <td>{{ $item->subject->subject_name }}</td>
-                      <td>{{ $item->deadline }}</td>
-                      <td>{{ ucfirst($item->status) }}</td>
+                      <td>{{ \Carbon\Carbon::parse($item->deadline)->format('d/m/Y') }}</td>
+                      <td>
+                        <span class="badge 
+                            @if($item->status == 'sudah_dikumpulkan')
+                                bg-success text-white
+                            @elseif($item->status == 'belum_dikumpulkan')
+                            @else
+                                bg-warning text-dark
+                            @endif
+                        ">
+                            @if($item->status == 'sudah_dikumpulkan')
+                                <i class="fa fa-check-circle"></i> Terkumpul
+                            @elseif($item->status == 'belum_dikumpulkan')
+                            @else
+                                <i class="fa fa-question-circle"></i> Belum Terkumpul
+                            @endif
+                        </span>
+                    </td>
+                    
                       <td class="text-center">
                         @if($item->file_soal)
-                        <a href="{{ route('tugas.download.soal', $item->id) }}" class="btn btn-outline-info btn-sm rounded-pill">Download</a>
+                          <a href="{{ route('tugas.download.soal', $item->id) }}" class="btn btn-outline-info btn-sm rounded-pill" title="Download Soal">
+                              <i class="fas fa-file-alt"></i>
+                          </a>
                         @else
-                        <span class="badge bg-secondary">Tidak Ada</span>
-                        @endif
-                      </td>
-                      <td class="text-center">
+                          <span class="badge bg-secondary">Tidak Ada</span>
+                          @endif
+                          </td>
+                          <td class="text-center">
                         @if($item->file_jawaban)
-                        <a href="{{ route('tugas.download.jawaban', $item->id) }}" class="btn btn-outline-success btn-sm rounded-pill">Download</a>
+                          <a href="{{ route('tugas.download.jawaban', $item->id) }}" class="btn btn-outline-success btn-sm rounded-pill" title="Download Jawaban">
+                              <i class="fas fa-file-upload"></i>
+                          </a>
                         @else
-                        <span class="badge bg-secondary">Tidak Ada</span>
+                          <span class="badge bg-secondary">Tidak Ada</span>
                         @endif
+
                       </td>
                       <td class="text-center">
                         @if($item->nilai_tugas !== null)
