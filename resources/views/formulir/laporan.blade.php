@@ -1,127 +1,138 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Pendaftaran & Seleksi Berkas</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .table thead {
-            background: #007bff;
-            color: white;
-        }
-        .btn-custom {
-            border-radius: 50px;
-            padding: 10px 20px;
-        }
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .nav-link:hover {
-            text-decoration: none;
-            color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container mt-5">
-        <h2 class="mb-4 text-center text-primary">Laporan Pendaftaran & Seleksi Berkas</h2>
-        
-        <div class="d-flex justify-content-between mb-3">
-            <a href="{{ route('home') }}" class="btn btn-secondary btn-custom">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </a>
-            <button class="btn btn-success btn-custom" onclick="exportTableToExcel('laporan_pendaftaran.xlsx')">
-                <i class="fas fa-file-excel"></i> Export Excel
-            </button>
-            <button class="btn btn-primary btn-custom" onclick="printTable()">
-                <i class="fas fa-print"></i> Print
-            </button>
+@extends('adminlte.layouts.app')
+
+@section('content')
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Laporan Pendaftaran</h1>
         </div>
-        
-        <div class="table-responsive">
-            <table id="laporanTable" class="table table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nama</th>
-                        <th>NIK</th>
-                        <th>Tempat, Tanggal Lahir</th>
-                        <th>Asal Sekolah</th>
-                        <th>Status</th>
-                        <th>Seleksi Berkas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($laporan as $index => $data)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $data->user->name }}</td>
-                            <td>{{ $data->nik }}</td>
-                            <td>{{ $data->tempat_lahir }}, {{ $data->tanggal_lahir }}</td>
-                            <td>{{ $data->asal_sekolah }}</td>
-                            <td>
-                                <span class="badge {{ $data->status == 'Diterima' ? 'bg-success' : 'bg-danger' }}">
-                                    {{ $data->status }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge {{ $data->seleksiBerkas ? 'bg-primary' : 'bg-warning' }}">
-                                    {{ $data->seleksiBerkas ? 'Berkas Lengkap' : 'Belum Lengkap' }}
-                                </span>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item active">Laporan</li>
+          </ol>
         </div>
+      </div>
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#laporanTable').DataTable({
-                "paging": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-            });
-        });
+  </div>
 
-        function exportTableToExcel(filename) {
-            let table = document.getElementById("laporanTable");
-            let wb = XLSX.utils.book_new();
-            let ws = XLSX.utils.table_to_sheet(table);
-            XLSX.utils.book_append_sheet(wb, ws, "Laporan");
-            XLSX.writeFile(wb, filename);
-        }
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card shadow rounded">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h3 class="card-title">Data Pendaftaran</h3>
+        </div>
+        <div class="card-body">
+          @if(session('success'))
+            <script>
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                confirmButtonText: 'OK'
+              });
+            </script>
+          @endif
 
-        function printTable() {
-            let printContent = document.querySelector(".table-responsive").innerHTML;
-            let originalContent = document.body.innerHTML;
-            document.body.innerHTML = printContent;
-            window.print();
-            document.body.innerHTML = originalContent;
-            location.reload();
-        }
-    </script>
-</body>
-</html>
+          <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
+            <input type="text" id="search" placeholder="🔍 Cari Nama/NIK..." class="form-control flex-grow-1 rounded-pill shadow-sm" style="max-width: 400px;">
+          
+            <div class="d-flex gap-2">
+              <button class="btn btn-success btn-sm rounded-pill" onclick="exportTableToExcel('laporan_pendaftaran.xlsx')">
+                <i class="fas fa-file-excel me-1"></i> Export Excel
+              </button>
+              <button class="btn btn-danger btn-sm rounded-pill" onclick="printTable()">
+                <i class="fas fa-print me-1"></i> Print
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table id="laporanTable" class="table table-bordered table-striped">
+              <thead class="bg-primary text-white text-center">
+                <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>NIK</th>
+                  <th>TTL</th>
+                  <th>Asal Sekolah</th>
+                  <th>Status</th>
+                  <th>Seleksi Berkas</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($laporan as $index => $data)
+                  <tr>
+                    <td class="text-center">{{ $index + 1 }}</td>
+                    <td>{{ $data->user->name }}</td>
+                    <td>{{ $data->nik }}</td>
+                    <td>{{ $data->tempat_lahir }}, {{ \Carbon\Carbon::parse($data->tanggal_lahir)->format('d-m-Y') }}</td>
+                    <td>{{ $data->asal_sekolah }}</td>
+                    <td class="text-center">
+                      <span class="badge {{ $data->status == 'Diterima' ? 'bg-success' : 'bg-danger' }}">
+                        {{ $data->status }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span class="badge {{ $data->seleksiBerkas ? 'bg-primary' : 'bg-warning' }}">
+                        {{ $data->seleksiBerkas ? 'Berkas Lengkap' : 'Belum Lengkap' }}
+                      </span>
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js"></script>
+<!-- XLSX for export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+  function exportTableToExcel(filename) {
+    const table = document.getElementById("laporanTable");
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.table_to_sheet(table);
+    XLSX.utils.book_append_sheet(wb, ws, "Laporan");
+    XLSX.writeFile(wb, filename);
+  }
+
+  function printTable() {
+    const contentWrapper = document.querySelector(".table-responsive");
+    const originalContent = document.body.innerHTML;
+
+    // Tambahkan judul "Laporan Pendaftaran" sebelum tabel
+    const printContent = `
+        <div style="text-align: center; margin-bottom: 20px;">
+        <h2>Laporan Pendaftaran</h2>
+        <p>${new Date().toLocaleString()}</p> <!-- Tanggal dan waktu cetak -->
+        </div>
+        ${contentWrapper.innerHTML}
+    `;
+
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+        location.reload();
+ }
+ 
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("search");
+    const rows = document.querySelectorAll("#laporanTable tbody tr");
+    input.addEventListener("keyup", function () {
+      const filter = input.value.toLowerCase();
+      rows.forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+      });
+    });
+  });
+</script>
+@endsection
