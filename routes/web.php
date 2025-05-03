@@ -112,5 +112,6 @@ Route::middleware(['auth'])->group(function () {
 });
 Route::resource('faq', FaqController::class);
 Route::middleware(['auth'])->group(function () {
+    Route::get('formulir/{id}/cetak', [FormulirPendaftaranController::class, 'cetak'])->name('formulir.cetak');
     Route::resource('formulir', FormulirPendaftaranController::class);
 });

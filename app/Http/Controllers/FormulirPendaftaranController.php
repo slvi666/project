@@ -87,10 +87,9 @@ class FormulirPendaftaranController extends Controller
     public function update(Request $request, $id)
     {
         $formulir = FormulirPendaftaran::findOrFail($id);
-
+    
         $request->validate([
             'nik' => 'required|unique:formulir_pendaftaran,nik,' . $id,
-            'user_id' => 'required|exists:users,id',
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
@@ -110,8 +109,8 @@ class FormulirPendaftaranController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'berkas_sertifikat' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
-
-        // Handle foto
+    
+        // Handle upload foto
         if ($request->hasFile('foto')) {
             if ($formulir->foto && Storage::disk('public')->exists($formulir->foto)) {
                 Storage::disk('public')->delete($formulir->foto);
@@ -120,8 +119,8 @@ class FormulirPendaftaranController extends Controller
         } else {
             $fotoPath = $formulir->foto;
         }
-
-        // Handle berkas sertifikat
+    
+        // Handle upload berkas sertifikat
         if ($request->hasFile('berkas_sertifikat')) {
             if ($formulir->berkas_sertifikat && Storage::disk('public')->exists($formulir->berkas_sertifikat)) {
                 Storage::disk('public')->delete($formulir->berkas_sertifikat);
@@ -130,14 +129,21 @@ class FormulirPendaftaranController extends Controller
         } else {
             $sertifikatPath = $formulir->berkas_sertifikat;
         }
-
-        $formulir->update(array_merge(
-            $request->all(),
-            ['foto' => $fotoPath, 'berkas_sertifikat' => $sertifikatPath]
-        ));
-
+    
+        // Ambil data request kecuali user_id dan user_email agar tidak diubah
+        $updateData = $request->except(['user_id', 'user_email']);
+    
+        // Tambahkan path file yang diupload
+        $updateData['foto'] = $fotoPath;
+        $updateData['berkas_sertifikat'] = $sertifikatPath;
+        // dd($updateData);
+    
+        // Update formulir
+        $formulir->update($updateData);
+    
         return redirect()->route('formulir.index')->with('success', 'Pendaftaran berhasil diperbarui!');
     }
+    
 
     public function destroy($id)
     {
@@ -150,5 +156,11 @@ class FormulirPendaftaranController extends Controller
 
         $formulir->delete();
         return redirect()->route('formulir.index')->with('success', 'Pendaftaran berhasil dihapus!');
+    }
+
+    public function cetak($id)
+    {
+        $formulir = FormulirPendaftaran::with('user')->findOrFail($id);
+        return view('formulir.cetak', compact('formulir'));
     }
 }

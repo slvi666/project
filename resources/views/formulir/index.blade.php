@@ -90,6 +90,11 @@
                             class="btn btn-info btn-sm rounded-pill me-1 shadow-sm">
                             <i class="fas fa-eye"></i>
                           </a>
+                          <a href="javascript:void(0);" 
+                            onclick="confirmShow('{{ route('formulir.cetak', $formulir->id) }}')" 
+                            class="btn btn-info btn-sm rounded-pill me-1 shadow-sm">
+                            <i class="fa fa-print"></i>
+                          </a>
                           <a href="javascript:void(0);" onclick="confirmEdit('{{ route('formulir.edit', $formulir->id) }}')" 
                             class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm">
                             <i class="fas fa-edit"></i>

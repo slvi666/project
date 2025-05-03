@@ -77,6 +77,7 @@
                                                     </button>
                                                 </h5>
                                             </div>
+                                            
                                         
                                             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#taskAccordion">
                                                 <div class="card-body">
@@ -86,13 +87,14 @@
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox" name="siswa_id[]" value="{{ $s->id }}" 
                                                                     id="siswa_{{ $s->id }}" 
-                                                                    @if(in_array($s->id, $tugas->siswa->pluck('id')->toArray())) checked @endif>
+                                                                    @if($tugas->siswa_id == $s->id) checked @endif>
                                                                 <label class="form-check-label" for="siswa_{{ $s->id }}">
                                                                     {{ $s->user->name ?? '-' }} ({{ $s->subject->class_name }})
                                                                 </label>
                                                             </div>
                                                         @endforeach
-                                                    </div>                                                
+                                                    </div>
+                                                                                                  
                                         
                                                     <div class="form-group">
                                                         <label>Guru</label>

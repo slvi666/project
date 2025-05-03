@@ -34,7 +34,9 @@
                     <li class="list-group-item"><strong>Nama Lengkap:</strong> {{ $formulir->user->name }}</li>
                     <li class="list-group-item"><strong>Email:</strong> {{ $formulir->user->email }}</li>
                     <li class="list-group-item"><strong>NIK:</strong> {{ $formulir->nik }}</li>
-                    <li class="list-group-item"><strong>TTL:</strong> {{ $formulir->tempat_lahir }}, {{ $formulir->tanggal_lahir }}</li>
+                    <li class="list-group-item">
+                      <strong>TTL:</strong> {{ $formulir->tempat_lahir }}, {{ \Carbon\Carbon::parse($formulir->tanggal_lahir)->format('d-m-Y') }}
+                    </li>
                     <li class="list-group-item"><strong>Jenis Kelamin:</strong> {{ $formulir->jenis_kelamin }}</li>
                     <li class="list-group-item"><strong>Agama:</strong> {{ $formulir->agama }}</li>
                     <li class="list-group-item"><strong>No HP:</strong> {{ $formulir->no_hp }}</li>
