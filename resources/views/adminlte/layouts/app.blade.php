@@ -154,13 +154,13 @@ body {
         <li class="nav-item">
           <a href="{{ route('formulir.index') }}" class="nav-link">
             <i class="fas fa-calendar nav-icon"></i>
-            <p>Pendaftaran</p>
+            <p>Formulir Pendaftaran</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ route('seleksi-berkas.index') }}" class="nav-link">
             <i class="fas fa-file-alt nav-icon"></i>
-            <p>Formulir Berkas</p>
+            <p>Berkas Pendaftaran</p>
           </a>
         </li>
         {{-- <li class="nav-item">
@@ -325,13 +325,13 @@ body {
         <li class="nav-item">
           <a href="{{ route('seleksi-berkas.index') }}" class="nav-link">
             <i class="fas fa-file-alt nav-icon"></i>
-            <p>Formulir Berkas</p>
+            <p>Berkas Pendaftaran</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ route('laporan.index') }}" class="nav-link">
             <i class="fas fa-file nav-icon"></i>
-            <p>Laporan Pendaftaran</p>
+            <p>Laporan</p>
           </a>
         </li>
       </ul>

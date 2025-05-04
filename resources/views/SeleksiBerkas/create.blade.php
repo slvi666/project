@@ -6,7 +6,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0 text-primary"><i class="fas fa-file-upload"></i> Tambah Seleksi Berkas</h1>
+          <h1 class="m-0 text-primary"><i class="fas fa-file-upload"></i>Seleksi Berkas</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -22,7 +22,7 @@
     <div class="container-fluid">
       <div class="card shadow-lg border-0 rounded-lg">
         <div class="card-header bg-primary text-white rounded-top">
-          <h3 class="card-title"><i class="fas fa-plus-circle"></i> Formulir Tambah Seleksi Berkas</h3>
+          <h3 class="card-title"><i class="fas fa-plus-circle"></i> Formulir Seleksi Berkas</h3>
         </div>
         <div class="card-body p-4">
           <form action="{{ route('seleksi-berkas.store') }}" method="POST" enctype="multipart/form-data">
@@ -42,7 +42,7 @@
 
             <div class="form-group">
               <label for="poto_ktp_orang_tua" class="font-weight-semibold">Foto KTP Orang Tua <small class="text-muted">(format: jpg/png, maksimal 2MB)</small></label>
-              <input type="file" name="poto_ktp_orang_tua" class="form-control rounded-pill @error('poto_ktp_orang_tua') is-invalid @enderror">
+              <input type="file" name="poto_ktp_orang_tua" class="form-control rounded-pill @error('poto_ktp_orang_tua') is-invalid @enderror"required>
               @error('poto_ktp_orang_tua')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -50,7 +50,7 @@
 
             <div class="form-group">
               <label for="kartu_keluarga" class="font-weight-semibold">Kartu Keluarga</label>
-              <input type="file" name="kartu_keluarga" class="form-control rounded-pill @error('kartu_keluarga') is-invalid @enderror">
+              <input type="file" name="kartu_keluarga" class="form-control rounded-pill @error('kartu_keluarga') is-invalid @enderror"required>
               @error('kartu_keluarga')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -58,7 +58,7 @@
 
             <div class="form-group">
               <label for="akte_kelahiran" class="font-weight-semibold">Akte Kelahiran</label>
-              <input type="file" name="akte_kelahiran" class="form-control rounded-pill @error('akte_kelahiran') is-invalid @enderror">
+              <input type="file" name="akte_kelahiran" class="form-control rounded-pill @error('akte_kelahiran') is-invalid @enderror"required>
               @error('akte_kelahiran')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -82,7 +82,7 @@
 
             <div class="form-group">
               <label for="kis_kip" class="font-weight-semibold">KIS/KIP</label>
-              <input type="file" name="kis_kip" class="form-control rounded-pill @error('kis_kip') is-invalid @enderror">
+              <input type="file" name="kis_kip" class="form-control rounded-pill @error('kis_kip') is-invalid @enderror"required>
               @error('kis_kip')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror

@@ -30,11 +30,16 @@
               <div class="mb-3 d-flex justify-content-between align-items-center">
                 <!-- Search Input on Left -->
                 <input type="text" id="searchBerkas" class="form-control w-50 shadow-sm rounded-pill px-3" placeholder="🔍 Cari...">
-                @if (auth()->user()->role_name === 'calon_siswa')
-                <!-- Add Data Button on Right -->
-                <a href="{{ route('seleksi-berkas.create') }}" class="btn btn-primary shadow-sm rounded-pill ms-3">
-                  <i class="fas fa-plus-circle me-1"></i> Tambah Data
-                </a>
+                 {{-- Tombol Tambah Data akan muncul hanya jika formulir sudah diisi --}}
+                @php
+                  $formulir = \App\Models\FormulirPendaftaran::where('user_id', auth()->id())->first();
+                  $seleksiBerkas = \App\Models\SeleksiBerkas::where('user_id', auth()->id())->first();
+                @endphp
+
+                @if (auth()->user()->role_name === 'calon_siswa' && $formulir && !$seleksiBerkas)
+                  <a href="{{ route('seleksi-berkas.create') }}" class="btn btn-primary shadow-sm rounded-pill ms-3" id="btnTambahData">
+                      <i class="fas fa-plus-circle me-1"></i> Lengkapi Berkas
+                  </a>
                 @endif
               </div>
 
@@ -109,8 +114,8 @@
       tambahBtn.addEventListener('click', function (e) {
         e.preventDefault();
         Swal.fire({
-          title: 'Tambah Data Baru?',
-          text: "Anda akan diarahkan ke halaman tambah data.",
+          title: 'Lengkapi berkas?',
+          text: "Anda akan diarahkan ke halaman melengkapi berkas.",
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Ya, lanjutkan!',

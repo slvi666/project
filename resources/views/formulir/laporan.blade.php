@@ -70,13 +70,20 @@
                     <td>{{ $data->tempat_lahir }}, {{ \Carbon\Carbon::parse($data->tanggal_lahir)->format('d-m-Y') }}</td>
                     <td>{{ $data->asal_sekolah }}</td>
                     <td class="text-center">
-                      <span class="badge {{ $data->status == 'Diterima' ? 'bg-success' : 'bg-danger' }}">
+                      <span class="badge 
+                        {{ $data->status == 'Lulus' ? 'bg-success' : 
+                          ($data->status == 'Tidak Lulus' ? 'bg-danger' : 'bg-primary') }}">
                         {{ $data->status }}
                       </span>
                     </td>
                     <td class="text-center">
-                      <span class="badge {{ $data->seleksiBerkas ? 'bg-primary' : 'bg-warning' }}">
-                        {{ $data->seleksiBerkas ? 'Berkas Lengkap' : 'Belum Lengkap' }}
+                      @php
+                        $berkas = $data->seleksiBerkas;
+                        $lengkap = $berkas && $berkas->ijazah && $berkas->raport && $berkas->surat_kelulusan;
+                      @endphp
+                    
+                      <span class="badge {{ $lengkap ? 'bg-primary' : 'bg-warning' }}">
+                        {{ $lengkap ? 'Berkas Lengkap' : 'Berkas Belum Lengkap' }}
                       </span>
                     </td>
                   </tr>

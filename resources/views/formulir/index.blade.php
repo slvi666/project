@@ -41,11 +41,25 @@
               @endif
 
               <div class="mb-3 d-flex justify-content-between align-items-center">
-                <input type="text" id="search" placeholder="🔍 Cari Nama/NIK..." class="form-control w-50 shadow-sm rounded-pill px-3">
-                @if (auth()->user()->role_name === 'calon_siswa')
+                <input type="text" id="search" placeholder="🔍 Cari..." class="form-control w-50 shadow-sm rounded-pill px-3">
+                @if (auth()->user()->role_name === 'Admin')
+                <div class="input-group w-auto shadow-sm rounded-pill" style="overflow: hidden;">
+                  <span class="input-group-text bg-white border-0">
+                    <i class="fas fa-graduation-cap text-primary"></i>
+                  </span>
+                  <select id="filterTahun" class="form-select border-0">
+                    <option value="">Semua Tahun</option>
+                    @foreach ($formulirs->pluck('tahun_lulus')->unique()->sort() as $tahun)
+                      <option value="{{ $tahun }}">{{ $tahun }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                @endif
+                
+                @if (auth()->user()->role_name === 'calon_siswa' && !$sudahMengisi)
                 <a href="javascript:void(0)" onclick="confirmAdd('{{ route('formulir.create') }}')" 
                   class="btn btn-primary fw-bold shadow-sm rounded-pill px-4 ms-3">
-                  <i class="fas fa-plus-circle me-1"></i> Tambah Pendaftaran
+                  <i class="fas fa-plus-circle me-1"></i> Registrasi Pendaftaran
                 </a>
                 @endif
               </div>
@@ -61,6 +75,7 @@
                       <th>TTL</th>
                       <th>Jenis Kelamin</th>
                       <th>No HP</th>
+                      <th>Tahun Lulus</th>
                       <th>Status</th>
                       <th>Aksi</th>
                     </tr>
@@ -75,6 +90,7 @@
                         <td>{{ $formulir->tempat_lahir }}, {{ \Carbon\Carbon::parse($formulir->tanggal_lahir)->format('d-m-Y') }}</td>
                         <td>{{ $formulir->jenis_kelamin }}</td>
                         <td>{{ $formulir->no_hp }}</td>
+                        <td>{{ $formulir->tahun_lulus }}</td>
                         <td class="text-center">
                           <span class="badge 
                           {{ 
@@ -91,14 +107,15 @@
                             <i class="fas fa-eye"></i>
                           </a>
                           <a href="javascript:void(0);" 
-                            onclick="confirmShow('{{ route('formulir.cetak', $formulir->id) }}')" 
-                            class="btn btn-info btn-sm rounded-pill me-1 shadow-sm">
+                            onclick="confirmPrint('{{ route('formulir.cetak', $formulir->id) }}')" 
+                            class="btn btn-success btn-sm rounded-pill me-1 shadow-sm">
                             <i class="fa fa-print"></i>
                           </a>
                           <a href="javascript:void(0);" onclick="confirmEdit('{{ route('formulir.edit', $formulir->id) }}')" 
                             class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm">
                             <i class="fas fa-edit"></i>
                           </a>
+                          @if (auth()->user()->role_name === 'Admin')
                           <form action="{{ route('formulir.destroy', $formulir->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
@@ -106,6 +123,7 @@
                               <i class="fas fa-trash"></i>
                             </button>
                           </form>
+                          @endif
                         </td>
                       </tr>
                     @endforeach
@@ -129,6 +147,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     const table = document.getElementById("formulirTable");
     const searchInput = document.getElementById("search");
+    const tahunSelect = document.getElementById("filterTahun");
     const rows = table.getElementsByTagName("tr");
     const pagination = document.getElementById("pagination");
     let currentPage = 1;
@@ -137,14 +156,22 @@
     function showPage(page) {
       const start = (page - 1) * rowsPerPage + 1;
       const end = start + rowsPerPage;
+      let rowIndex = 1;
       for (let i = 1; i < rows.length; i++) {
-        rows[i].style.display = (i >= start && i < end) ? "" : "none";
+        if (rows[i].style.display !== "none") {
+          rows[i].style.display = (rowIndex >= start && rowIndex < end) ? "" : "none";
+          rowIndex++;
+        }
       }
     }
 
     function setupPagination() {
       pagination.innerHTML = "";
-      const pageCount = Math.ceil((rows.length - 1) / rowsPerPage);
+      let visibleRowCount = 0;
+      for (let i = 1; i < rows.length; i++) {
+        if (rows[i].style.display !== "none") visibleRowCount++;
+      }
+      const pageCount = Math.ceil(visibleRowCount / rowsPerPage);
       for (let i = 1; i <= pageCount; i++) {
         const btn = document.createElement("button");
         btn.textContent = i;
@@ -157,13 +184,36 @@
       }
     }
 
-    searchInput.addEventListener("keyup", function () {
-      const filter = searchInput.value.toLowerCase();
+    function filterRows() {
+      const searchText = searchInput.value.toLowerCase();
+      const selectedTahun = tahunSelect.value;
+      let visibleRows = 0;
+
       for (let i = 1; i < rows.length; i++) {
-        const text = rows[i].textContent.toLowerCase();
-        rows[i].style.display = text.includes(filter) ? "" : "none";
+        const rowText = rows[i].textContent.toLowerCase();
+        const rowTahun = rows[i].cells[7]?.textContent.trim();
+        const matchesSearch = rowText.includes(searchText);
+        const matchesTahun = selectedTahun === "" || rowTahun === selectedTahun;
+
+        if (matchesSearch && matchesTahun) {
+          rows[i].style.display = "";
+          visibleRows++;
+        } else {
+          rows[i].style.display = "none";
+        }
       }
-    });
+
+      if (searchText || selectedTahun) {
+        pagination.style.display = "none";
+      } else {
+        pagination.style.display = "block";
+        setupPagination();
+        showPage(1);
+      }
+    }
+
+    searchInput.addEventListener("keyup", filterRows);
+    tahunSelect?.addEventListener("change", filterRows);
 
     showPage(currentPage);
     setupPagination();
@@ -171,8 +221,8 @@
 
   function confirmAdd(url) {
     Swal.fire({
-      title: 'Tambah Pendaftar Baru?',
-      text: "Anda akan diarahkan ke halaman tambah pendaftaran.",
+      title: 'Silahkan isi formulir berikut?',
+      text: "Anda akan diarahkan ke halaman isi formulir pendaftaran.",
       icon: 'info',
       showCancelButton: true,
       confirmButtonText: 'Lanjutkan',
@@ -221,6 +271,21 @@
       icon: 'info',
       showCancelButton: true,
       confirmButtonText: 'Lihat',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  }
+
+  function confirmPrint(url) {
+    Swal.fire({
+      title: 'Cetak Formulir?',
+      text: "Anda akan diarahkan ke halaman cetak formulir.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Cetak',
       cancelButtonText: 'Batal'
     }).then((result) => {
       if (result.isConfirmed) {

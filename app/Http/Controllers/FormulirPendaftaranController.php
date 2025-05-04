@@ -18,12 +18,14 @@ class FormulirPendaftaranController extends Controller
         // Jika yang login adalah Admin, tampilkan semua data
         if ($user->role_name === 'Admin') {
             $formulirs = FormulirPendaftaran::with('user')->get();
+            $sudahMengisi = false; // Admin bisa selalu melihat tombol
         } else {
             // Jika bukan admin, tampilkan hanya data milik pengguna yang sedang login
             $formulirs = FormulirPendaftaran::with('user')->where('user_id', $user->id)->get();
+            $sudahMengisi = FormulirPendaftaran::where('user_id', $user->id)->exists();
         }
     
-        return view('formulir.index', compact('formulirs'));
+        return view('formulir.index', compact('formulirs', 'sudahMengisi'));
     }
     
 

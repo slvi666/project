@@ -34,9 +34,14 @@ class SeleksiBerkasController extends Controller
     {
         $user = Auth::user();
         $formulir = FormulirPendaftaran::where('user_id', $user->id)->first();
+        $seleksiBerkas = SeleksiBerkas::where('user_id', $user->id)->first();  // Cek jika sudah ada data seleksi berkas
 
         if (!$formulir) {
             return redirect()->route('seleksi-berkas.index')->with('error', 'Anda belum mengisi formulir pendaftaran.');
+        }
+
+        if ($seleksiBerkas) {
+            return redirect()->route('seleksi-berkas.index')->with('error', 'Anda sudah mengisi seleksi berkas.');  // Jika sudah ada data, jangan tampilkan form tambah data
         }
 
         return view('SeleksiBerkas.create', compact('user', 'formulir'));
@@ -54,10 +59,16 @@ class SeleksiBerkasController extends Controller
     {
         $user = Auth::user();
         $formulir = FormulirPendaftaran::where('user_id', $user->id)->first();
+        $seleksiBerkas = SeleksiBerkas::where('user_id', $user->id)->first();  // Cek apakah sudah ada
 
         if (!$formulir) {
             return redirect()->route('seleksi-berkas.index')->with('error', 'Anda belum mengisi formulir pendaftaran.');
         }
+
+        if ($seleksiBerkas) {
+            return redirect()->route('seleksi-berkas.index')->with('error', 'Anda sudah mengisi seleksi berkas.');  // Jangan izinkan user mengisi berkas lebih dari sekali
+        }
+    
 
         $request->validate([
             'poto_ktp_orang_tua' => 'nullable|file|mimes:jpg,jpeg,png,pdf',

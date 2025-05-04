@@ -20,7 +20,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="card shadow-lg rounded-4">
-        <div class="card-header bg-gradient-success text-white rounded-top">
+        <div class="card-header bg-gradient-primary text-white rounded-top">
           <h3 class="card-title">Input Absensi</h3>
         </div>
 
@@ -99,11 +99,16 @@
             </div>
 
             <!-- Tombol Submit -->
-            <div class="row justify-content-center mt-4">
-              <div class="col-md-4 text-center">
-                <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill">
-                  <i class="bi bi-save-fill me-1"></i> Simpan Absensi
+            <div class="row justify-content-end mt-4">
+              <div class="col-auto">
+                <button type="submit" class="btn btn-success btn-lg rounded-pill px-4">
+                  <i class="bi bi-save-fill me-1"></i> Simpan
                 </button>
+              </div>
+              <div class="col-auto">
+                <a href="{{ route('mata-pelajaran.index') }}" class="btn btn-secondary btn-lg rounded-pill px-4">
+                  <i class="bi bi-x-circle-fill me-1"></i> Batal
+                </a>
               </div>
             </div>
           </form>

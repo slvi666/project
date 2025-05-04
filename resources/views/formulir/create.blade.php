@@ -6,7 +6,7 @@
     <div class="container-fluid">
       <div class="row mb-2 align-items-center">
         <div class="col-sm-6">
-          <h1 class="m-0 text-primary"><i class="fas fa-user-plus"></i> Tambah Formulir Pendaftaran</h1>
+          <h1 class="m-0 text-primary"><i class="fas fa-user-plus"></i> Formulir Pendaftaran</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -149,7 +149,7 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="berkas_sertifikat" class="font-weight-semibold text-dark">Berkas Sertifikat</label>
+                      <label for="berkas_sertifikat" class="font-weight-semibold text-dark">Berkas Sertifikat<span class="text-muted">(Opsional)</span></label>
                       <input type="file" name="berkas_sertifikat" class="form-control rounded-pill" accept=".pdf,.doc,.docx">
                       <small class="text-muted">Opsional (format: PDF, DOC, DOCX)</small>
                     </div>
