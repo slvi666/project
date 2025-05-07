@@ -92,9 +92,16 @@
             </div>
 
             <div class="card-footer d-flex justify-content-between align-items-center rounded-bottom">
+              @if (auth()->user()->role_name === 'Admin')
               <a href="{{ route('buku.index') }}" class="btn btn-secondary btn-sm px-4 py-2 shadow rounded-pill">
                 <i class="fas fa-arrow-left"></i> Kembali
               </a>
+              @endif
+              @if (in_array(auth()->user()->role_name, ['siswa', 'guru']))
+              <a href="{{ route('bookssiswa.index') }}" class="btn btn-secondary btn-sm px-4 py-2 shadow rounded-pill">
+                <i class="fas fa-arrow-left"></i> Kembali
+              </a>
+              @endif
             </div>
           </div>
         </div>

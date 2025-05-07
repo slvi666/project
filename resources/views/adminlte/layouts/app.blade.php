@@ -290,7 +290,6 @@ body {
       </ul>
     </li>
     @endif
-
     @if (in_array(auth()->user()->role_name, ['siswa', 'guru', 'Admin']))
     <li class="nav-item">
       <a href="#" class="nav-link">
@@ -298,15 +297,28 @@ body {
         <p>Perpustakaan<i class="right fas fa-angle-left"></i></p>
       </a>
       <ul class="nav nav-treeview">
+        @if (auth()->user()->role_name === 'Admin')
         <li class="nav-item">
           <a href="{{ route('buku.index') }}" class="nav-link">
             <i class="fas fa-bookmark nav-icon"></i>
-            <p>Data Buku</p>
+            <p>Data Buku Admin</p>
           </a>
         </li>
+        @endif
+    
+        @if (in_array(auth()->user()->role_name, ['siswa', 'guru']))
+        <li class="nav-item">
+          <a href="{{ route('bookssiswa.index') }}" class="nav-link">
+            <i class="fas fa-bookmark nav-icon"></i>
+            <p>Data Buku Siswa/Guru</p>
+          </a>
+        </li>
+        @endif
       </ul>
     </li>
     @endif
+    
+  
 
     @if (in_array(auth()->user()->role_name, [ 'Admin']))
     <li class="nav-header mt-2 py-2">- PPDB</li>
@@ -337,10 +349,19 @@ body {
       </ul>
     </li>
     @endif
-
+    @if (in_array(auth()->user()->role_name, [ 'Admin']))
+    <li class="nav-header mt-2 py-2">- FAQ </li>
+    <li class="nav-item">
+      <a href="{{ route('faq.index') }}" class="nav-link">
+        <i class="fas fa-file nav-icon"></i>
+        <p>FAQ</p>
+      </a>
+    </li>
+    @endif
     <li class="nav-header mt-2 py-2">- Logout</li>
     <li class="nav-item">
       <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
+
         <i class="nav-icon fas fa-sign-out-alt"></i>
         <p>Keluar</p>
       </a>
@@ -348,6 +369,8 @@ body {
         @csrf
       </form>
     </li>
+
+
 
   </ul>
 </nav>

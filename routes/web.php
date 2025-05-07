@@ -115,3 +115,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('formulir/{id}/cetak', [FormulirPendaftaranController::class, 'cetak'])->name('formulir.cetak');
     Route::resource('formulir', FormulirPendaftaranController::class);
 });
+use App\Http\Controllers\BookssiswaController;
+
+Route::get('/buku-siswa', [BookssiswaController::class, 'index'])->name('bookssiswa.index');

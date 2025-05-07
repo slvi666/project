@@ -70,7 +70,7 @@
                             <i class="fas fa-eye"></i> Lihat
                           </a>                          
                           <a href="javascript:void(0)" onclick="confirmEdit('{{ route('faq.edit', $faq->id) }}')" class="btn btn-warning btn-sm rounded-pill shadow-sm me-1">
-                            <i class="fas fa-edit"></i> Edit
+                            <i class="fas fa-edit"></i> Resphon
                           </a>
                           <form action="{{ route('faq.destroy', $faq->id) }}" method="POST" class="d-inline">
                             @csrf

@@ -9,7 +9,7 @@
     <div class="container-fluid">
       <div class="row mb-2 align-items-center">
         <div class="col-sm-6">
-          <h1 class="m-0 text-primary font-weight-bold">Selamat datang di Halaman {{ auth()->user()->role_name }}</h1>
+
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -31,10 +31,10 @@
           <div class="card shadow-lg rounded-4 border-0 bg-gradient-primary text-white hover-effect">
             <div class="card-body text-center py-5">
               <div class="icon-container mb-4">
-                <i class="fas fa-calendar-check fa-4x animate__animated animate__pulse animate__infinite"></i>
+              <i class="fas fa-handshake fa-4x animate__animated animate__pulse animate__infinite"></i>
               </div>
               <h3 class="display-4 font-weight-bold"></h3>
-              <p class="h5">Total Kegiatan</p>
+              <h3>Halo, selamat datang {{ auth()->user()->name }} ({{ auth()->user()->role_name }})</h3>
               <hr class="divider">
             </div>
           </div>

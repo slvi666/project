@@ -22,19 +22,28 @@
   <section class="content">
     <div class="container-fluid">
       <!-- Cards with Progress Bars -->
+      {{-- total guru --}}
       <div class="row mb-4">
+        @php
+        use App\Models\User;
+        $totalGuru = User::where('role_name', 'guru')->count();
+        @endphp
+        
         <div class="col-md-3">
           <div class="card p-3">
-            <h6>Total Page Views</h6>
-            <h4>442,236 <span class="text-primary small">▲ 59.3%</span></h4>
+            <h6>Total Pengguna (Guru)</h6>
+            <h4>{{ $totalGuru }}
+              <span class="text-success small">▲ 100%%</span>
+            </h4>
             <div class="progress">
-              <div class="progress-bar bg-primary" style="width: 59.3%" role="progressbar" aria-valuenow="59.3" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-success" style="width: 70.5%" role="progressbar" aria-valuenow="70.5" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
         </div>
+       {{-- Totoal pengguna  --}}
         <div class="col-md-3">
           <div class="card p-3">
-              <h6>Total Users</h6>
+              <h6>Total Pengguna</h6>
               <h4>{{ \App\Models\User::count() }} <span class="text-success small">▲ 100%%</span></h4>
               <div class="progress">
                   <div class="progress-bar bg-success" style="width: 70.5%" role="progressbar" aria-valuenow="70.5" aria-valuemin="0" aria-valuemax="100"></div>
@@ -43,51 +52,103 @@
       </div>
       
         <div class="col-md-3">
+          @php
+        // use App\Models\User;
+          $totalSiswa = User::where('role_name', 'siswa')->count();
+          @endphp
+          
           <div class="card p-3">
-            <h6>Total Orders</h6>
-            <h4>18,800 <span class="text-warning small">▼ 27.4%</span></h4>
+            <h6>Total Siswa</h6>
+            <h4>{{ number_format($totalSiswa) }} <span class="text-warning small">▼ 27.4%</span></h4>
             <div class="progress">
               <div class="progress-bar bg-warning" style="width: 27.4%" role="progressbar" aria-valuenow="27.4" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
+          
         </div>
+
+        {{-- total calon siswa --}}
         <div class="col-md-3">
+          @php
+          $totalCalonSiswa = User::where('role_name', 'calon_siswa')->count();
+          @endphp
+          
           <div class="card p-3">
-            <h6>Total Sales</h6>
-            <h4>$35,078 <span class="text-danger small">▼ 27.4%</span></h4>
+            <h6>Calon Siswa</h6>
+            <h4>{{ number_format($totalCalonSiswa) }} <span class="text-danger small">▼ 27.4%</span></h4>
             <div class="progress">
               <div class="progress-bar bg-danger" style="width: 27.4%" role="progressbar" aria-valuenow="27.4" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
+          
         </div>
       </div>
 
       <!-- Unique Visitor and Income Overview -->
       <div class="row mb-4">
-        <div class="col-md-8">
+        <div class="col-md-12">
           <div class="card p-3">
-            <h6>Unique Visitor (Per Hari)</h6>
+            <h6>Data Pendaftaran Calon Siswa</h6>
             <div class="table-responsive">
               <table class="table table-bordered table-sm">
                 <thead class="table-light">
                   <tr>
-                    <th>Hari</th>
-                    <th>Page Views</th>
-                    <th>Sessions</th>
+                    <th>Nama</th>
+                    <th>NIK</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Tempat, Tanggal Lahir</th>
+                    <th>Asal Sekolah</th>
+                    <th>Tahun Lulus</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @php
-                    $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                    $pageViews = [30, 45, 35, 55, 50, 120, 110];
-                    $sessions = [15, 35, 50, 30, 40, 55, 40];
-                  @endphp
-                  @foreach($days as $i => $day)
+                  @foreach(\App\Models\FormulirPendaftaran::latest()->take(5)->get() as $formulir)
+                    <tr>
+                      <td>{{ $formulir->user->name ?? '-' }}</td>
+                      <td>{{ $formulir->nik }}</td>
+                      <td>{{ $formulir->jenis_kelamin }}</td>
+                      <td>{{ $formulir->tempat_lahir }}, {{ \Carbon\Carbon::parse($formulir->tanggal_lahir)->format('d-m-Y') }}</td>
+                      <td>{{ $formulir->asal_sekolah }}</td>
+                      <td>{{ $formulir->tahun_lulus }}</td>
+                      <td>{{ ucfirst($formulir->status) }}</td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Recent Orders and Analytics -->
+      <div class="row mb-4">
+        <div class="col-md-8">
+          <div class="card p-3">
+            <h6>Jadwal Mata Pelajaran</h6>
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm">
+                <thead class="table-light">
                   <tr>
-                    <td>{{ $day }}</td>
-                    <td>{{ $pageViews[$i] }}</td>
-                    <td>{{ $sessions[$i] }}</td>
+                    <th>Nama Pelajaran</th>
+                    <th>Jumlah Siswa</th>
+                    <th>Hari</th>
+                    <th>Durasi</th>
                   </tr>
+                </thead>
+                <tbody>
+                  @foreach(\App\Models\MataPelajaran::with('subject')->get() as $mapel)
+                    <tr>
+                      <td>{{ $mapel->subject->subject_name ?? '-' }}</td>
+                      <td>{{ is_array($mapel->siswa_ids) ? count($mapel->siswa_ids) : 0 }}</td>
+                      <td>{{ $mapel->hari }}</td>
+                      <td>
+                        @php
+                          $start = \Carbon\Carbon::parse($mapel->waktu_mulai);
+                          $end = \Carbon\Carbon::parse($mapel->waktu_berakhir);
+                        @endphp
+                        {{ $start->diff($end)->format('%Hj %Im') }}
+                      </td>
+                    </tr>
                   @endforeach
                 </tbody>
               </table>
@@ -97,87 +158,26 @@
       
         <div class="col-md-4">
           <div class="card p-3">
-            <h6>Income Overview (This Week)</h6>
-            <p>Total Income: <strong>$7,650</strong></p>
-            <div class="table-responsive">
-              <table class="table table-bordered table-sm">
-                <thead class="table-light">
-                  <tr>
-                    <th>Hari</th>
-                    <th>Income ($)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @php
-                    $income = [1000, 1300, 950, 600, 850, 780, 1170];
-                  @endphp
-                  @foreach($days as $i => $day)
-                  <tr>
-                    <td>{{ $day }}</td>
-                    <td>${{ number_format($income[$i], 0) }}</td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Orders and Analytics -->
-      <div class="row mb-4">
-        <div class="col-md-8">
-          <div class="card p-3">
-            <h6>Recent Orders</h6>
-            <div class="table-responsive">
-              <table class="table table-bordered table-sm">
-                <thead class="table-light">
-                  <tr>
-                    <th>Tracking No.</th>
-                    <th>Product Name</th>
-                    <th>Total Order</th>
-                    <th>Status</th>
-                    <th>Total Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for ($i = 0; $i < 10; $i++)
-                  <tr>
-                    <td>84564564</td>
-                    <td>{{ ['Camera Lens', 'Laptop', 'Mobile'][$i % 3] }}</td>
-                    <td>{{ rand(30, 400) }}</td>
-                    <td class="{{ ['text-danger','text-warning','text-success'][$i % 3] }}">
-                      {{ ['Rejected', 'Pending', 'Approved'][$i % 3] }}
-                    </td>
-                    <td>${{ rand(10000, 200000) }}</td>
-                  </tr>
-                  @endfor
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card p-3">
             <h6>Analytics Report</h6>
             <ul class="list-group mb-3">
               <li class="list-group-item d-flex justify-content-between">
-                <span>Company Finance Growth</span>
-                <strong class="text-success">+45.14%</strong>
+                <span>Total Mata Pelajaran</span>
+                <strong>{{ \App\Models\MataPelajaran::count() }}</strong>
               </li>
               <li class="list-group-item d-flex justify-content-between">
-                <span>Company Expenses Ratio</span>
-                <strong>0.58%</strong>
+                <span>Guru Terlibat</span>
+                <strong>{{ \App\Models\MataPelajaran::distinct('guru_id')->count('guru_id') }}</strong>
               </li>
               <li class="list-group-item d-flex justify-content-between">
-                <span>Business Risk Cases</span>
-                <strong class="text-muted">Low</strong>
+                <span>Hari Aktif</span>
+                <strong>{{ \App\Models\MataPelajaran::distinct('hari')->count('hari') }}</strong>
               </li>
             </ul>
             <canvas id="riskChart" height="150"></canvas>
           </div>
         </div>
       </div>
+      
     </div>
   </section>
 </div>

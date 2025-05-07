@@ -44,7 +44,6 @@
         <ul>
           <li><a href="#hero" class="active">Beranda</a></li>
           <li><a href="#about">Tentang Kami</a></li>
-          {{-- <li><a href="#features">Features</a></li> --}}
           <li><a href="#gallery">Dokumentasi</a></li>
           <li><a href="#team">Pengajar</a></li>
           <li><a href="#contact">Kontak</a></li>
@@ -74,7 +73,7 @@
             <h1>MTSS <span><br>AL-MUNAWAROH</span></h1>
             <p>"Mewujudkan generasi rabbani, berjiwa qur'ani yang berbekal iman dan taqwa (IMTAQ) serta ilmu pengetahuan dan teknologi (IPTEK)" </p>
             <div class="d-flex">
-              <a href="{{ route('register') }}" class="btn-get-started">Daftar Sekarang</a>
+              <a href="{{ route('register') }}" class="btn-get-started">Daftar Calon Siswa Sekarang</a>
             </div>
           </div>
 
@@ -282,47 +281,39 @@
     <section id="stats" class="stats section light-background">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-
+    
         <div class="row gy-4">
-
-          <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
-            <i class="bi bi-emoji-smile"></i>
+    
+          <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
+            <i class="bi bi-person"></i>
             <div class="stats-item">
-                <span data-purecounter-start="0" data-purecounter-end="{{ \App\Models\User::count() }}" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Total Pengguna</p>
+                <span data-purecounter-start="0" data-purecounter-end="{{ \App\Models\User::where('role_name', 'siswa')->count() }}" data-purecounter-duration="1" class="purecounter"></span>
+                <p>Total Siswa</p>
             </div>
-        </div>
-        
-
-          <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
-            <i class="bi bi-journal-richtext"></i>
+          </div>
+    
+          <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
+            <i class="bi bi-person-vcard"></i>
             <div class="stats-item">
-              <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end="{{ \App\Models\User::where('role_name', 'guru')->count() }}" data-purecounter-duration="1" class="purecounter"></span>
               <p>Total Guru</p>
             </div>
-          </div><!-- End Stats Item -->
-
-          <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
-            <i class="bi bi-headset"></i>
+          </div>
+    
+          <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
+            <i class="bi bi-file-earmark-person"></i>
             <div class="stats-item">
-              <span data-purecounter-start="0" data-purecounter-end="1463" data-purecounter-duration="1" class="purecounter"></span>
-              <p>Total Materi</p>
+              <span data-purecounter-start="0" data-purecounter-end="{{ \App\Models\User::where('role_name', 'calon_siswa')->count() }}" data-purecounter-duration="1" class="purecounter"></span>
+              <p>Total Calon Siswa</p>
             </div>
-          </div><!-- End Stats Item -->
-
-          <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
-            <i class="bi bi-people"></i>
-            <div class="stats-item">
-              <span data-purecounter-start="0" data-purecounter-end="15" data-purecounter-duration="1" class="purecounter"></span>
-              <p>Hard Workers</p>
-            </div>
-          </div><!-- End Stats Item -->
-
+          </div>
+    
         </div>
-
+    
       </div>
-
+    
     </section><!-- /Stats Section -->
+    
 
     <!-- Visi dan Misi Section -->
     <section id="visi-misi" class="details section" style="background: #f9f9f9; padding: 60px 0;">
@@ -605,72 +596,45 @@
 
     </section><!-- /Testimonials Section --> --}}
 
-    <!-- Team Section -->
-    <section id="team" class="team section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Pengajar</h2>
-        <div><span>Team</span> <span class="description-title">Pengajar</span></div>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row gy-5">
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+    @php
+    $pengajar = \App\Models\Guru::take(3)->get();
+  @endphp
+  
+  <!-- Team Section -->
+  <section id="team" class="team section">
+  
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Pengajar</h2>
+      <div><span>Team</span> <span class="description-title">Pengajar</span></div>
+    </div><!-- End Section Title -->
+  
+    <div class="container">
+      <div class="row gy-5">
+        @foreach($pengajar as $index => $guru)
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ 100 + ($index * 100) }}">
             <div class="member">
-              <div class="pic"><img src="{{ asset('main/assets/img/team/team-1.jpg') }}" class="img-fluid" alt=""></div>
+              <div class="pic">
+                <img src="{{ asset('storage/' . $guru->foto) }}" class="img-fluid" alt="{{ $guru->nama_guru }}">
+              </div>
               <div class="member-info">
-                <h4>Hendra Permana., S.Pd.I</h4>
-                <span>Kepala Madrasah</span>
+                <h4>{{ $guru->nama_guru }}</h4>
+                <span>{{ $guru->user->role ?? 'Guru' }}</span>
                 <div class="social">
-                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
+                  <a href="#"><i class="bi bi-twitter-x"></i></a>
+                  <a href="#"><i class="bi bi-facebook"></i></a>
+                  <a href="#"><i class="bi bi-instagram"></i></a>
+                  <a href="#"><i class="bi bi-linkedin"></i></a>
                 </div>
               </div>
             </div>
-          </div><!-- End Team Member -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="member">
-              <div class="pic"><img src="{{ asset('main/assets/img/team/team-2.jpg') }}" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Enong Rina., S.Pd.I</h4>
-                <span>Wakil Kepala Madrasah Kurikulum</span>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Team Member -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="member">
-              <div class="pic"><img src="{{ asset('main/assets/img/team/team-3.jpg') }}" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Cecep Roslan., S.I.Pust</h4>
-                <span>TU/Operator</span>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter-x"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Team Member -->
-
-        </div>
-
+          </div>
+        @endforeach
       </div>
-
-    </section><!-- /Team Section -->
+    </div>
+  
+  </section><!-- /Team Section -->
+  
 
     <!-- Buku Section -->
     <section id="buku" class="buku section py-5 bg-light">
@@ -728,35 +692,18 @@
             </div>
 
             <div class="faq-container px-xl-5" data-aos="fade-up" data-aos-delay="200">
-
-              <div class="faq-item faq-active">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Bagaimana cara mendaftar dan mengakses LMS?</h3>
-                <div class="faq-content">
-                  <p>Untuk mendaftar, siswa dan guru akan mendapatkan akun dari pihak sekolah. Setelah login menggunakan akun yang diberikan, pengguna dapat langsung mengakses materi pembelajaran dan fitur lainnya.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Apa saja fitur utama yang tersedia dalam LMS ini?</h3>
-                <div class="faq-content">
-                  <p>LMS ini menyediakan fitur seperti Media pembelajaran, pengelolaan materi dan tugas, laporan absensi, serta perpustakaan untuk media bacaan secara digital.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item">
-                <i class="faq-icon bi bi-question-circle"></i>
-                <h3>Apakah LMS ini bisa diakses melalui perangkat mobile?</h3>
-                <div class="faq-content">
-                  <p>Ya, LMS MTSS AL-MUNAWAROH dapat diakses melalui komputer, laptop, tablet, maupun smartphone, sehingga siswa dan guru dapat belajar dengan fleksibel dari mana saja.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
+              @foreach(\App\Models\Faq::limit(3)->get() as $faq)
+                <div class="faq-item {{ $loop->first ? 'faq-active' : '' }}">
+                  <i class="faq-icon bi bi-question-circle"></i>
+                  <h3>{{ $faq->question }}</h3>
+                  <div class="faq-content">
+                    <p>{{ $faq->answer }}</p>
+                  </div>
+                  <i class="faq-toggle bi bi-chevron-right"></i>
+                </div><!-- End Faq item-->
+              @endforeach
             </div>
+            
 
           </div>
 
@@ -769,156 +716,172 @@
 
     </section><!-- /Faq Section -->
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact section">
+<!-- Contact Section -->
+@php
+    $kontak = \App\Models\KontakInformasi::first();
+@endphp
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Contact</h2>
-        <div><span>Hubungi</span> <span class="description-title">Kami</span></div>
-      </div><!-- End Section Title -->
+<section id="contact" class="contact section">
 
-      <div class="container" data-aos="fade" data-aos-delay="100">
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Contact</h2>
+    <div><span>Hubungi</span> <span class="description-title">Kami</span></div>
+  </div><!-- End Section Title -->
 
-        <div class="row gy-4">
+  <div class="container" data-aos="fade" data-aos-delay="100">
 
-          <div class="col-lg-4">
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
-              <i class="bi bi-geo-alt flex-shrink-0"></i>
-              <div>
-                <h3>Alamat</h3>
-                <p>Kp. Cikupa RT:03 RW:06 Desa Sukamanah Kec Rongga Kab Bandung Barat</p>
-              </div>
-            </div><!-- End Info Item -->
+    <div class="row gy-4">
 
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-              <i class="bi bi-telephone flex-shrink-0"></i>
-              <div>
-                <h3>Telepon</h3>
-                <p>+62 0123 1112 322</p>
-              </div>
-            </div><!-- End Info Item -->
-
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-              <i class="bi bi-envelope flex-shrink-0"></i>
-              <div>
-                <h3>Email</h3>
-                <p>info@example.com</p>
-              </div>
-            </div><!-- End Info Item -->
-
+      <div class="col-lg-4">
+        <!-- Alamat -->
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+          <i class="bi bi-geo-alt flex-shrink-0"></i>
+          <div>
+            <h3>Alamat</h3>
+            <p>{{ $kontak->alamat ?? 'Alamat belum tersedia' }}</p>
           </div>
+        </div>
 
-          <div class="col-lg-8">
-            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-              <div class="row gy-4">
+        <!-- Telepon -->
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+          <i class="bi bi-telephone flex-shrink-0"></i>
+          <div>
+            <h3>Telepon</h3>
+            <p>{{ $kontak->no_telpon ?? 'Telepon belum tersedia' }}</p>
+          </div>
+        </div>
 
-                <div class="col-md-6">
-                  <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
-                </div>
-
-                <div class="col-md-6 ">
-                  <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
-                </div>
-
-                <div class="col-md-12">
-                  <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
-                </div>
-
-                <div class="col-md-12">
-                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
-                </div>
-
-                <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
-
-                  <button type="submit">Kirim</button>
-                </div>
-
-              </div>
-            </form>
-          </div><!-- End Contact Form -->
-
+        <!-- Email -->
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+          <i class="bi bi-envelope flex-shrink-0"></i>
+          <div>
+            <h3>Email</h3>
+            <p>{{ $kontak->email ?? 'Email belum tersedia' }}</p>
+          </div>
         </div>
 
       </div>
 
-    </section><!-- /Contact Section -->
+      <div class="col-lg-8">
+        <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+          <div class="row gy-4">
+
+            <div class="col-md-6">
+              <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+            </div>
+
+            <div class="col-md-6">
+              <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+            </div>
+
+            <div class="col-md-12">
+              <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+            </div>
+
+            <div class="col-md-12">
+              <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+            </div>
+
+            <div class="col-md-12 text-center">
+              <div class="loading">Loading</div>
+              <div class="error-message"></div>
+              <div class="sent-message">Your message has been sent. Thank you!</div>
+
+              <button type="submit">Kirim</button>
+            </div>
+
+          </div>
+        </form>
+      </div><!-- End Contact Form -->
+
+    </div>
+
+  </div>
+
+</section><!-- /Contact Section -->
+
 
   </main>
+  {{-- @php
+  $kontak = \App\Models\KontakInformasi::first();
+@endphp --}}
 
-  <footer id="footer" class="footer dark-background">
+<footer id="footer" class="footer dark-background">
 
-    <div class="container footer-top">
-      <div class="row gy-4">
-        <div class="col-lg-4 col-md-6 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">MTSS<br>Al-Munawaroh</span>
-          </a>
-          <div class="footer-contact pt-3">
-            <p>Kp. Cikupa RT:03 RW:06 Desa Sukamanah</p>
-            <p>Kec. Rongga Kab. Bandung Barat</p>
-            <p class="mt-3"><strong>Phone:</strong> <span>+62 0123 1112 322</span></p>
-            <p><strong>Email:</strong> <span>info@example.com</span></p>
-          </div>
-          <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
-          </div>
-        </div>
-
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Useful Links</h4>
-          <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Terms of service</a></li>
-            <li><a href="#">Privacy policy</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Our Services</h4>
-          <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-4 col-md-12 footer-newsletter">
-          <h4>Our Newsletter</h4>
-          <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
-          <form action="forms/newsletter.php" method="post" class="php-email-form">
-            <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
-            <div class="loading">Loading</div>
-            <div class="error-message"></div>
-            <div class="sent-message">Your subscription request has been sent. Thank you!</div>
-          </form>
-        </div>
-
+<div class="container footer-top">
+  <div class="row gy-4">
+    <div class="col-lg-4 col-md-6 footer-about">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <span class="sitename">MTSS<br>Al-Munawaroh</span>
+      </a>
+      <div class="footer-contact pt-3">
+        <p>{{ $kontak->alamat ?? 'Alamat belum tersedia' }}</p>
+        <p>Kec. Rongga Kab. Bandung Barat</p>
+        <p class="mt-3"><strong>Phone:</strong> <span>{{ $kontak->no_telpon ?? 'N/A' }}</span></p>
+        <p><strong>Email:</strong> <span>{{ $kontak->email ?? 'N/A' }}</span></p>
+      </div>
+      <div class="social-links d-flex mt-4">
+        @if($kontak->instagram)
+          <a href="https://instagram.com/{{ ltrim($kontak->instagram, '@') }}" target="_blank"><i class="bi bi-instagram"></i></a>
+        @endif
+        @if($kontak->fb)
+          <a href="{{ $kontak->fb }}" target="_blank"><i class="bi bi-facebook"></i></a>
+        @endif
+        @if($kontak->no_wa)
+          <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $kontak->no_wa) }}" target="_blank"><i class="bi bi-whatsapp"></i></a>
+        @endif
       </div>
     </div>
 
-    <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">MTS Al-Munawaroh</strong> <span>All Rights Reserved</span></p>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        {{-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> --}}
-      </div>
+    <div class="col-lg-2 col-md-3 footer-links">
+      <h4>Useful Links</h4>
+      <ul>
+        <li><a href="#hero" class="active">Beranda</a></li>
+        <li><a href="#about">Tentang Kami</a></li>
+        <li><a href="#gallery">Dokumentasi</a></li>
+        <li><a href="#team">Pengajar</a></li>
+        <li><a href="#contact">Kontak</a></li>
+      </ul>
     </div>
 
-  </footer>
+    <div class="col-lg-2 col-md-3 footer-links">
+      <h4>Our Services</h4>
+      <ul>
+        <li><a href="#">Web Design</a></li>
+        <li><a href="#">Web Development</a></li>
+        <li><a href="#">Product Management</a></li>
+        <li><a href="#">Marketing</a></li>
+        <li><a href="#">Graphic Design</a></li>
+      </ul>
+    </div>
+
+    <div class="col-lg-4 col-md-12 footer-newsletter">
+      <h4>Our Newsletter</h4>
+      <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
+      <form action="forms/newsletter.php" method="post" class="php-email-form">
+        <div class="newsletter-form">
+          <input type="email" name="email">
+          <input type="submit" value="Subscribe">
+        </div>
+        <div class="loading">Loading</div>
+        <div class="error-message"></div>
+        <div class="sent-message">Your subscription request has been sent. Thank you!</div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<div class="container copyright text-center mt-4">
+  <p>© <span>Copyright</span> <strong class="px-1 sitename">MTS Al-Munawaroh</strong> <span>All Rights Reserved</span></p>
+  <div class="credits">
+    {{-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> --}}
+  </div>
+</div>
+
+</footer>
+
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

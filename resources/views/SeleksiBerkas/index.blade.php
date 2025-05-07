@@ -48,8 +48,9 @@
                   <thead class="bg-primary text-white text-center">
                     <tr>
                       <th>No</th>
+                      <th>No Pendaftaran</th>
                       <th>Nama User</th>
-                      <th>Formulir Pendaftaran ID</th>
+                      
                       <th>Aksi</th>
                     </tr>
                   </thead>
@@ -57,8 +58,9 @@
                     @foreach($data as $index => $item)
                       <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
-                        <td>{{ $item->user->name }}</td>
+                        
                         <td>{{ $item->formulir_pendaftaran_id }}</td>
+                        <td>{{ $item->user->name }}</td>
                         <td class="text-center">
                           <a href="{{ route('seleksi-berkas.show', $item->id) }}" class="btn btn-info btn-sm rounded-pill me-1 shadow-sm">
                             <i class="fas fa-eye"></i> Lihat

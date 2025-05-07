@@ -20,24 +20,28 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user(); // Mendapatkan pengguna yang sedang login
-
-        // Get the total number of RencanaKegiatan
-
-        // Periksa peran pengguna dan arahkan ke halaman yang sesuai
+    
         switch ($user->role_name) {
             case 'siswa':
-                return view('siswa.Home_siswa'); // Pass the data to the siswa view
+                return view('siswa.Home_siswa');
             case 'guru':
-                return view('guru.guru'); // Pass the data to the guru view
+                return view('guru.guru');
             case 'Admin':
-                // Pass the total counts to the Admin view
                 return view('Admin.home');
             case 'Orang Tua':
-                return view('orang_tua.orang_tua'); // Pass the data to the orang_tua view
+                return view('orang_tua.orang_tua');
             case 'calon_siswa':
-                    return view('calon_siswa.home'); // Pass the data to the orang_tua view
+                if ($user->role_name === 'Admin') {
+                    $pendaftarans = \App\Models\FormulirPendaftaran::with('user')->latest()->get();
+                } else {
+                    $pendaftarans = \App\Models\FormulirPendaftaran::with('user')
+                        ->where('user_id', $user->id)
+                        ->latest()
+                        ->get();
+                }
+                return view('calon_siswa.home', compact('pendaftarans'));
             default:
                 return redirect('/')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
-}
+}    
