@@ -18,6 +18,7 @@ use App\Http\Controllers\SeleksiBerkasController;
 use App\Http\Controllers\FormulirPendaftaranController;
 use App\Http\Controllers\KontakInformasiController;
 use App\Http\Controllers\MateriPembelajaranController;
+use App\Http\Controllers\DokKegiatanController;
 
 
 
@@ -118,3 +119,9 @@ Route::middleware(['auth'])->group(function () {
 use App\Http\Controllers\BookssiswaController;
 
 Route::get('/buku-siswa', [BookssiswaController::class, 'index'])->name('bookssiswa.index');
+Route::resource('dok_kegiatan', DokKegiatanController::class);
+
+
+Route::get('/siswa/{id}/print', [SiswaController::class, 'print'])->name('siswa.print');
+Route::get('guru/{id}/cetak', [GuruController::class, 'cetakPerId'])->name('guru.cetak');
+Route::post('/registrasi/import', [RegistrasiController::class, 'import'])->name('registrasi.import');

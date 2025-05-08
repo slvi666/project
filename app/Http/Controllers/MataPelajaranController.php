@@ -14,23 +14,34 @@ class MataPelajaranController extends Controller
     // Menampilkan semua data mata pelajaran
     public function index()
     {
-        $user = Auth::user();
-
-        if ($user->role_name === 'Admin' || $user->role_name === 'siswa') {
-            // Admin dan siswa bisa lihat semua data
-            $data = MataPelajaran::with(['subject', 'guru'])->get();
+        $user = auth()->user();
+    
+        if ($user->role_name === 'siswa') {
+            // Ambil ID siswa dari relasi user
+            $siswaId = $user->siswa->id ?? null;
+    
+            // Ambil mata pelajaran yang memiliki siswa_id sesuai user login
+            $data = MataPelajaran::with(['subject', 'guru'])
+                ->whereJsonContains('siswa_ids', (string) $siswaId)
+                ->get();
+    
         } elseif ($user->role_name === 'guru') {
-            // Guru hanya lihat data pelajaran yang dia ajar
+            // Guru bisa lihat data berdasarkan guru_id yang sama dengan user->id
             $data = MataPelajaran::with(['subject', 'guru'])
                 ->where('guru_id', $user->id)
                 ->get();
+    
         } else {
-            // Role lain tidak bisa lihat apa pun
-            $data = collect();
+            // Role admin atau lainnya melihat semua data
+            $data = MataPelajaran::with(['subject', 'guru'])->get();
         }
-
+    
         return view('mata_pelajaran.index', compact('data'));
     }
+    
+    
+
+    
 
 
     // Form tambah data

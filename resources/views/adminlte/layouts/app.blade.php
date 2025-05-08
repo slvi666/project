@@ -197,9 +197,9 @@ body {
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ route('faq.index') }}" class="nav-link">
+          <a href="{{ route('dok_kegiatan.index') }}" class="nav-link">
             <i class="fas fa-question-circle nav-icon"></i>
-            <p>Data FAQ</p>
+            <p>Data Dokumentasi</p>
           </a>
         </li>
         <li class="nav-item">
