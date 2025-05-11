@@ -76,44 +76,65 @@
         
         <div class="col-lg-6 mb-4">
           <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
-            <div class="card-body">
-              <h5 class="card-title font-weight-bold mb-3">Jadwal Pelajaran</h5>
-        
-              @php
-                // Mengambil jadwal pelajaran terbaru
-                $jadwal = \App\Models\MataPelajaran::latest()->first();
-              @endphp
-        
-              {{-- Tampilkan pesan jika tidak ada jadwal --}}
-              @if(!$jadwal)
-                <p class="card-text">Tidak ada jadwal pelajaran terbaru.</p>
-              @else
-                <table class="table table-striped table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">Mata Pelajaran</th>
-                      <th scope="col">Guru</th>
-                      <th scope="col">Hari</th>
-                      <th scope="col">Waktu Mulai</th>
-                      <th scope="col">Waktu Berakhir</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{ $jadwal->subject->subject_name }}</td>
-                      <td>{{ $jadwal->guru->name }}</td>
-                      <td>{{ $jadwal->hari }}</td>
-                      <td>{{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }}</td>
-                      <td>{{ \Carbon\Carbon::parse($jadwal->waktu_berakhir)->format('H:i') }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              @endif
-        
-              <hr class="divider">
-            </div>
+              <div class="card-body">
+                  <h5 class="card-title font-weight-bold mb-3">Jadwal Pelajaran</h5>
+      
+                  @php
+                      $user = auth()->user();
+      
+                      // Initialize empty collection for jadwal data
+                      $data = collect();
+      
+                      if ($user->role_name === 'siswa') {
+                          // Ambil ID siswa dari relasi user
+                          $siswaId = $user->siswa->id ?? null;
+                          // Ambil mata pelajaran yang memiliki siswa_id sesuai user login
+                          $data = \App\Models\MataPelajaran::with(['subject', 'guru'])
+                              ->whereJsonContains('siswa_ids', (string) $siswaId)
+                              ->get();
+                      } elseif ($user->role_name === 'guru') {
+                          // Guru bisa lihat data berdasarkan guru_id yang sama dengan user->id
+                          $data = \App\Models\MataPelajaran::with(['subject', 'guru'])
+                              ->where('guru_id', $user->id)
+                              ->get();
+                      } else {
+                          // Role admin atau lainnya melihat semua data
+                          $data = \App\Models\MataPelajaran::with(['subject', 'guru'])->get();
+                      }
+                  @endphp
+      
+                  @if($data->isEmpty())
+                      <p class="card-text">Tidak ada jadwal pelajaran untuk Anda.</p>
+                  @else
+                      <table class="table table-striped table-bordered">
+                          <thead>
+                              <tr>
+                                  <th scope="col">Mata Pelajaran</th>
+                                  <th scope="col">Guru</th>
+                                  <th scope="col">Hari</th>
+                                  <th scope="col">Waktu Mulai</th>
+                                  <th scope="col">Waktu Berakhir</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              @foreach ($data as $jadwal)
+                                  <tr>
+                                      <td>{{ $jadwal->subject->subject_name }}</td>
+                                      <td>{{ $jadwal->guru->name }}</td>
+                                      <td>{{ $jadwal->hari }}</td>
+                                      <td>{{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }}</td>
+                                      <td>{{ \Carbon\Carbon::parse($jadwal->waktu_berakhir)->format('H:i') }}</td>
+                                  </tr>
+                              @endforeach
+                          </tbody>
+                      </table>
+                  @endif
+      
+                  <hr class="divider">
+              </div>
           </div>
-        </div>
+      </div>
+      
         
 
         <!-- Featured Cards -->
@@ -131,6 +152,20 @@
           </div>
         </div>
 
+        @php
+        use App\Models\TugasSiswa;
+        $user = auth()->user();
+      
+        if($user->role_name === 'siswa') {
+          $openTugas = TugasSiswa::where('siswa_id', $user->siswa->id)
+                        ->whereNull('file_jawaban')
+                        ->get();
+        } else {
+          $openTugas = TugasSiswa::all();
+        }
+      @endphp
+      
+      @if($openTugas->isNotEmpty())
         <div class="col-lg-6 mb-4">
           <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
             <div class="card-header">
@@ -138,12 +173,14 @@
             </div>
             <div class="card-body">
               <h6 class="card-title font-weight-bold">Jumlah Tugas Tersedia</h6>
-              <p class="card-text">Jumlah total tugas yang telah dibuat oleh guru dalam sistem.</p>
-              <h3 class="display-4 text-primary"></h3>
+              <p class="card-text">Jumlah total tugas yang belum Anda upload jawabannya.</p>
+              <h3 class="display-4 text-primary">{{ $openTugas->count() }}</h3>
               <hr class="divider">
             </div>
           </div>
         </div>
+      @endif
+      
       </div>
     </div>
   </div>

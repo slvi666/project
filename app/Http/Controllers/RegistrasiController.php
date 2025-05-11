@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Registrasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\RegistrasiImport;
 
 class RegistrasiController extends Controller
 {
@@ -124,4 +126,18 @@ class RegistrasiController extends Controller
 
         return redirect()->route('registrasi.index')->with('success', 'User deleted successfully.');
     }
+
+
+
+public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv',
+    ]);
+
+    Excel::import(new RegistrasiImport, $request->file('file'));
+
+    return redirect()->route('registrasi.index')->with('success', 'Users imported successfully.');
+}
+
 }

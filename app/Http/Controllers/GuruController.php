@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Guru;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class GuruController extends Controller
 {
@@ -134,4 +136,16 @@ class GuruController extends Controller
 
         return redirect()->route('guru.index')->with('success', 'Data guru berhasil dihapus.');
     }
+    public function cetakPerId($id)
+{
+    // Ambil data guru berdasarkan ID yang dipilih
+    $guru = Guru::with('user')->findOrFail($id);
+
+    // Menggenerate PDF
+    $pdf = Pdf::loadView('guru.pdf', compact('guru'));
+
+    // Menyajikan PDF ke browser atau bisa diunduh
+    return $pdf->download('guru_' . $guru->nip . '.pdf');
+}
+
 }

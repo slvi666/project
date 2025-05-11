@@ -84,6 +84,10 @@
                               <a href="javascript:void(0)" onclick="confirmView('{{ route('guru.show', $g->id) }}')" class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
                                 <i class="fas fa-eye"></i> Lihat
                               </a>
+                              <a href="{{ route('guru.cetak', $g->id) }}" class="btn btn-secondary btn-sm rounded-pill shadow-sm me-1" target="_blank">
+                                <i class="fas fa-print"></i> Cetak
+                              </a>
+                              
                               <button class="btn btn-warning btn-sm rounded-pill shadow-sm me-1"
                                 onclick="confirmEdit('{{ route('guru.edit', $g->id) }}')">
                                 <i class="fas fa-edit"></i> Edit
@@ -98,6 +102,7 @@
                                   <i class="fas fa-trash"></i> Hapus
                                 </button>
                               </form>
+
                             </td>
                           @endif
                         </tr>

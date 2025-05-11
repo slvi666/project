@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SiswaController extends Controller
 {
@@ -106,5 +107,17 @@ class SiswaController extends Controller
 
         $siswa->delete();
         return redirect()->route('profil_siswa.index')->with('success', 'Siswa berhasil dihapus!');
+    }
+
+    public function print($id)
+    {
+        // Ambil data siswa berdasarkan ID
+        $siswa = Siswa::with('user', 'subject')->findOrFail($id);
+
+        // Generate PDF menggunakan view
+        $pdf = Pdf::loadView('profil_siswa.print', compact('siswa'));
+
+        // Return file PDF
+        return $pdf->download('siswa_' . $siswa->nisn . '.pdf');
     }
 }

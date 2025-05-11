@@ -75,42 +75,70 @@ class AbsensiController extends Controller
     }
     public function laporan(Request $request)
     {
-        $mataPelajaran = MataPelajaran::with(['subject', 'guru'])->get(); // semua mata pelajaran
-
+        $user = auth()->user();
+    
+        // Default: ambil semua mata pelajaran (untuk dropdown filter)
+        $mataPelajaran = MataPelajaran::with(['subject', 'guru'])->get();
+    
         // Ambil semua nama kelas unik dari relasi subject
         $kelasList = $mataPelajaran
-        ->pluck('subject.class_name')
-        ->filter()
-        ->unique()
-        ->sort()
-        ->values();
-
+            ->pluck('subject.class_name')
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values();
+    
         $query = Absensi::with(['siswa.user', 'mataPelajaran.subject', 'mataPelajaran.guru']);
-
-        
+    
+        // 🔐 Filter sesuai peran user
+        if ($user->role_name === 'siswa') {
+            $siswaId = $user->siswa->id ?? null;
+    
+            $query->where('siswa_id', $siswaId);
+    
+            // Opsional: batasi juga $mataPelajaran yang ditampilkan (untuk dropdown filter)
+            $mataPelajaran = MataPelajaran::whereJsonContains('siswa_ids', (string) $siswaId)
+                ->with(['subject', 'guru'])
+                ->get();
+    
+        } elseif ($user->role_name === 'guru') {
+            $guruId = $user->guru->id ?? $user->id;
+    
+            // Filter absensi berdasarkan mata pelajaran yang diajar guru
+            $mataPelajaranIds = MataPelajaran::where('guru_id', $guruId)->pluck('id');
+    
+            $query->whereIn('mata_pelajaran_id', $mataPelajaranIds);
+    
+            // Batasi juga list dropdownnya
+            $mataPelajaran = MataPelajaran::with(['subject', 'guru'])
+                ->where('guru_id', $guruId)
+                ->get();
+        }
+    
+        // ✅ Filter tambahan dari request
         if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
         }
-
+    
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-
+    
         if ($request->filled('mata_pelajaran_id')) {
             $query->where('mata_pelajaran_id', $request->mata_pelajaran_id);
         }
-
+    
         if ($request->filled('kelas')) {
             $query->whereHas('mataPelajaran.subject', function ($q) use ($request) {
                 $q->where('class_name', $request->kelas);
             });
         }
     
-
         $absensi = $query->orderBy('tanggal', 'desc')->get();
-
+    
         return view('absensi.laporan_absensi', compact('absensi', 'mataPelajaran', 'kelasList'));
     }
+    
 
     public function cetak(Request $request, $id)
     {

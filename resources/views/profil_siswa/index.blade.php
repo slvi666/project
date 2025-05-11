@@ -105,6 +105,9 @@
                           </button>
                         </form>
                       @endif
+                      <a href="{{ route('siswa.print', $data->id) }}" target="_blank" class="btn btn-success btn-sm rounded-pill shadow-sm">
+                        <i class="fas fa-print"></i> Print
+                    </a>
                       </td>
                     </tr>
                   @endforeach
