@@ -138,18 +138,20 @@
                     <tr>
                       <th>Waktu</th>
                       <th>Nama Siswa</th>
+                      <th>Kelas</th>
                       <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     @forelse ($absensi as $tanggal => $items)
                       <tr class="table-secondary text-center">
-                        <td colspan="3"><strong>{{ $tanggal }}</strong></td>
+                        <td colspan="4"><strong>{{ $tanggal }}</strong></td>
                       </tr>
                       @foreach ($items as $item)
                         <tr class="text-center">
                           <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('H:i') }}</td>
                           <td>{{ $item->siswa->user->name ?? '-' }}</td>
+                          <td>{{ $item->siswa->subject->class_name ?? '-' }}</td>
                           <td>
                             @php
                               $statusColor = [

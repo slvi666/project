@@ -16,6 +16,7 @@ class MateriPembelajaran extends Model
         'subject_id',
         'file',
         'deskripsi',
+        'views', // ✅ Tambahkan ini
     ];
 
     /**
@@ -33,15 +34,21 @@ class MateriPembelajaran extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+
     public function siswa()
     {
         return $this->hasMany(Siswa::class, 'id', 'siswa_ids');
     }
 
-
     protected $casts = [
         'siswa_ids' => 'array',
     ];
+
+    /**
+     * ✅ Method untuk menaikkan jumlah views
+     */
+    public function incrementViews(): void
+    {
+        $this->increment('views');
+    }
 }
-
-

@@ -110,31 +110,40 @@
                 </td>
                 <td>{{ $item->hari }}</td>
                 <td>{{ substr($item->waktu_mulai, 0, 5) }} - {{ substr($item->waktu_berakhir, 0, 5) }}</td>
-                <td>
-                  @if (auth()->user()->role_name === 'Admin')
-                  <a href="#" class="btn btn-warning btn-sm rounded-pill"
-                    onclick="confirmNavigate('{{ route('mata-pelajaran.edit', $item->id) }}', 'Edit data ini?')">
-                    <i class="fas fa-edit me-1"></i> Edit
-                  </a>
-                  <!-- Tombol Hapus -->
-                  <button type="button" class="btn btn-danger btn-sm mt-1 rounded-pill" onclick="hapusData({{ $item->id }})">
-                    <i class="fas fa-trash-alt me-1"></i> Hapus
-                  </button>
-                  <form id="delete-form-{{ $item->id }}" action="{{ route('mata-pelajaran.destroy', $item->id) }}" method="POST" style="display: none;">
-                    @csrf
-                    @method('DELETE')
-                  </form>
-                  @endif
-                  @if (auth()->user()->role_name === 'guru')
-                    <button type="button" class="btn btn-primary btn-sm mt-1 rounded-pill" onclick="konfirmasiAbsensi('{{ route('absensi.create', $item->id) }}')">
-                      Input Absensi
-                    </button>
-                  @endif
-                  <a href="#" class="btn btn-info btn-sm mt-1 rounded-pill"
-                    onclick="confirmNavigate('{{ route('absensi.index', $item->id) }}', 'Lihat absensi kelas ini?')">
-                    <i class="fas fa-eye me-1"></i> Lihat Absensi
-                  </a>
-                </td>
+<td>
+    @if (auth()->user()->role_name === 'Admin')
+        <a href="#" class="btn btn-warning btn-sm rounded-pill"
+           onclick="confirmNavigate('{{ route('mata-pelajaran.edit', $item->id) }}', 'Edit data ini?')">
+            <i class="fas fa-edit me-1"></i> Edit
+        </a>
+        <!-- Tombol Hapus -->
+        <button type="button" class="btn btn-danger btn-sm mt-1 rounded-pill" onclick="hapusData({{ $item->id }})">
+            <i class="fas fa-trash-alt me-1"></i> Hapus
+        </button>
+        <form id="delete-form-{{ $item->id }}" action="{{ route('mata-pelajaran.destroy', $item->id) }}" method="POST" style="display: none;">
+            @csrf
+            @method('DELETE')
+        </form>
+    @endif
+
+    @if (auth()->user()->role_name === 'guru')
+        <button type="button" class="btn btn-primary btn-sm mt-1 rounded-pill" onclick="konfirmasiAbsensi('{{ route('absensi.create', $item->id) }}')">
+            Input Absensi
+        </button>
+    @endif
+
+    <!-- Button untuk melihat detail Mata Pelajaran -->
+  <a href="#" class="btn btn-success btn-sm mt-1 rounded-pill"
+   onclick="confirmNavigate('{{ route('mata-pelajaran.show', $item->id) }}', 'Lihat detail mata pelajaran ini?')">
+    <i class="fas fa-eye me-1"></i> Lihat Detail
+</a>
+
+    <a href="#" class="btn btn-info btn-sm mt-1 rounded-pill"
+       onclick="confirmNavigate('{{ route('absensi.index', $item->id) }}', 'Lihat absensi kelas ini?')">
+        <i class="fas fa-eye me-1"></i> Lihat Absensi
+    </a>
+</td>
+
               </tr>
               @endforeach
             </tbody>

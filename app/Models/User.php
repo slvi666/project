@@ -74,4 +74,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(MateriPembelajaran::class, 'guru_id');
     }
+    // Relasi untuk percakapan yang dikirim oleh pengguna
+    public function sentChats()
+    {
+        return $this->hasMany(Chat::class, 'sender_id');
+    }
+
+    // Relasi untuk percakapan yang diterima oleh pengguna
+    public function receivedChats()
+    {
+        return $this->hasMany(Chat::class, 'receiver_id');
+    }
+     // Relasi dengan pesan yang dikirim oleh pengguna
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    // Relasi dengan pesan yang diterima oleh pengguna
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
+    }
 }

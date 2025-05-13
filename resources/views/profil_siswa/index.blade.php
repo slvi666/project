@@ -10,7 +10,7 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item active">Daftar Siswa</li>
+            <li class="breadcrumb-item active">Siswa</li>
           </ol>
         </div>
       </div>
@@ -21,98 +21,95 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Daftar Siswa</h3>
-              @if (auth()->user()->role_name === 'Admin')
-              <div class="card-tools">
-                <a href="javascript:void(0)" onclick="confirmAdd('{{ route('profil_siswa.create') }}')" class="btn btn-success shadow-sm">
-                  <i class="fas fa-user-plus"></i> Tambah Siswa
-                </a>
-              </div>
-              @endif
+          <div class="card shadow-lg rounded">
+            <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+              <h3 class="card-title m-0">Daftar Siswa</h3>
             </div>
+
             <div class="card-body">
               @if(session('success'))
-                <script>
-                  Swal.fire({
-                    title: 'Berhasil!',
-                    text: "{{ session('success') }}",
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                  }).then(() => {
-                    window.location.reload();
-                  });
-                </script>
+              <script>
+                Swal.fire({
+                  title: 'Berhasil!',
+                  text: "{{ session('success') }}",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then(() => {
+                  window.location.reload();
+                });
+              </script>
               @endif
 
-              <div class="card">
-                <div class="card-body">
-                  @if (auth()->user()->role_name === 'Admin')
-                  <div class="mb-3 d-flex justify-content-between align-items-center">
-                    <input type="text" id="searchInput" placeholder="🔍 Cari siswa..." class="form-control w-50 shadow-sm">
-                  </div>
-                  @endif
+              <div class="mb-3 d-flex justify-content-between align-items-center">
+                <input type="text" id="searchInput" placeholder="🔍 Cari siswa..." class="form-control w-50 shadow-sm rounded-pill px-3">
+               @if (auth()->user()->role_name === 'Admin')
+              <a href="javascript:void(0)" onclick="confirmAdd('{{ route('profil_siswa.create') }}')" 
+                class="btn btn-primary fw-bold shadow-sm rounded-pill px-4">
+                <i class="fas fa-plus-circle me-1"></i> Tambah Siswa
+              </a>
+              @endif
+              </div>
 
-              {{-- <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari siswa..."> --}}
-
-              <table id="studentsTable" class="table table-bordered table-striped">
-                <thead class="bg-primary text-white">
-                  <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Email</th>
-                    <th>NISN</th>
-                    <th>Kelas</th>
-                    <th>Foto</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach($siswa as $index => $data)
+              <div class="table-responsive">
+                <table id="studentsTable" class="table table-bordered table-striped align-middle">
+                  <thead class="bg-primary text-white text-center">
                     <tr>
-                      <td>{{ $index + 1 }}</td>
+                      <th style="width: 5%;">No</th>
+                      <th>Nama</th>
+                      <th>Email</th>
+                      <th>NISN</th>
+                      <th>Kelas</th>
+                      <th>Foto</th>
+                      <th style="width: 25%;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($siswa as $index => $data)
+                    <tr>
+                      <td class="text-center">{{ $index + 1 }}</td>
                       <td>{{ $data->user->name }}</td>
                       <td>{{ $data->user->email }}</td>
                       <td>{{ $data->nisn }}</td>
                       <td>{{ $data->subject->class_name ?? '-' }}</td>
-                      <td>
+                      <td class="text-center">
                         @if($data->poto)
-                          <img src="{{ asset('storage/' . $data->poto) }}" width="50">
+                          <img src="{{ asset('storage/' . $data->poto) }}" width="50" class="rounded-circle">
                         @else
-                          Tidak ada foto
+                          <span class="text-muted">Tidak ada foto</span>
                         @endif
                       </td>
-                      <td>
-                        <a href="javascript:void(0)" onclick="confirmView('{{ route('profil_siswa.show', $data->id) }}')" class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
-                          <i class="fas fa-eye"></i> Detail
+                      <td class="text-center">
+                        <a href="javascript:void(0)" onclick="confirmView('{{ route('profil_siswa.show', $data->id) }}')" 
+                          class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
+                          <i class="fas fa-eye"></i>
                         </a>
                         @if (auth()->user()->role_name === 'Admin' || auth()->user()->role_name === 'siswa')
                         <button class="btn btn-warning btn-sm rounded-pill shadow-sm me-1"
                                 onclick="confirmEdit('{{ route('profil_siswa.edit', $data->id) }}')">
-                          <i class="fas fa-edit"></i> Edit
+                          <i class="fas fa-edit"></i>
                         </button>
-                      @endif
-                    
-                      @if (auth()->user()->role_name === 'Admin')
+                        @endif
+                        @if (auth()->user()->role_name === 'Admin')
                         <form action="{{ route('profil_siswa.destroy', $data->id) }}" method="POST" class="d-inline">
                           @csrf
                           @method('DELETE')
                           <button type="button"
-                                  class="btn btn-danger btn-sm rounded-pill shadow-sm"
+                                  class="btn btn-danger btn-sm rounded-pill shadow-sm me-1"
                                   onclick="confirmDelete(this.form)">
-                            <i class="fas fa-trash"></i> Hapus
+                            <i class="fas fa-trash"></i>
                           </button>
                         </form>
-                      @endif
-                      <a href="{{ route('siswa.print', $data->id) }}" target="_blank" class="btn btn-success btn-sm rounded-pill shadow-sm">
-                        <i class="fas fa-print"></i> Print
-                    </a>
+                        @endif
+                        <a href="{{ route('siswa.print', $data->id) }}" target="_blank"
+                          class="btn btn-success btn-sm rounded-pill shadow-sm">
+                          <i class="fas fa-print"></i>
+                        </a>
                       </td>
                     </tr>
-                  @endforeach
-                </tbody>
-              </table>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
 
               <div id="paginationContainer" class="mt-3 text-center"></div>
             </div>
@@ -123,45 +120,50 @@
   </section>
 </div>
 
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    let table = document.getElementById("studentsTable");
-    let searchInput = document.getElementById("searchInput");
-    let rows = table.getElementsByTagName("tr");
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.getElementById("studentsTable");
+    const searchInput = document.getElementById("searchInput");
+    const rows = table.getElementsByTagName("tr");
+    const pagination = document.getElementById("paginationContainer");
     let currentPage = 1;
-    let rowsPerPage = 5;
-    let pagination = document.getElementById("paginationContainer");
+    const rowsPerPage = 5;
 
     function showPage(page) {
-      let start = (page - 1) * rowsPerPage + 1;
-      let end = start + rowsPerPage;
-
+      const start = (page - 1) * rowsPerPage + 1;
+      const end = start + rowsPerPage;
       for (let i = 1; i < rows.length; i++) {
-        rows[i].style.display = (i >= start && i < end) ? "table-row" : "none";
+        rows[i].style.display = (i >= start && i < end) ? "" : "none";
       }
     }
 
     function setupPagination() {
       pagination.innerHTML = "";
-      let pageCount = Math.ceil((rows.length - 1) / rowsPerPage);
+      const pageCount = Math.ceil((rows.length - 1) / rowsPerPage);
       for (let i = 1; i <= pageCount; i++) {
-        let btn = document.createElement("button");
-        btn.innerText = i;
+        const btn = document.createElement("button");
+        btn.textContent = i;
         btn.className = "btn btn-sm btn-secondary mx-1";
-        btn.onclick = function() { currentPage = i; showPage(i); };
+        btn.onclick = () => {
+          currentPage = i;
+          showPage(i);
+        };
         pagination.appendChild(btn);
       }
     }
 
-    searchInput.addEventListener("keyup", function() {
-      let filter = searchInput.value.toLowerCase();
+    searchInput.addEventListener("keyup", function () {
+      const filter = searchInput.value.toLowerCase();
       for (let i = 1; i < rows.length; i++) {
-        let text = rows[i].textContent.toLowerCase();
-        rows[i].style.display = text.includes(filter) ? "table-row" : "none";
+        const text = rows[i].textContent.toLowerCase();
+        rows[i].style.display = text.includes(filter) ? "" : "none";
       }
     });
 
-    showPage(1);
+    showPage(currentPage);
     setupPagination();
   });
 
@@ -180,32 +182,17 @@
     });
   }
 
-  function confirmDelete(form) {
-    Swal.fire({
-      title: 'Anda yakin?',
-      text: "Data ini akan dihapus!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        form.submit();
-      }
-    });
-  }
-
   function confirmEdit(url) {
     Swal.fire({
-      title: 'Anda yakin ingin mengedit?',
+      title: 'Edit Data Siswa?',
       text: "Anda akan diarahkan ke halaman edit.",
       icon: 'info',
       showCancelButton: true,
-      confirmButtonText: 'Ya, lanjutkan!',
+      confirmButtonText: 'Lanjutkan',
       cancelButtonText: 'Batal'
     }).then((result) => {
       if (result.isConfirmed) {
-        document.location.href = url;
+        window.location.href = url;
       }
     });
   }
@@ -213,12 +200,27 @@
   function confirmView(url) {
     Swal.fire({
       title: 'Lihat Detail Siswa?',
-      text: "Anda akan diarahkan ke halaman detail.",
+      text: "Anda akan diarahkan ke halaman detail siswa.",
       icon: 'info',
       confirmButtonText: 'Lanjutkan'
     }).then((result) => {
       if (result.isConfirmed) {
         window.location.href = url;
+      }
+    });
+  }
+
+  function confirmDelete(form) {
+    Swal.fire({
+      title: 'Hapus Data Siswa?',
+      text: "Data ini akan dihapus secara permanen!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
       }
     });
   }

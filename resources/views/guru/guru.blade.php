@@ -113,149 +113,92 @@
 
   
   
-  <!-- Main content -->
-  <section class="content">
-    <div class="container-fluid">
-      <!-- Unique Visitor and Income Overview -->
-      <div class="row mb-4">
-        <div class="col-md-8">
-          <div class="card p-4 shadow-sm">
-              <h5 class="card-title text-primary">Pengumuman Aktif</h5>
-      
-              <!-- Menampilkan Pengumuman dengan Status Aktif -->
-              @php
-                  // Mengambil semua pengumuman yang statusnya 'Aktif'
-                  $pengumumans = \App\Models\Pengumuman::where('status', 'Aktif')->get();
-              @endphp
-      
-              @if($pengumumans->count() > 0)
-                  @foreach($pengumumans as $pengumuman)
-                      <!-- Judul Pengumuman -->
-                      <h6 class="card-subtitle mb-3 text-secondary">{{ $pengumuman->judul_pengumuman }}</h6>
-      
-                      <!-- Deskripsi Pengumuman -->
-                      <p class="card-text">{{ $pengumuman->deskripsi_pengumuman }}</p>
-      
-                      <!-- Status Pengumuman -->
-                      <div class="mb-3">
-                          <strong>Status:</strong>
-                          <span class="badge bg-success">{{ $pengumuman->status }}</span>
-                      </div>
-      
-                      <!-- Tanggal Mulai dan Berakhir -->
-                      <div class="row">
-                          <div class="col-6">
-                              <p><strong>Tanggal Mulai:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_mulai)->format('d M Y') }}</p>
-                          </div>
-                          <div class="col-6">
-                              <p><strong>Tanggal Berakhir:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_berakhir)->format('d M Y') }}</p>
-                          </div>
-                      </div>
-      
-                      <hr>
-                  @endforeach
-              @else
-                  <p>Tidak ada pengumuman aktif saat ini.</p>
-              @endif
-          </div>
-      </div>
-      
-    
-      
-        <div class="col-md-4">
-          <div class="card p-3">
-            @php
-                // Mengambil pengumuman terbaru langsung dari model
-                $pengumuman = \App\Models\Pengumuman::latest()->first(); // Ambil pengumuman terbaru
-        
-                // Data Income per hari
-                $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-                $income = [1000, 1300, 950, 600, 850, 780, 1170];
-            @endphp
-        
-            <h6>{{ $pengumuman->judul_pengumuman }}</h6>
-            <p>{{ $pengumuman->deskripsi_pengumuman }}</p>
-            <p><strong>Untuk Bagian Ujian:</strong> $7,650</p>
-            
-            <div class="table-responsive">
-                <table class="table table-bordered table-sm">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Hari</th>
-                            <th>Income ($)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($days as $i => $day)
-                        <tr>
-                            <td>{{ $day }}</td>
-                            <td>${{ number_format($income[$i], 0) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- Unique Visitor and Income Overview -->
+    <div class="row mb-4">
+
+      <!-- Kolom Pengumuman Aktif -->
+      <div class="col-md-8">
+        <div class="card p-4 shadow-sm">
+          <h5 class="card-title text-primary mb-4">📢 Pengumuman Aktif</h5>
+
+          @php
+              $pengumumans = \App\Models\Pengumuman::where('status', 'Aktif')->get();
+          @endphp
+
+          @if($pengumumans->count())
+            @foreach($pengumumans as $pengumuman)
+              <div class="mb-4">
+                <h6 class="text-secondary">{{ $pengumuman->judul_pengumuman }}</h6>
+                <p>{{ $pengumuman->deskripsi_pengumuman }}</p>
+
+                <p>
+                  <strong>Status:</strong>
+                  <span class="badge bg-success">{{ $pengumuman->status }}</span>
+                </p>
+
+                <div class="row">
+                  <div class="col-6">
+                    <p><strong>Tanggal Mulai:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_mulai)->format('d M Y') }}</p>
+                  </div>
+                  <div class="col-6">
+                    <p><strong>Tanggal Berakhir:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_berakhir)->format('d M Y') }}</p>
+                  </div>
+                </div>
+              </div>
+              <hr>
+            @endforeach
+          @else
+            <p class="text-muted">Tidak ada pengumuman aktif saat ini.</p>
+          @endif
         </div>
       </div>
 
-      {{-- <!-- Recent Orders and Analytics -->
-      <div class="row mb-4">
-        <div class="col-md-8">
-          <div class="card p-3">
-            <h6>Recent Orders</h6>
-            <div class="table-responsive">
-              <table class="table table-bordered table-sm">
-                <thead class="table-light">
+      <!-- Kolom Income & Pengumuman Terbaru -->
+      <div class="col-md-4">
+        <div class="card p-4 shadow-sm">
+          @php
+              $pengumuman = \App\Models\Pengumuman::latest()->first();
+              $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+              $income = [1000, 1300, 950, 600, 850, 780, 1170];
+          @endphp
+
+          @if($pengumuman)
+            <h6 class="text-primary">{{ $pengumuman->judul_pengumuman }}</h6>
+            <p>{{ $pengumuman->deskripsi_pengumuman }}</p>
+          @else
+            <p class="text-muted">Tidak ada pengumuman terbaru.</p>
+          @endif
+
+          <p><strong>Untuk Bagian Ujian:</strong> $7,650</p>
+
+          <div class="table-responsive mt-3">
+            <table class="table table-bordered table-sm">
+              <thead class="table-light">
+                <tr>
+                  <th>Hari</th>
+                  <th>Income ($)</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($days as $i => $day)
                   <tr>
-                    <th>Tracking No.</th>
-                    <th>Product Name</th>
-                    <th>Total Order</th>
-                    <th>Status</th>
-                    <th>Total Amount</th>
+                    <td>{{ $day }}</td>
+                    <td>${{ number_format($income[$i], 0) }}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  @for ($i = 0; $i < 10; $i++)
-                  <tr>
-                    <td>84564564</td>
-                    <td>{{ ['Camera Lens', 'Laptop', 'Mobile'][$i % 3] }}</td>
-                    <td>{{ rand(30, 400) }}</td>
-                    <td class="{{ ['text-danger','text-warning','text-success'][$i % 3] }}">
-                      {{ ['Rejected', 'Pending', 'Approved'][$i % 3] }}
-                    </td>
-                    <td>${{ rand(10000, 200000) }}</td>
-                  </tr>
-                  @endfor
-                </tbody>
-              </table>
-            </div>
+                @endforeach
+              </tbody>
+            </table>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="card p-3">
-            <h6>Analytics Report</h6>
-            <ul class="list-group mb-3">
-              <li class="list-group-item d-flex justify-content-between">
-                <span>Company Finance Growth</span>
-                <strong class="text-success">+45.14%</strong>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span>Company Expenses Ratio</span>
-                <strong>0.58%</strong>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span>Business Risk Cases</span>
-                <strong class="text-muted">Low</strong>
-              </li>
-            </ul>
-            <canvas id="riskChart" height="150"></canvas>
-          </div>
-        </div>
-      </div> --}}
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
+
 </div>
 @endsection
 

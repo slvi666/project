@@ -51,6 +51,13 @@
                     </h5>
                     <p class="fs-5 text-dark">{{ $materi->subject->class_name }}</p>
                   </div>
+                  <div class="mb-4">
+  <h5 class="fw-bold text-dark">
+    <i class="fas fa-eye me-2 text-primary"></i> Status Dilihat:
+  </h5>
+  <p class="fs-5 text-dark">{{ $materi->views }} kali</p>
+</div>
+
 
                   @if(isset($materi->status))
                   <div class="mb-4">

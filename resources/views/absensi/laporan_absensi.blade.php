@@ -111,6 +111,7 @@
                     <th>Tanggal</th>
                     <th>Nama Siswa</th>
                     <th>Kelas</th>
+                    <th>Guru</th>
                     <th>Mata Pelajaran</th>
                     <th>Status</th>
                   </tr>
@@ -122,6 +123,7 @@
                       <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y H:i') }}</td>
                       <td>{{ optional(optional($item->siswa)->user)->name ?? '-' }}</td>
                       <td>{{ optional(optional($item->mataPelajaran)->subject)->class_name ?? '-' }}</td>
+                      <td>{{ optional(optional($item->mataPelajaran)->guru)->name ?? '-' }}</td>
                       <td>
                         {{ 
                           optional(

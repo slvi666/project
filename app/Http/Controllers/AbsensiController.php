@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\Siswa;
+use App\Models\User;
 use App\Models\MataPelajaran;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
@@ -101,19 +102,13 @@ class AbsensiController extends Controller
                 ->with(['subject', 'guru'])
                 ->get();
     
-        } elseif ($user->role_name === 'guru') {
-            $guruId = $user->guru->id ?? $user->id;
-    
-            // Filter absensi berdasarkan mata pelajaran yang diajar guru
-            $mataPelajaranIds = MataPelajaran::where('guru_id', $guruId)->pluck('id');
-    
-            $query->whereIn('mata_pelajaran_id', $mataPelajaranIds);
-    
-            // Batasi juga list dropdownnya
-            $mataPelajaran = MataPelajaran::with(['subject', 'guru'])
-                ->where('guru_id', $guruId)
-                ->get();
-        }
+} elseif ($user->role_name === 'guru') {
+    // Guru bisa lihat semua absensi, tidak dibatasi mata pelajaran yang dia ajar
+
+    // Tetap ambil semua mata pelajaran untuk dropdown filter
+    $mataPelajaran = MataPelajaran::with(['subject', 'guru'])->get();
+}
+
     
         // ✅ Filter tambahan dari request
         if ($request->filled('tanggal')) {

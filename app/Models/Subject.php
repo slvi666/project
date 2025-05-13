@@ -29,4 +29,10 @@ class Subject extends Model
     {
         return $this->hasMany(TugasSiswa::class, 'subject_id');
     }
+     // Relasi: Sebuah Subject memiliki banyak Exam
+   // Relasi dengan Exam
+    public function exams()
+    {
+        return $this->hasMany(Exam::class);
+    }
 }

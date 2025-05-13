@@ -12,7 +12,12 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css" rel="stylesheet">
-  
+  <!-- CSS Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- JS Select2 -->
+
+
   <style>
 /* Warna latar belakang utama */
 body {
@@ -313,7 +318,15 @@ body {
             <p>Data Buku Siswa/Guru</p>
           </a>
         </li>
+
         @endif
+                 <li class="nav-item">
+              <a href="{{ route('messages.index') }}" class="nav-link">
+                  <i class="fas fa-bookmark nav-icon"></i>
+                  <p>Pesan</p>
+              </a>
+
+        </li>
       </ul>
     </li>
     @endif
@@ -390,7 +403,7 @@ body {
 <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- Di bagian bawah sebelum penutupan </body> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.js"></script>
 </body>

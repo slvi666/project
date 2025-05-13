@@ -10,31 +10,39 @@ use Illuminate\Support\Facades\Storage;
 
 class MateriPembelajaranController extends Controller
 {
-    // public function index()
-    // {
-    //     $materi = MateriPembelajaran::with('guru', 'subject')->latest()->get();
-    //     return view('MateriPembelajaran.index', compact('materi'));
-    // }
 
-    public function index()
-    {
-        // Ambil daftar kelas unik untuk dropdown filter
-        $kelasList = Subject::select('class_name')->distinct()->orderBy('class_name')->pluck('class_name');
-        
-        // Query dasar
-        $query = MateriPembelajaran::with(['guru', 'subject']);
-        
-        // Filter berdasarkan kelas jika dipilih
-        if(request('kelas')) {
-            $query->whereHas('subject', function($q) {
-                $q->where('class_name', request('kelas'));
-            });
-        }
-        
-        $materi = $query->latest()->get();
-        
-        return view('MateriPembelajaran.index', compact('materi', 'kelasList'));
+
+public function index()
+{
+    // Ambil daftar kelas unik untuk dropdown filter
+    $kelasList = Subject::select('class_name')->distinct()->orderBy('class_name')->pluck('class_name');
+
+    // Query dasar
+    $query = MateriPembelajaran::with(['guru', 'subject']);
+
+    // Cek jika yang login adalah siswa
+    if (auth()->user()->role_name === 'siswa') {
+        // Ambil data siswa dari tabel siswa berdasarkan user_id
+        $siswa = \App\Models\Siswa::where('user_id', auth()->id())->first();
+
+        // Ambil class_name dari relasi subject
+        $className = optional($siswa->subject)->class_name;
+
+        // Filter berdasarkan class_name
+        $query->whereHas('subject', function ($q) use ($className) {
+            $q->where('class_name', $className);
+        });
+    } elseif (request('kelas')) {
+        // Filter berdasarkan kelas jika dipilih dari dropdown (untuk admin/guru)
+        $query->whereHas('subject', function ($q) {
+            $q->where('class_name', request('kelas'));
+        });
     }
+
+    $materi = $query->latest()->get();
+
+    return view('MateriPembelajaran.index', compact('materi', 'kelasList'));
+}
 
     public function create()
     {
@@ -64,11 +72,19 @@ class MateriPembelajaranController extends Controller
         return redirect()->route('materi.index')->with('success', 'Materi berhasil ditambahkan.');
     }
 
-    public function show($id)
-    {
-        $materi = MateriPembelajaran::with('guru', 'subject')->findOrFail($id);
-        return view('MateriPembelajaran.show', compact('materi'));
+public function show($id)
+{
+    $materi = MateriPembelajaran::with('guru', 'subject')->findOrFail($id);
+
+    // Cek apakah pengguna yang login adalah siswa
+    if (auth()->check() && auth()->user()->role_name === 'siswa') {
+        // Tambahkan increment views hanya jika yang login adalah siswa
+        $materi->incrementViews();
     }
+
+    return view('MateriPembelajaran.show', compact('materi'));
+}
+
 
     public function edit($id)
     {

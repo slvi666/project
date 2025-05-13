@@ -41,38 +41,51 @@
         </div>
 
         <!-- Card Example -->
-        <div class="col-lg-6 mb-4">
-          <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
-            <div class="card-body">
-              <h5 class="card-title font-weight-bold mb-3">Pengumuman</h5>
-              
-              @php
-                // Mengambil pengumuman terbaru
-                $pengumuman = \App\Models\Pengumuman::latest()->first();
-              @endphp
-        
-              <p class="card-text mb-3">
-                {{-- Menampilkan deskripsi pengumuman jika ada, jika tidak tampilkan pesan fallback --}}
-                {{ $pengumuman ? $pengumuman->deskripsi_pengumuman : 'Tidak ada pengumuman terbaru.' }}
-              </p>
-        
-              <p class="display-4 text-primary mb-3">
-                {{-- Menampilkan judul pengumuman jika ada --}}
-                {{ $pengumuman ? $pengumuman->judul_pengumuman : '' }}
-              </p>
-              
-              {{-- Menampilkan tanggal mulai dan berakhir pengumuman --}}
-              @if($pengumuman)
-                <p class="text-muted">
-                  <strong>Mulai:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_mulai)->format('d M Y') }} <br>
-                  <strong>Berakhir:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_berakhir)->format('d M Y') }}
-                </p>
-              @endif
-        
-              <hr class="divider">
-            </div>
-          </div>
+<div class="col-lg-6 mb-4">
+  <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
+    <div class="card-body">
+      <!-- Judul Pengumuman -->
+      <h5 class="card-title font-weight-bold mb-3 text-center text-primary">Pengumuman Terbaru</h5>
+      
+      @php
+        // Mengambil pengumuman terbaru
+        $pengumuman = \App\Models\Pengumuman::latest()->first();
+      @endphp
+
+      <!-- Deskripsi Pengumuman -->
+      <p class="card-text mb-4">
+        {{-- Menampilkan deskripsi pengumuman jika ada, jika tidak tampilkan pesan fallback --}}
+        {{ $pengumuman ? $pengumuman->deskripsi_pengumuman : 'Tidak ada pengumuman terbaru.' }}
+      </p>
+
+      <!-- Judul Pengumuman -->
+      @if($pengumuman)
+        <p class="display-4 text-primary text-center mb-4">
+          {{-- Menampilkan judul pengumuman --}}
+          {{ $pengumuman->judul_pengumuman }}
+        </p>
+      @endif
+
+      <!-- Tanggal Pengumuman -->
+      @if($pengumuman)
+        <div class="d-flex justify-content-between text-muted">
+          <p><strong>Mulai:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_mulai)->format('d M Y') }}</p>
+          <p><strong>Berakhir:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_berakhir)->format('d M Y') }}</p>
         </div>
+      @endif
+
+      <hr class="divider mt-4">
+
+      <!-- Tombol untuk melihat lebih lanjut (opsional) -->
+      @if($pengumuman)
+        {{-- <div class="text-center mt-4">
+          <a href="{{ route('pengumuman.show', $pengumuman->id) }}" class="btn btn-primary">Lihat Selengkapnya</a>
+        </div> --}}
+      @endif
+    </div>
+  </div>
+</div>
+
         
         <div class="col-lg-6 mb-4">
           <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">

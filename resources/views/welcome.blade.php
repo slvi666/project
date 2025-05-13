@@ -73,7 +73,7 @@
             <h1>MTSS <span><br>AL-MUNAWAROH</span></h1>
             <p>"Mewujudkan generasi rabbani, berjiwa qur'ani yang berbekal iman dan taqwa (IMTAQ) serta ilmu pengetahuan dan teknologi (IPTEK)" </p>
             <div class="d-flex">
-              <a href="{{ route('register') }}" class="btn-get-started">Daftar Calon Siswa Sekarang</a>
+              <a href="{{ route('register') }}" class="btn-get-started">Daftar Sebagai Peserta Didik Baru Sekarang</a>
             </div>
           </div>
 
@@ -151,7 +151,7 @@
               </div>
               <h5 class="fw-bold">Monitoring & Evaluasi</h5>
               <p class="text-muted small">
-                Pantau perkembangan akademik siswa secara real-time dengan laporan yang akurat dan transparan.
+                Pantau perkembangan akademik siswa dengan laporan yang akurat dan transparan.
               </p>
             </div>
           </div>
@@ -177,106 +177,6 @@
 </section>
 <!-- /About Section -->
 
-
-
-   <!-- Features Section -->
-    {{-- <section id="features" class="features section">
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
-            <div class="features-item">
-              <i class="bi bi-display" style="color: #ffbb2c;"></i>
-              <h3><a href="" class="stretched-link">E-Learning Interaktif</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="features-item">
-              <i class="bi bi-clipboard-data" style="color: #5578ff;"></i>
-              <h3><a href="" class="stretched-link">Manajemen Absensi</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="300">
-            <div class="features-item">
-              <i class="bi bi-chat-dots" style="color: #e80368;"></i>
-              <h3><a href="" class="stretched-link">Laporan Akademik</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="400">
-            <div class="features-item">
-              <i class="bi bi-calendar-check" style="color: #e361ff;"></i>
-              <h3><a href="" class="stretched-link">Media Pembelajaran</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="500">
-            <div class="features-item">
-              <i class="bi bi-file-earmark-text" style="color: #47aeff;"></i>
-              <h3><a href="" class="stretched-link">Tugas</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="600">
-            <div class="features-item">
-              <i class="bi bi-bell" style="color: #ffa76e;"></i>
-              <h3><a href="" class="stretched-link">Notifikasi</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="700">
-            <div class="features-item">
-              <i class="bi bi-people" style="color: #11dbcf;"></i>
-              <h3><a href="" class="stretched-link">Kolaborasi Guru & Siswa</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="800">
-            <div class="features-item">
-              <i class="bi bi-camera-video" style="color: #4233ff;"></i>
-              <h3><a href="" class="stretched-link">Perpustakaan Digital</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="900">
-            <div class="features-item">
-              <i class="bi bi-shield-lock" style="color: #b2904f;"></i>
-              <h3><a href="" class="stretched-link">Keamanan Data</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="1000">
-            <div class="features-item">
-              <i class="bi bi-cloud-upload" style="color: #b20969;"></i>
-              <h3><a href="" class="stretched-link">Penyimpanan Buku Digital</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="1100">
-            <div class="features-item">
-              <i class="bi bi-bar-chart" style="color: #ff5828;"></i>
-              <h3><a href="" class="stretched-link">Analisis Perkembangan</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-          <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="1200">
-            <div class="features-item">
-              <i class="bi bi-phone" style="color: #29cc61;"></i>
-              <h3><a href="" class="stretched-link">Akses Terjangkau</a></h3>
-            </div>
-          </div><!-- End Feature Item -->
-
-        </div>
-
-      </div>
-
-    </section><!-- /Features Section --> --}}
-
-
     <!-- Stats Section -->
     <section id="stats" class="stats section light-background">
 
@@ -285,7 +185,7 @@
         <div class="row gy-4">
     
           <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
-            <i class="bi bi-person"></i>
+            <i class="bi bi-people-fill display-4"></i>
             <div class="stats-item">
                 <span data-purecounter-start="0" data-purecounter-end="{{ \App\Models\User::where('role_name', 'siswa')->count() }}" data-purecounter-duration="1" class="purecounter"></span>
                 <p>Total Siswa</p>
@@ -293,7 +193,7 @@
           </div>
     
           <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
-            <i class="bi bi-person-vcard"></i>
+            <i class="bi bi-person-badge-fill display-4"></i>
             <div class="stats-item">
               <span data-purecounter-start="0" data-purecounter-end="{{ \App\Models\User::where('role_name', 'guru')->count() }}" data-purecounter-duration="1" class="purecounter"></span>
               <p>Total Guru</p>
@@ -301,10 +201,10 @@
           </div>
     
           <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
-            <i class="bi bi-file-earmark-person"></i>
+            <i class="bi bi-person-plus-fill display-4"></i>
             <div class="stats-item">
               <span data-purecounter-start="0" data-purecounter-end="{{ \App\Models\User::where('role_name', 'calon_siswa')->count() }}" data-purecounter-duration="1" class="purecounter"></span>
-              <p>Total Calon Siswa</p>
+              <p>Total Calon Peserta Didik Baru</p>
             </div>
           </div>
     
@@ -401,36 +301,40 @@
 <!-- Gallery Section -->
 <section id="gallery" class="gallery section">
 
-  <!-- Section Title -->
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Gallery</h2>
-    <div><span>Dokumentasi</span> <span class="description-title">Sekolah</span></div>
-  </div><!-- End Section Title -->
+ <div class="container section-title" data-aos="fade-up">
+  <h2>Gallery</h2>
+  <div><span>Dokumentasi</span> <span class="description-title">Sekolah</span></div>
+</div><!-- End Section Title -->
 
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
+<div class="container" data-aos="fade-up" data-aos-delay="100">
 
-    <div class="row g-0">
+  <div class="row g-4"> <!-- Ganti g-0 menjadi g-3 -->
 
-      @php
-        // Memanggil model DokKegiatan langsung di Blade untuk mengambil data dokumen
-        $dokKegiatan = \App\Models\DokKegiatan::all();
-      @endphp
+    @php
+      // Memanggil model DokKegiatan langsung di Blade untuk mengambil data dokumen
+      $dokKegiatan = \App\Models\DokKegiatan::all();
+    @endphp
 
-      @foreach($dokKegiatan as $dokumen)
-        <div class="col-lg-3 col-md-4">
-          <div class="gallery-item">
-            <a href="{{ asset($dokumen->path_file) }}" class="glightbox" data-gallery="images-gallery">
-              <img src="{{ asset($dokumen->path_file) }}" alt="{{ $dokumen->nama_dokumen }}" class="img-fluid">
-            </a>
+    @foreach($dokKegiatan as $dokumen)
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card shadow-lg border-0 rounded-3 overflow-hidden" style="transition: transform 0.3s ease;">
+          <!-- Image -->
+          <a href="{{ asset($dokumen->path_file) }}" class="glightbox" data-gallery="images-gallery">
+            <img src="{{ asset($dokumen->path_file) }}" alt="{{ $dokumen->nama_dokumen }}" class="card-img-top" style="object-fit: cover; height: 200px;">
+          </a>
+
+          <!-- Card Body with Info -->
+          <div class="card-body">
+            <h5 class="card-title" style="font-size: 1.1rem; font-weight: bold; color: #333;">{{ $dokumen->nama_dokumen }}</h5>
+            <p class="card-text" style="font-size: 0.9rem; color: #555;">{{ \Str::limit($dokumen->deskripsi, 80) }}</p>
           </div>
-        </div><!-- End Gallery Item -->
-      @endforeach
-
-    </div>
+        </div>
+      </div><!-- End Gallery Item -->
+    @endforeach
 
   </div>
 
-</section><!-- /Gallery Section -->
+</div><!-- End Gallery Section -->
 
     @php
     $pengajar = \App\Models\Guru::take(3)->get();

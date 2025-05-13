@@ -125,3 +125,33 @@ Route::resource('dok_kegiatan', DokKegiatanController::class);
 Route::get('/siswa/{id}/print', [SiswaController::class, 'print'])->name('siswa.print');
 Route::get('guru/{id}/cetak', [GuruController::class, 'cetakPerId'])->name('guru.cetak');
 Route::post('/registrasi/import', [RegistrasiController::class, 'import'])->name('registrasi.import');
+
+
+use App\Http\Controllers\MessageController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');  // Tidak ada receiver_id di sini
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/messages/{receiver_id}', [MessageController::class, 'show'])->name('messages.show');
+    Route::get('/messages/edit/{id}', [MessageController::class, 'edit'])->name('messages.edit');
+    Route::put('/messages/{id}', [MessageController::class, 'update'])->name('messages.update');
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
+});
+
+use App\Http\Controllers\ExamController;
+
+Route::resource('exams', ExamController::class);
+
+use App\Http\Controllers\QuestionController;
+
+Route::prefix('exams/{examId}')->group(function () {
+    Route::get('questions', [QuestionController::class, 'index'])->name('questions.index');
+    Route::get('questions/create', [QuestionController::class, 'create'])->name('questions.create');
+    Route::post('questions', [QuestionController::class, 'store'])->name('questions.store');
+    Route::get('questions/{questionId}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
+    Route::put('questions/{questionId}', [QuestionController::class, 'update'])->name('questions.update');
+    Route::delete('questions/{questionId}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+});
+
+

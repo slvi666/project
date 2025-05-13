@@ -59,7 +59,7 @@
                       <th>Judul</th>
                       <th>Penulis</th>
                       <th>Kategori</th>
-                      <th>Views</th>
+                      <th>Terlihat</th>
                       <th style="width: 20%;">Aksi</th>
                     </tr>
                   </thead>

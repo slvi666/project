@@ -156,4 +156,14 @@ if ($bentrok) {
         MataPelajaran::destroy($id);
         return redirect()->route('mata-pelajaran.index')->with('success', 'Data berhasil dihapus!');
     }
+    // Menampilkan detail data mata pelajaran
+public function show($id)
+{
+    // Find the MataPelajaran by its ID
+    $data = MataPelajaran::with(['subject', 'guru'])->findOrFail($id);
+
+    // Return a view with the MataPelajaran details
+    return view('mata_pelajaran.show', compact('data'));
+}
+
 }

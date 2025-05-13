@@ -2,18 +2,33 @@
 
 @section('content')
 <div class="content-wrapper">
-  <!-- Header -->
+  
   <div class="content-header">
     <div class="container-fluid">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <h1 class="m-0">Daftar Pengguna</h1>
-        
-        <a href="javascript:void(0)" onclick="confirmAdd('{{ route('registrasi.create') }}')" class="btn btn-success">
-          <i class="fas fa-user-plus"></i> Tambah Pengguna
-        </a>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Daftar Pengguna</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item active">Data Pengguna</li>
+          </ol>
+        </div>
       </div>
     </div>
   </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h3 class="card-title">Daftar Data Pengguna</h3>
+            </div>
+          </div>
+        </div>
+      </div>
 
   <!-- Content -->
   <section class="content">
@@ -36,11 +51,12 @@
       <div class="card">
         <div class="card-body">
 
-          <div class="d-flex flex-wrap justify-content-start align-items-center gap-3 mb-3">
-
-            <!-- Search Box -->
-            <input type="text" id="search" placeholder="🔍 Cari pengguna..." 
-                   class="form-control shadow-sm rounded-pill" style="max-width: 300px;">
+          
+           <div class="mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <!-- Search Input -->
+           <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 100%;">
+              <input type="text" id="search" placeholder="🔍 Cari pengguna..." 
+                class="form-control shadow-sm rounded-pill me-2" style="max-width: 300px;">
           
             <!-- Filter Dropdown -->
             <form method="GET" action="{{ route('registrasi.index') }}" class="d-flex align-items-center gap-2">
@@ -55,7 +71,7 @@
                 <!-- Dropdown Role -->
                 <select name="role" id="role" class="form-select border-0" onchange="this.form.submit()" style="border-left: 1px solid #ddd;">
                   <option value="">Semua</option>
-                  @foreach (['admin', 'guru', 'siswa', 'calon_siswa', 'Orang Tua'] as $role)
+                  @foreach (['admin', 'guru', 'siswa', 'calon_siswa'] as $role)
                     <option value="{{ $role }}" {{ request('role') == $role ? 'selected' : '' }}>
                       {{ ucfirst(str_replace('_', ' ', $role)) }}
                     </option>
@@ -73,7 +89,13 @@
                 </a>
               @endif
             </form>
-          </div>
+            </div>
+              <!-- Button Tambah -->
+              <a href="javascript:void(0)" onclick="confirmAdd('{{ route('registrasi.create') }}')" 
+                class="btn btn-primary fw-bold shadow-sm rounded-pill px-4">
+                <i class="fas fa-plus-circle me-1"></i> Tambah Pengguna
+              </a>
+            </div>
 
           <!-- Tabel Pengguna -->
           <div class="table-responsive">
@@ -107,23 +129,29 @@
                       <span class="badge {{ $color }} text-uppercase shadow-sm">{{ $user->role_name }}</span>
                     </td>
                     <td>
-                      <a href="javascript:void(0)" onclick="confirmView('{{ route('registrasi.show', $user->id) }}')" class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
-                        <i class="fas fa-eye"></i> Lihat
+                      <a href="javascript:void(0)" onclick="confirmView('{{ route('registrasi.show', $user->id) }}')" 
+                        class="btn btn-info btn-sm rounded-circle shadow-sm me-1" 
+                        data-bs-toggle="tooltip" title="Lihat">
+                        <i class="fas fa-eye"></i>
                       </a>
 
-                      <button class="btn btn-warning btn-sm rounded-pill shadow-sm me-1"
-                              onclick="confirmEdit('{{ route('registrasi.edit', $user->id) }}')">
-                        <i class="fas fa-edit"></i> Edit
+                      <button class="btn btn-warning btn-sm rounded-circle shadow-sm me-1" 
+                              onclick="confirmEdit('{{ route('registrasi.edit', $user->id) }}')" 
+                              data-bs-toggle="tooltip" title="Edit">
+                        <i class="fas fa-edit"></i>
                       </button>
 
                       <form action="{{ route('registrasi.destroy', $user->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm" onclick="confirmDelete(this.form)">
-                          <i class="fas fa-trash"></i> Hapus
+                        <button type="button" class="btn btn-danger btn-sm rounded-circle shadow-sm" 
+                                onclick="confirmDelete(this.form)" 
+                                data-bs-toggle="tooltip" title="Hapus">
+                          <i class="fas fa-trash"></i>
                         </button>
                       </form>
                     </td>
+
                   </tr>
                 @endforeach
               </tbody>

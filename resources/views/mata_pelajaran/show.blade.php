@@ -2,49 +2,112 @@
 
 @section('content')
 <div class="content-wrapper">
-  <div class="content-header">
-    <div class="container-fluid">
-      <h1 class="m-0 text-primary">Detail Jadwal Pelajaran</h1>
-    </div>
-  </div>
-
-  <section class="content">
-    <div class="container-fluid">
-      <div class="card shadow-lg rounded-4">
-        <div class="card-header bg-gradient-success text-white rounded-top">
-          <h3 class="card-title">Detail Mata Pelajaran</h3>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-primary">Detail Mata Pelajaran</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('mata-pelajaran.index') }}">Mata Pelajaran</a></li>
+                        <li class="breadcrumb-item active">Detail Mata Pelajaran</li>
+                    </ol>
+                </div>
+            </div>
         </div>
-
-        <div class="card-body">
-          <table class="table table-bordered">
-            <tr>
-              <th>Nama Mapel</th>
-              <td>{{ $data->subject->subject_name }}</td>
-            </tr>
-            <tr>
-              <th>Kelas</th>
-              <td>{{ $data->subject->class_name }}</td>
-            </tr>
-            <tr>
-              <th>Guru</th>
-              <td>{{ $data->guru ? $data->guru->name : '-' }}</td>
-            </tr>
-            <tr>
-              <th>Hari</th>
-              <td>{{ $data->hari }}</td>
-            </tr>
-            <tr>
-              <th>Waktu</th>
-              <td>{{ substr($data->waktu_mulai, 0, 5) }} - {{ substr($data->waktu_berakhir, 0, 5) }}</td>
-            </tr>
-          </table>
-
-          <a href="{{ route('mataelajaran.index') }}" class="btn btn-secondary mt-3 rounded-pill">
-            <i class="fas fa-arrow-left me-1"></i> Kembali
-          </a>
-        </div>
-      </div>
     </div>
-  </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card shadow-lg rounded-4 w-100">
+                        <div class="card-header bg-gradient-primary text-white text-center py-4 rounded-top">
+                            <h3 class="card-title m-0">Informasi Mata Pelajaran</h3>
+                        </div>
+
+                        <div class="card-body p-5">
+                            <div class="row">
+                                <!-- Left Column -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <h5 class="fw-bold text-dark">
+                                            <i class="fas fa-chalkboard-teacher me-2 text-primary"></i> Guru:
+                                        </h5>
+                                        <p class="fs-5 text-dark">{{ $data->guru->name }}</p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="fw-bold text-dark">
+                                            <i class="fas fa-book me-2 text-success"></i> Mata Pelajaran:
+                                        </h5>
+                                        <p class="fs-5 text-dark">{{ $data->subject->subject_name }}</p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="fw-bold text-dark">
+                                            <i class="fas fa-calendar-alt me-2 text-info"></i> Waktu:
+                                        </h5>
+                                        <p class="fs-5 text-dark">{{ $data->waktu_mulai }} - {{ $data->waktu_berakhir }}</p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="fw-bold text-dark">
+                                            <i class="fas fa-calendar-check me-2 text-warning"></i> Hari:
+                                        </h5>
+                                        <p class="fs-5 text-dark">{{ $data->hari }}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column -->
+                                {{-- <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <h5 class="fw-bold text-dark">
+                                            <i class="fas fa-users me-2 text-primary"></i> Siswa yang Terdaftar:
+                                        </h5>
+                                        <ul class="fs-5 text-dark">
+                                            @foreach($data->siswa_ids as $siswaId)
+                                                <li>{{ $siswaId }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div> --}}
+                            </div>
+                        </div>
+
+                        <div class="card-footer d-flex justify-content-between align-items-center rounded-bottom">
+                            <a href="{{ route('mata-pelajaran.index') }}" class="btn btn-secondary btn-sm px-4 py-2 shadow-lg rounded-pill">
+                                <i class="fas fa-arrow-left"></i> Kembali
+                            </a>
+
+                            @if (auth()->user()->role_name === 'Admin')
+                                <a href="{{ route('mata-pelajaran.edit', $data->id) }}" class="btn btn-warning btn-sm shadow-sm rounded-pill">
+                                    <i class="fas fa-edit me-1"></i> Edit
+                                </a>
+
+                                <button type="button" class="btn btn-danger btn-sm shadow-sm rounded-pill" onclick="hapusData({{ $data->id }})">
+                                    <i class="fas fa-trash me-1"></i> Hapus
+                                </button>
+
+                                <form id="delete-form-{{ $data->id }}" action="{{ route('mata-pelajaran.destroy', $data->id) }}" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
+
+<script>
+    function hapusData(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus mata pelajaran ini?')) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    }
+</script>
 @endsection

@@ -130,7 +130,8 @@
                 <thead class="table-light">
                   <tr>
                     <th>Nama Pelajaran</th>
-                    <th>Jumlah Siswa</th>
+                    <th>Guru</th>
+                    <th>Kelas</th>
                     <th>Hari</th>
                     <th>Durasi</th>
                   </tr>
@@ -139,7 +140,8 @@
                   @foreach(\App\Models\MataPelajaran::with('subject')->get() as $mapel)
                     <tr>
                       <td>{{ $mapel->subject->subject_name ?? '-' }}</td>
-                      <td>{{ is_array($mapel->siswa_ids) ? count($mapel->siswa_ids) : 0 }}</td>
+                      <td>{{ $mapel->guru->name ?? '-' }}</td>
+                      <td>{{ $mapel->subject->class_name ?? '-' }}</td>
                       <td>{{ $mapel->hari }}</td>
                       <td>
                         @php

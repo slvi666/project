@@ -1,101 +1,122 @@
 @extends('adminlte.layouts.app')
 
 @section('content')
-  <div class="content-wrapper">
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Edit Data Guru</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item active">Edit Guru</li>
-            </ol>
-          </div>
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <h1 class="m-0 text-dark">Edit Data Guru</h1>
+        </div>
+        <div class="col-md-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('guru.index') }}">Daftar Guru</a></li>
+            <li class="breadcrumb-item active">Edit Data Guru</li>
+          </ol>
         </div>
       </div>
     </div>
+  </div>
 
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Form Edit Guru</h3>
-              </div>
-              <div class="card-body">
-                @if ($errors->any())
-                  <script>
-                    Swal.fire({
-                      title: 'Kesalahan!',
-                      html: "<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>",
-                      icon: 'error',
-                      confirmButtonText: 'OK'
-                    });
-                  </script>
-                @endif
-                
-                <form action="{{ route('guru.update', $guru->id) }}" method="POST" enctype="multipart/form-data">
-                  @csrf
-                  @method('PUT')
-                  <div class="form-group">
-                    <label for="user_id">Pengguna (Guru)</label>
-                    <select name="user_id" class="form-control">
-                      @foreach ($users as $user)
-                        <option value="{{ $user->id }}" {{ $user->id == $guru->user_id ? 'selected' : '' }}>{{ $user->name }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="nip">NIP</label>
-                    <input type="text" name="nip" class="form-control" value="{{ $guru->nip }}">
-                  </div>
-                  <div class="form-group">
-                    <label for="nama_guru">Nama Guru</label>
-                    <input type="text" name="nama_guru" class="form-control" value="{{ $guru->nama_guru }}">
-                  </div>
-                  <div class="form-group">
-                    <label for="alamat">Alamat</label>
-                    <input type="text" name="alamat" class="form-control" value="{{ $guru->alamat }}">
-                  </div>
-                  <div class="form-group">
-                    <label for="jenis_kelamin">Jenis Kelamin</label>
-                    <select name="jenis_kelamin" class="form-control">
-                      <option value="Laki-laki" {{ $guru->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                      <option value="Perempuan" {{ $guru->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="telepon">Telepon</label>
-                    <input type="text" name="telepon" class="form-control" value="{{ $guru->telepon }}">
-                  </div>
-                  <div class="form-group">
-                    <label for="tanggal_lahir">Tanggal Lahir</label>
-                    <input type="date" name="tanggal_lahir" class="form-control" value="{{ $guru->tanggal_lahir }}">
-                  </div>
-                  <div class="form-group">
-                    <label for="tanggal_bergabung">Tanggal Bergabung</label>
-                    <input type="date" name="tanggal_bergabung" class="form-control" value="{{ $guru->tanggal_bergabung }}">
-                  </div>
-                  <div class="form-group">
-                    <label for="foto">Foto</label>
-                    <input type="file" name="foto" class="form-control">
-                    @if ($guru->foto)
-                      <img src="{{ asset('storage/'.$guru->foto) }}" alt="Foto Guru" width="100" class="mt-2">
-                    @endif
-                  </div>
-                  <button type="submit" class="btn btn-primary">Simpan</button>
-                  <a href="{{ route('guru.index') }}" class="btn btn-secondary">Batal</a>
-                </form>
-              </div>
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card shadow-sm border-0 rounded-lg">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Form Edit Guru</h5>
+            </div>
+            <div class="card-body">
+
+              @if ($errors->any())
+                <script>
+                  Swal.fire({
+                    title: 'Kesalahan!',
+                    html: `<ul>{!! implode('', $errors->all('<li>:message</li>')) !!}</ul>`,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  });
+                </script>
+              @endif
+
+              <form action="{{ route('guru.update', $guru->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+
+                <div class="mb-3">
+                  <label for="user_id" class="form-label">Pengguna (Guru)</label>
+                  <select name="user_id" id="user_id" class="form-control rounded-pill px-3 py-2" required>
+                    @foreach ($users as $user)
+                      <option value="{{ $user->id }}" {{ $user->id == $guru->user_id ? 'selected' : '' }}>
+                        {{ $user->name }} ({{ $user->email }})
+                      </option>
+                    @endforeach
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="nip" class="form-label">NIP</label>
+                  <input type="text" name="nip" class="form-control rounded-pill px-3 py-2" value="{{ $guru->nip }}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="nama_guru" class="form-label">Nama Guru</label>
+                  <input type="text" name="nama_guru" class="form-control rounded-pill px-3 py-2" value="{{ $guru->nama_guru }}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="alamat" class="form-label">Alamat</label>
+                  <input type="text" name="alamat" class="form-control rounded-pill px-3 py-2" value="{{ $guru->alamat }}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                  <select name="jenis_kelamin" class="form-control rounded-pill px-3 py-2" required>
+                    <option value="Laki-laki" {{ $guru->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="Perempuan" {{ $guru->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="telepon" class="form-label">Telepon</label>
+                  <input type="text" name="telepon" class="form-control rounded-pill px-3 py-2" value="{{ $guru->telepon }}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                  <input type="date" name="tanggal_lahir" class="form-control rounded-pill px-3 py-2" value="{{ $guru->tanggal_lahir }}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="tanggal_bergabung" class="form-label">Tanggal Bergabung</label>
+                  <input type="date" name="tanggal_bergabung" class="form-control rounded-pill px-3 py-2" value="{{ $guru->tanggal_bergabung }}" required>
+                </div>
+
+                <div class="mb-4">
+                  <label for="foto" class="form-label">Foto</label>
+                  <input type="file" name="foto" class="form-control rounded-pill px-3 py-2">
+                  @if ($guru->foto)
+                    <img src="{{ asset('storage/'.$guru->foto) }}" alt="Foto Guru" width="100" class="mt-2">
+                  @endif
+                </div>
+
+                <div class="d-flex justify-content-start gap-2">
+                  <a href="{{ route('guru.index') }}" class="btn btn-secondary rounded-pill px-4 shadow-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Kembali
+                  </a>
+                  <button type="submit" class="btn btn-success rounded-pill px-4 shadow-sm">
+                    <i class="fas fa-save me-1"></i> Simpan
+                  </button>
+                </div>
+              </form>
+
             </div>
           </div>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
