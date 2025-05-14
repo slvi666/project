@@ -33,21 +33,13 @@
           <div class="card p-3">
             <h6>Total Pengguna (Guru)</h6>
             <h4>{{ $totalGuru }}
-              <span class="text-success small">▲ 100%%</span>
-            </h4>
-            <div class="progress">
-              <div class="progress-bar bg-success" style="width: 70.5%" role="progressbar" aria-valuenow="70.5" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
           </div>
         </div>
        {{-- Totoal pengguna  --}}
         <div class="col-md-3">
           <div class="card p-3">
               <h6>Total Pengguna</h6>
-              <h4>{{ \App\Models\User::count() }} <span class="text-success small">▲ 100%%</span></h4>
-              <div class="progress">
-                  <div class="progress-bar bg-success" style="width: 70.5%" role="progressbar" aria-valuenow="70.5" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
+              <h4>{{ \App\Models\User::count() }} </h4>
           </div>
       </div>
       
@@ -59,10 +51,8 @@
           
           <div class="card p-3">
             <h6>Total Siswa</h6>
-            <h4>{{ number_format($totalSiswa) }} <span class="text-warning small">▼ 27.4%</span></h4>
-            <div class="progress">
-              <div class="progress-bar bg-warning" style="width: 27.4%" role="progressbar" aria-valuenow="27.4" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
+            <h4>{{ number_format($totalSiswa) }} </h4>
+           
           </div>
           
         </div>
@@ -75,10 +65,7 @@
           
           <div class="card p-3">
             <h6>Calon Siswa</h6>
-            <h4>{{ number_format($totalCalonSiswa) }} <span class="text-danger small">▼ 27.4%</span></h4>
-            <div class="progress">
-              <div class="progress-bar bg-danger" style="width: 27.4%" role="progressbar" aria-valuenow="27.4" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
+            <h4>{{ number_format($totalCalonSiswa) }}</h4>
           </div>
           
         </div>
