@@ -217,11 +217,11 @@
         </table>
       </div>
 
-      {{-- <div class="mt-3 text-end">
-        <a href="{{ route('jadwal.index') }}" class="btn btn-outline-success btn-sm">
+      <div class="mt-3 text-end">
+        <a href="{{ route('mata-pelajaran.index') }}" class="btn btn-outline-success btn-sm">
           <i class="bi bi-eye-fill me-1"></i> Lihat Semua Jadwal
         </a>
-      </div> --}}
+      </div>
     </div>
   </div>
 </div>
