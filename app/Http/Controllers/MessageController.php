@@ -9,15 +9,29 @@ use Illuminate\Http\Request;
 class MessageController extends Controller
 {
     // Menampilkan daftar pesan untuk pengguna yang login
-    public function index()
-    {
-        // Ambil pesan yang diterima dan dikirim oleh pengguna
-        $user = auth()->user();
-        $sentMessages = $user->sentMessages;
-        $receivedMessages = $user->receivedMessages;
+public function index()
+{
+    $user = auth()->user();
 
-        // Kirim data ke view
-        return view('chats.index', compact('sentMessages', 'receivedMessages'));
+    // Gabungkan pesan yang dikirim dan diterima, lalu ambil pesan terakhir per lawan bicara
+    $messages = \App\Models\Message::where('sender_id', $user->id)
+        ->orWhere('receiver_id', $user->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // Kelompokkan berdasarkan lawan bicara
+    $conversations = [];
+
+    foreach ($messages as $message) {
+        $otherUserId = $message->sender_id == $user->id ? $message->receiver_id : $message->sender_id;
+
+        // Simpan hanya 1 pesan terakhir per lawan bicara
+        if (!isset($conversations[$otherUserId])) {
+            $conversations[$otherUserId] = $message;
+        }
+    }
+
+    return view('chats.index', ['conversations' => $conversations]);
     }
 
     // Menampilkan halaman untuk membuat pesan baru

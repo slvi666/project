@@ -139,7 +139,7 @@
                     <div class="form-group">
                       <label for="status" class="font-weight-semibold text-dark">Status</label>
                       <select name="status" class="form-control rounded-pill">
-                        <option value="Pending" {{ $formulir->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="Pending" {{ $formulir->status == 'Pending' ? 'selected' : '' }}>Menunggu Verifikasi</option>
                         <option value="Tidak Lulus" {{ $formulir->status == 'Tidak Lulus' ? 'selected' : '' }}>Tidak Lulus</option>
                         <option value="Lulus" {{ $formulir->status == 'Lulus' ? 'selected' : '' }}>Lulus</option>
                       </select>

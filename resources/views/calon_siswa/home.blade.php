@@ -82,7 +82,7 @@
   @elseif($formulir->status === 'Tidak Lulus')
     <i class="fas fa-times-circle mr-1"></i>
   @endif
-  {{ $formulir->status }}
+  {{ $formulir->status === 'Pending' ? 'Menunggu Verifikasi' : $formulir->status }}
 </span>
                     </div>
                   </div>

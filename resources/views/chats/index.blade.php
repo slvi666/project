@@ -1,39 +1,76 @@
-@extends('layouts.app')
+@extends('adminlte.layouts.app')
 
 @section('content')
-    <h1>Daftar Pesan</h1>
-
-    <!-- Tombol Pesan Baru -->
-    <a href="{{ route('messages.create') }}" class="btn btn-success mb-3">Pesan Baru</a>
-
-    <!-- Daftar percakapan pengirim dan penerima -->
-    <div class="messages-list">
-        @forelse ($sentMessages as $message)
-            @php
-                // Ambil penerima berdasarkan ID
-                $receiver = $message->receiver_id == auth()->user()->id ? $message->sender : $message->receiver;
-            @endphp
-            <div class="message-item">
-                <h4>Dengan: {{ $receiver->name }}</h4>
-                <p>{{ $message->message }}</p>
-                <a href="{{ route('messages.show', ['receiver_id' => $receiver->id]) }}" class="btn btn-primary">Lihat Percakapan</a>
-            </div>
-        @empty
-            <p>Belum ada pesan yang dikirim.</p>
-        @endforelse
-
-        @forelse ($receivedMessages as $message)
-            @php
-                // Ambil pengirim berdasarkan ID
-                $sender = $message->sender_id == auth()->user()->id ? $message->receiver : $message->sender;
-            @endphp
-            <div class="message-item">
-                <h4>Dengan: {{ $sender->name }}</h4>
-                <p>{{ $message->message }}</p>
-                <a href="{{ route('messages.show', ['receiver_id' => $sender->id]) }}" class="btn btn-primary">Lihat Percakapan</a>
-            </div>
-        @empty
-            <p>Belum ada pesan yang diterima.</p>
-        @endforelse
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Daftar Pesan</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item active">Pesan</li>
+          </ol>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card shadow-lg rounded">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+              <h3 class="card-title m-0">Daftar Pesan</h3>
+              <a href="{{ route('messages.create') }}"
+                <i class="fas fa-plus me-1"></i> Pesan Baru
+              </a>
+            </div>
+
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                  <thead class="bg-primary text-white text-center">
+                    <tr>
+                      <th style="width: 5%;">#</th>
+                      <th>Dengan</th>
+                      <th>Pesan Terakhir</th>
+                      <th>Waktu</th>
+                      <th style="width: 15%;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @forelse ($conversations as $index => $message)
+                      @php
+                        $receiver = $message->sender_id == auth()->id() ? $message->receiver : $message->sender;
+                      @endphp
+                      <tr>
+                        <td class="text-center">{{ $index + 1 }}</td>
+                        <td>{{ $receiver->name }}</td>
+                        <td>{{ Str::limit($message->message, 50) }}</td>
+                        <td>{{ $message->created_at->format('d M Y, H:i') }}</td>
+                        <td class="text-center">
+                          <a href="{{ route('messages.show', ['receiver_id' => $receiver->id]) }}" class="btn btn-info btn-sm rounded-pill shadow-sm">
+                            <i class="fas fa-eye"></i> Lihat
+                          </a>
+                        </td>
+                      </tr>
+                    @empty
+                      <tr>
+                        <td colspan="5" class="text-center">Belum ada percakapan.</td>
+                      </tr>
+                    @endforelse
+                  </tbody>
+                </table>
+              </div>
+              {{-- Optional Pagination / Search can be added here --}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 @endsection

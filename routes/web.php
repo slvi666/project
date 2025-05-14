@@ -19,7 +19,7 @@ use App\Http\Controllers\FormulirPendaftaranController;
 use App\Http\Controllers\KontakInformasiController;
 use App\Http\Controllers\MateriPembelajaranController;
 use App\Http\Controllers\DokKegiatanController;
-
+use App\Http\Controllers\EssayExamResultController;
 
 
 
@@ -138,6 +138,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/messages/{id}', [MessageController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
 });
+Route::get('/messages/get-users', [MessageController::class, 'getUsers'])->name('messages.getUsers');
+
 
 use App\Http\Controllers\ExamController;
 
@@ -153,5 +155,15 @@ Route::prefix('exams/{examId}')->group(function () {
     Route::put('questions/{questionId}', [QuestionController::class, 'update'])->name('questions.update');
     Route::delete('questions/{questionId}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 });
+use App\Http\Controllers\StudentExamController;
+
+Route::resource('student_exams', StudentExamController::class);
 
 
+use App\Http\Controllers\AnswerController;
+
+Route::resource('answers', AnswerController::class);
+Route::get('answers/{id}/auto-grade', [AnswerController::class, 'autoGrade'])->name('answers.autoGrade');
+Route::post('/student-exams/{id}/calculate-score', [StudentExamController::class, 'calculateScore'])->name('student_exams.calculateScore');
+
+Route::resource('essay_exam_results', EssayExamResultController::class);

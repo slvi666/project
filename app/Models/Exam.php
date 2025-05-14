@@ -34,4 +34,15 @@ class Exam extends Model
     {
         return $this->hasMany(Question::class);
     }
+public function siswa()
+{
+    return $this->belongsToMany(Siswa::class, 'student_exams', 'exam_id', 'siswa_id')
+                ->withPivot(['started_at', 'finished_at', 'score'])
+                ->withTimestamps();
+}
+public function essayExamResults()
+{
+    return $this->hasMany(EssayExamResult::class);
+}
+
 }

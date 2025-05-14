@@ -89,7 +89,9 @@
                     $badgeColor = $statusColors[strtolower($formulir->status)] ?? 'secondary';
                   @endphp
                   <strong>Status:</strong> 
-                  <span class="badge badge-{{ $badgeColor }}">{{ strtoupper($formulir->status) }}</span>
+                 <span class="badge badge-{{ $badgeColor }}">
+                  {{ strtoupper($formulir->status === 'Pending' ? 'Menunggu Verifikasi' : $formulir->status) }}
+                </span>
                 </li>
               </ul>
             </div>

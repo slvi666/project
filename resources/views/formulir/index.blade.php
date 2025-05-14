@@ -97,7 +97,9 @@
                             $formulir->status === 'Lulus' ? 'bg-success' : 
                             ($formulir->status === 'Tidak Lulus' ? 'bg-danger' : 'bg-primary') 
                           }}">
-                          {{ $formulir->status }}
+                          {{ 
+                            $formulir->status === 'Pending' ? 'Menunggu Verifikasi' : $formulir->status 
+                          }}
                         </span>
                         </td>
                         <td class="text-center">
@@ -142,6 +144,9 @@
 
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+<script>
+  const userRole = "{{ auth()->user()->role_name }}";
+</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -234,20 +239,46 @@
     });
   }
 
+  // function confirmEdit(url) {
+  //   Swal.fire({
+  //     title: 'Verifikasi Status?',
+  //     text: "Anda akan diarahkan ke halaman pembaharuan",
+  //     icon: 'info',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Lanjutkan',
+  //     cancelButtonText: 'Batal'
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       window.location.href = url;
+  //     }
+  //   });
+  // }
+
   function confirmEdit(url) {
-    Swal.fire({
-      title: 'Edit Data?',
-      text: "Anda akan diarahkan ke halaman edit.",
-      icon: 'info',
-      showCancelButton: true,
-      confirmButtonText: 'Lanjutkan',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = url;
-      }
-    });
+  let title = 'Verifikasi Status?';
+  let text = 'Anda akan diarahkan ke halaman pembaharuan';
+  let icon = 'info';
+
+  if (userRole === 'calon_siswa') {
+    title = 'Ubah Data Anda?';
+    text = 'Silakan update data pendaftaran Anda.';
+    icon = 'question';
   }
+
+  Swal.fire({
+    title: title,
+    text: text,
+    icon: icon,
+    showCancelButton: true,
+    confirmButtonText: 'Lanjutkan',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+}
+
 
   function confirmDelete(form) {
     Swal.fire({

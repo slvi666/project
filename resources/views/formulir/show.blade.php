@@ -75,7 +75,7 @@
                     
                     <strong>Status:</strong> 
                     <span class="badge badge-{{ $badgeColor }}">
-                      {{ strtoupper($formulir->status) }}
+                      {{ strtoupper($formulir->status === 'Pending' ? 'Menunggu Verifikasi' : $formulir->status) }}
                     </span>
                     </li>
                   </ul>

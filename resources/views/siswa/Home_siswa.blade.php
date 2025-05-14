@@ -150,20 +150,50 @@
       
         
 
-        <!-- Featured Cards -->
-        <div class="col-lg-6 mb-4">
-          <div class="card border-0 shadow-lg rounded-4 hover-effect">
-            <div class="card-header bg-gradient-primary text-white">
-              <h5 class="m-0 font-weight-bold">Total Data Siswa</h5>
-            </div>
-            <div class="card-body">
-              <h6 class="card-title font-weight-bold">Jumlah Siswa Terdaftar</h6>
-              <p class="card-text">Jumlah total siswa yang terdaftar dalam sistem.</p>
-              <h3 class="display-4 text-primary"></h3>
-              <hr class="divider">
-            </div>
-          </div>
-        </div>
+<!-- Jadwal Ujian - Tabel langsung pakai Model -->
+<div class="col-lg-6 mb-4">
+  <div class="card border-0 shadow-lg rounded-4 hover-effect">
+    <div class="card-header bg-gradient-primary text-white">
+      <h5 class="m-0 font-weight-bold">Jadwal Ujian</h5>
+    </div>
+    <div class="card-body">
+
+      @php
+          use App\Models\Exam;
+          $exams = Exam::with('subject')->latest()->take(5)->get(); // ambil 5 ujian terbaru
+      @endphp
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover mb-0">
+          <thead class="text-center table-primary">
+            <tr>
+              <th style="width: 5%;">No</th>
+              <th>Judul</th>
+              <th>Mulai</th>
+              <th>Selesai</th>
+            </tr>
+          </thead>
+          <tbody>
+            @forelse($exams as $index => $exam)
+              <tr>
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ $exam->exam_title }}</td>
+                <td>{{ $exam->start_time ? \Carbon\Carbon::parse($exam->start_time)->format('d-m-Y H:i') : '-' }}</td>
+                <td>{{ $exam->end_time ? \Carbon\Carbon::parse($exam->end_time)->format('d-m-Y H:i') : '-' }}</td>
+              </tr>
+            @empty
+              <tr>
+                <td colspan="4" class="text-center text-muted">Tidak ada jadwal ujian.</td>
+              </tr>
+            @endforelse
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
         @php
         use App\Models\TugasSiswa;

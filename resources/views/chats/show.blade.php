@@ -2,120 +2,204 @@
 
 @section('content')
 <style>
-    .messages {
-        max-height: 500px;
+    body {
+        background-color: #f1f2f6;
+    }
+
+    .chat-container {
+        max-width: 900px;
+        margin: auto;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        background: #fff;
+    }
+
+    .chat-header {
+        background: #3059b1;
+        color: #ffffff;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-header h4 {
+        margin: 0;
+    }
+
+    .chat-header .status {
+        font-size: 0.85rem;
+        color: #70d26f;
+        display: flex;
+        align-items: center;
+    }
+
+    .chat-header .status i {
+        font-size: 0.6rem;
+        margin-right: 6px;
+    }
+
+    .chat-body {
+        padding: 20px;
+        height: 500px;
         overflow-y: auto;
-        padding: 15px;
-        background-color: #e5ddd5;
-        border-radius: 10px;
+        background: #e8e8e8;
+        display: flex;
+        flex-direction: column;
     }
 
-    .message {
+    .message-wrapper {
+        display: flex;
+        margin-bottom: 15px;
+    }
+
+    .message-wrapper.sent {
+        justify-content: flex-end;
+    }
+
+    .message-bubble {
         max-width: 70%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 10px;
+        padding: 12px 18px;
+        border-radius: 20px;
         position: relative;
-        clear: both;
+        background: #f1f1f1;
+        font-size: 0.95rem;
+        transition: background 0.3s ease;
     }
 
-    .sent {
-        background-color: #dcf8c6;
-        margin-left: auto;
-        text-align: right;
-        border-bottom-right-radius: 0;
+    .sent .message-bubble {
+        background: #4cd137;
+        color: white;
+        border-bottom-right-radius: 4px;
     }
 
-    .received {
-        background-color: #fff;
-        margin-right: auto;
-        text-align: left;
-        border-bottom-left-radius: 0;
+    .received .message-bubble {
+        background: white;
+        color: black;
+        border-bottom-left-radius: 4px;
     }
 
-    .message small {
-        display: block;
+    .message-bubble:hover {
+        background-color: #dcdde1;
+    }
+
+    .message-meta {
         font-size: 0.75rem;
-        color: #666;
-        margin-top: 5px;
+        margin-top: 6px;
+        opacity: 0.7;
     }
 
-    .card-body {
-        background-color: #e5ddd5;
-        padding: 0;
+    .chat-footer {
+        padding: 10px 20px;
+        border-top: 1px solid #ddd;
+        background: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: sticky;
+        bottom: 0;
     }
 
-    .card-footer textarea {
+    .chat-footer textarea {
+        flex: 1;
         resize: none;
+        border-radius: 20px;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        transition: all 0.3s ease;
+    }
+
+    .chat-footer textarea:focus {
+        outline: none;
+        border-color: #4cd137;
+        box-shadow: 0 0 0 2px rgba(76, 209, 55, 0.2);
+    }
+
+    .btn-send {
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        border: none;
+        background-color: #4cd137;
+        color: white;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-send:hover {
+        background-color: #44bd32;
+    }
+
+    @media (max-width: 768px) {
+        .chat-body {
+            height: 400px;
+        }
+
+        .chat-header, .chat-footer {
+            padding: 15px;
+        }
+
+        .message-bubble {
+            font-size: 0.9rem;
+        }
     }
 </style>
 
 <div class="content-wrapper">
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0"><i class="fas fa-comment-alt me-2 text-primary"></i>Percakapan dengan {{ $receiver->name }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right bg-transparent">
-                        <li class="breadcrumb-item"><a href="{{ route('messages.index') }}"">Daftar Percakapan</a></li>
-                        <li class="breadcrumb-item active">Percakapan dengan {{ $receiver->name }}</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card shadow-lg border-0 rounded-4 animate__animated animate__fadeInUp w-100">
-                        <div class="card-header bg-light d-flex justify-content-between align-items-center rounded-top-4">
-                            <h3 class="card-title text-dark mb-0">
-                                <i class="fas fa-comment-dots me-2 text-info"></i>Pesan
-                            </h3>
-                            <a href="{{ route('messages.index') }}" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-arrow-left"></i> Kembali
-                            </a>
-                        </div>
+        <div class="chat-container my-4">
+            <!-- Header -->
+            <div class="chat-header">
+                <div>
+                    <h4>Percakapan dengan {{ $receiver->name }}</h4>
+                    <span class="status"><i class="fas fa-circle"></i> Online</span>
+                </div>
+                <a href="{{ route('messages.index') }}" class="btn btn-sm btn-light text-dark"><i class="fas fa-arrow-left"></i> Kembali</a>
+            </div>
 
-                        <div class="card-body">
-                            <div class="messages">
-                                @foreach ($messages as $message)
-                                    <div class="message {{ $message->sender_id == auth()->user()->id ? 'sent' : 'received' }}">
-                                        <strong>{{ $message->sender_id == auth()->user()->id ? 'You' : $message->sender->name }}:</strong>
-                                        <p>{{ $message->message }}</p>
-                                        <small>{{ \Carbon\Carbon::parse($message->sent_at)->diffForHumans() }}</small>
-                                    </div>
-                                @endforeach
+            <!-- Body -->
+            <div class="chat-body" id="messages">
+                @foreach ($messages as $message)
+                    <div class="message-wrapper {{ $message->sender_id == auth()->user()->id ? 'sent' : 'received' }}">
+                        <div class="message-bubble">
+                            <strong>{{ $message->sender_id == auth()->user()->id ? 'Anda' : $message->sender->name }}</strong>
+                            <div>{{ $message->message }}</div>
+                            <div class="message-meta" title="{{ \Carbon\Carbon::parse($message->sent_at)->toDayDateTimeString() }}">
+                                {{ \Carbon\Carbon::parse($message->sent_at)->diffForHumans() }}
                             </div>
                         </div>
-
-                        <div class="card-footer bg-white text-muted text-end small rounded-bottom-4">
-                            <form action="{{ route('messages.store') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="receiver_id" value="{{ $receiver->id }}">
-                                <textarea name="message" required placeholder="Tulis balasan di sini..." class="form-control"></textarea><br>
-                                <button type="submit" class="btn btn-primary btn-sm">Kirim Pesan</button>
-                            </form>
-                        </div>
                     </div>
-                </div>
+                @endforeach
             </div>
+
+            <!-- Footer -->
+            <form action="{{ route('messages.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="receiver_id" value="{{ $receiver->id }}">
+                <div class="chat-footer">
+                    <textarea name="message" placeholder="Ketik pesan..." required></textarea>
+                    <button type="submit" class="btn-send">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
         </div>
     </section>
 </div>
 
-<!-- Load FontAwesome & Animate.css -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+<!-- External Assets -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 @endsection
+
+@section('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const messagesContainer = document.querySelector('.messages');
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        const container = document.getElementById('messages');
+        container.scrollTop = container.scrollHeight;
     });
 </script>
-
+@endsection

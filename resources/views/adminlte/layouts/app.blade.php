@@ -283,6 +283,14 @@ body {
           </a>
         </li>
         @endif
+         @if (auth()->user()->role_name === 'Admin')
+        <li class="nav-item">
+          <a href="{{ route('exams.index') }}" class="nav-link">
+            <i class="fas fa-book-reader nav-icon"></i>
+            <p>Data master Ujian</p>
+          </a>
+        </li>
+        @endif
 
         @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin', 'Orang Tua']))
         <li class="nav-item">
@@ -320,19 +328,10 @@ body {
         </li>
 
         @endif
-                 <li class="nav-item">
-              <a href="{{ route('messages.index') }}" class="nav-link">
-                  <i class="fas fa-bookmark nav-icon"></i>
-                  <p>Pesan</p>
-              </a>
 
-        </li>
       </ul>
     </li>
     @endif
-    
-  
-
     @if (in_array(auth()->user()->role_name, [ 'Admin']))
     <li class="nav-header mt-2 py-2">- PPDB</li>
     <li class="nav-item">
@@ -371,6 +370,13 @@ body {
       </a>
     </li>
     @endif
+    <li class="nav-header mt-2 py-2">- Pesan </li>
+    <li class="nav-item">
+      <a href="{{ route('messages.index') }}" class="nav-link">
+        <i class="fas fa-file nav-icon"></i>
+        <p>Pesan</p>
+      </a>
+    </li>
     <li class="nav-header mt-2 py-2">- Logout</li>
     <li class="nav-item">
       <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
