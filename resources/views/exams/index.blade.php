@@ -44,7 +44,7 @@
               <div class="mb-3 d-flex justify-content-between align-items-center">
                 <input type="text" id="search" placeholder="🔍 Cari Ujian..." class="form-control w-50 shadow-sm rounded-pill px-3">
                 
-                @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
+                @if (auth()->user()->role_name === '#' || auth()->user()->role_name === 'Admin')
                 <a href="javascript:void(0)" onclick="confirmAddExam()" 
                   class="btn btn-primary fw-bold shadow-sm rounded-pill px-4 ms-3">
                   <i class="fas fa-plus-circle me-1"></i> Tambah Jadwal Ujian
@@ -60,6 +60,7 @@
                       <th>No</th>
                       <th>Nama Ujian</th>
                       <th>Mata Pelajaran</th>
+                      <th>Kelas</th>
                       <th>Jenis Soal</th>
                       <th>Durasi</th>
                       <th>Waktu Mulai</th>
@@ -73,6 +74,7 @@
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td>{{ $exam->exam_title }}</td>
                         <td>{{ $exam->subject->subject_name }}</td>
+                        <td>{{ $exam->subject->class_name }}</td>
                         <td>{{ ucfirst(str_replace('_', ' ', $exam->question_type)) }}</td>
                         <td>{{ $exam->duration }} menit</td>
                         <td>{{ $exam->start_time ? \Carbon\Carbon::parse($exam->start_time)->format('Y-m-d H:i') : '-' }}</td>
@@ -84,12 +86,14 @@
                                                 <a href="{{ route('exam.start', $exam->id) }}" class="btn btn-success btn-sm rounded-pill me-1 shadow-sm" title="Kerjakan Ujian">
                           <i class="fas fa-play"></i> <!-- icon "play" untuk mulai -->
                         </a>
+ @if (in_array(auth()->user()->role_name, ['guru', 'Admin']))
+                        <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-primary btn-sm rounded-pill me-1 shadow-sm" title="Kelola Soal">
+                          <i class="fas fa-tasks"></i>
+                        </a>
+                        @endif
                         @if (auth()->user()->role_name === 'Admin')
                         <a href="javascript:void(0);" onclick="confirmEdit('{{ route('exams.edit', $exam->id) }}')" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm" title="Edit">
                           <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-primary btn-sm rounded-pill me-1 shadow-sm" title="Kelola Soal">
-                          <i class="fas fa-tasks"></i>
                         </a>
                         <form action="{{ route('exams.destroy', $exam->id) }}" method="POST" class="d-inline">
                           @csrf

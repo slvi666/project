@@ -41,15 +41,16 @@
           <form action="{{ route('exams.store') }}" method="POST">
             @csrf
 
-            <div class="mb-3">
-              <label for="subject_id" class="form-label">Mata Pelajaran</label>
-              <select name="subject_id" id="subject_id" class="form-control rounded-pill px-3 py-2" required>
-                <option value="" disabled selected>Pilih Mata Pelajaran</option>
-                @foreach($subjects as $subject)
-                  <option value="{{ $subject->id }}">{{ $subject->subject_name }}</option>
-                @endforeach
-              </select>
-            </div>
+<div class="mb-3">
+  <label for="subject_id" class="form-label">Mata Pelajaran</label>
+  <select name="subject_id" id="subject_id" class="form-control rounded-pill px-3 py-2" required>
+    <option value="" disabled selected>Pilih Mata Pelajaran</option>
+    @foreach($subjects as $subject)
+      <option value="{{ $subject->id }}">{{ $subject->subject_name }} ({{ $subject->class_name }})</option>
+    @endforeach
+  </select>
+</div>
+
 
             <div class="mb-3">
               <label for="exam_title" class="form-label">Judul Ujian</label>

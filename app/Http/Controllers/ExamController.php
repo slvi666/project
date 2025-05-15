@@ -9,11 +9,40 @@ use Illuminate\Http\Request;
 class ExamController extends Controller
 {
     // Menampilkan daftar ujian
-    public function index()
-    {
-        $exams = Exam::with('subject')->get(); // Mengambil semua ujian beserta data mata pelajaran
-        return view('exams.index', compact('exams'));
+public function index()
+{
+    // Ambil daftar kelas unik untuk dropdown filter (misalnya untuk admin/guru)
+    $kelasList = Subject::select('class_name')->distinct()->orderBy('class_name')->pluck('class_name');
+
+    // Query dasar ujian dengan relasi subject
+    $query = Exam::with('subject');
+
+    // Cek peran user yang login
+    if (auth()->user()->role_name === 'siswa') {
+        // Ambil data siswa berdasarkan user_id
+        $siswa = \App\Models\Siswa::where('user_id', auth()->id())->first();
+
+        // Ambil class_name dari relasi subject (misalnya siswa hanya bisa lihat exam untuk kelasnya)
+        $className = optional($siswa->subject)->class_name;
+
+        // Filter berdasarkan class_name siswa
+        $query->whereHas('subject', function ($q) use ($className) {
+            $q->where('class_name', $className);
+        });
+    } elseif (request('kelas')) {
+        // Jika ada request filter kelas (biasanya dari admin/guru)
+        $query->whereHas('subject', function ($q) {
+            $q->where('class_name', request('kelas'));
+        });
     }
+
+    // Ambil data ujian yang sudah difilter
+    $exams = $query->latest()->get();
+
+    // Kirim data ke view
+    return view('exams.index', compact('exams', 'kelasList'));
+}
+
 
     // Menampilkan form untuk membuat ujian baru
 public function create()
