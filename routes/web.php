@@ -155,9 +155,9 @@ Route::prefix('exams/{examId}')->group(function () {
     Route::put('questions/{questionId}', [QuestionController::class, 'update'])->name('questions.update');
     Route::delete('questions/{questionId}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 });
-use App\Http\Controllers\StudentExamController;
+// use App\Http\Controllers\StudentExamController;
 
-Route::resource('student_exams', StudentExamController::class);
+// Route::resource('student_exams', StudentExamController::class);
 
 
 use App\Http\Controllers\AnswerController;
@@ -167,3 +167,13 @@ Route::get('answers/{id}/auto-grade', [AnswerController::class, 'autoGrade'])->n
 Route::post('/student-exams/{id}/calculate-score', [StudentExamController::class, 'calculateScore'])->name('student_exams.calculateScore');
 
 Route::resource('essay_exam_results', EssayExamResultController::class);
+Route::post('/exams/{examId}/questions/import', [QuestionController::class, 'import'])->name('questions.import');
+Route::post('/questions/import/{examId}', [QuestionController::class, 'importExcel'])->name('questions.importExcel');
+
+use App\Http\Controllers\StudentExamController;
+
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    Route::get('/exam/{exam}/start', [StudentExamController::class, 'start'])->name('exam.start');
+    Route::post('/exam/{exam}/submit', [StudentExamController::class, 'submit'])->name('exam.submit');
+    Route::get('/exam-list', [StudentExamController::class, 'list'])->name('exam.list');
+});

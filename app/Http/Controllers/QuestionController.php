@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Exam;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\QuestionImport;
 
 class QuestionController extends Controller
 {
     // Menampilkan daftar soal berdasarkan exam
     public function index($examId)
     {
-        $exam = Exam::findOrFail($examId);  // Menemukan ujian berdasarkan ID
-        $questions = $exam->questions; // Mendapatkan semua soal yang terkait dengan ujian ini
+        $exam = Exam::findOrFail($examId);
+        $questions = $exam->questions;
 
         return view('questions.index', compact('exam', 'questions'));
     }
@@ -20,7 +22,7 @@ class QuestionController extends Controller
     // Menampilkan form untuk membuat soal baru
     public function create($examId)
     {
-        $exam = Exam::findOrFail($examId); // Menemukan ujian berdasarkan ID
+        $exam = Exam::findOrFail($examId);
         return view('questions.create', compact('exam'));
     }
 
@@ -30,8 +32,8 @@ class QuestionController extends Controller
         $request->validate([
             'question_text' => 'required',
             'type' => 'required',
-            'choices' => 'nullable|json', // Validasi untuk kolom choices, jika tipe soal pilihan ganda
-            'correct_answer' => 'nullable|string', // Validasi untuk jawaban yang benar, jika tipe soal pilihan ganda
+            'choices' => 'nullable|json',
+            'correct_answer' => 'nullable|string',
         ]);
 
         $exam = Exam::findOrFail($examId);
@@ -39,7 +41,7 @@ class QuestionController extends Controller
         Question::create([
             'exam_id' => $exam->id,
             'question_text' => $request->question_text,
-            'type' => $request->type,
+            'type' => $exam->question_type,
             'choices' => $request->choices ? json_encode($request->choices) : null,
             'correct_answer' => $request->correct_answer,
         ]);
@@ -66,7 +68,6 @@ class QuestionController extends Controller
             'correct_answer' => 'nullable|string',
         ]);
 
-        $exam = Exam::findOrFail($examId);
         $question = Question::findOrFail($questionId);
 
         $question->update([
@@ -76,17 +77,34 @@ class QuestionController extends Controller
             'correct_answer' => $request->correct_answer,
         ]);
 
-        return redirect()->route('questions.index', $exam->id)->with('success', 'Soal berhasil diperbarui.');
+        return redirect()->route('questions.index', $examId)->with('success', 'Soal berhasil diperbarui.');
     }
 
     // Menghapus soal
     public function destroy($examId, $questionId)
     {
-        $exam = Exam::findOrFail($examId);
         $question = Question::findOrFail($questionId);
-
         $question->delete();
 
-        return redirect()->route('questions.index', $exam->id)->with('success', 'Soal berhasil dihapus.');
+        return redirect()->route('questions.index', $examId)->with('success', 'Soal berhasil dihapus.');
     }
+
+    // Import soal dari file Excel
+public function importExcel(Request $request, $exam_id)
+{
+    $request->validate([
+        'excel_file' => 'required|file|mimes:xlsx,xls'
+    ]);
+
+    $exam = Exam::findOrFail($exam_id);
+
+    try {
+        Excel::import(new QuestionImport($exam), $request->file('excel_file'));
+        return redirect()->back()->with('success', 'Soal berhasil diimpor.');
+    } catch (\Exception $e) {
+        \Log::error('Gagal impor soal: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Gagal impor soal: ' . $e->getMessage());
+    }
+}
+
 }

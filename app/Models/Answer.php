@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,24 +8,24 @@ class Answer extends Model
 {
     use HasFactory;
 
-    // Menentukan tabel yang digunakan (opsional, jika tabel tidak sesuai konvensi)
-    protected $table = 'answers';
-
-    // Menentukan kolom yang dapat diisi secara massal (mass assignment)
     protected $fillable = [
-        'student_exam_id',
+        'siswa_id',
+        'exam_id',
         'question_id',
-        'answer_text',
+        'answer',
         'score',
     ];
 
-    // Relasi dengan model StudentExam
-    public function studentExam()
+    public function siswa()
     {
-        return $this->belongsTo(StudentExam::class);
+        return $this->belongsTo(Siswa::class);
     }
 
-    // Relasi dengan model Question
+    public function exam()
+    {
+        return $this->belongsTo(Exam::class);
+    }
+
     public function question()
     {
         return $this->belongsTo(Question::class);

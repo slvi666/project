@@ -71,27 +71,32 @@
                         <td>{{ $exam->duration }} menit</td>
                         <td>{{ $exam->start_time ? \Carbon\Carbon::parse($exam->start_time)->format('Y-m-d H:i') : '-' }}</td>
                         <td>{{ $exam->end_time ? \Carbon\Carbon::parse($exam->end_time)->format('Y-m-d H:i') : '-' }}</td>
-                        <td class="text-center">
-                          <a href="{{ route('exams.show', $exam->id) }}" class="btn btn-info btn-sm rounded-pill me-1 shadow-sm" title="Lihat">
-                            <i class="fas fa-eye"></i>
-                          </a>
+<td class="text-center">
+  <a href="{{ route('exams.show', $exam->id) }}" class="btn btn-info btn-sm rounded-pill me-1 shadow-sm" title="Lihat">
+    <i class="fas fa-eye"></i>
+  </a>
 
-                          <a href="javascript:void(0);" onclick="confirmEdit('{{ route('exams.edit', $exam->id) }}')" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm" title="Edit">
-                            <i class="fas fa-edit"></i>
-                          </a>
+  <a href="javascript:void(0);" onclick="confirmEdit('{{ route('exams.edit', $exam->id) }}')" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm" title="Edit">
+    <i class="fas fa-edit"></i>
+  </a>
 
-                          <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-primary btn-sm rounded-pill me-1 shadow-sm" title="Kelola Soal">
-                            <i class="fas fa-tasks"></i>
-                          </a>
+  <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-primary btn-sm rounded-pill me-1 shadow-sm" title="Kelola Soal">
+    <i class="fas fa-tasks"></i>
+  </a>
 
-                          <form action="{{ route('exams.destroy', $exam->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm" onclick="confirmDelete(this.form)" title="Hapus">
-                              <i class="fas fa-trash"></i>
-                            </button>
-                          </form>
-                        </td>
+  <a href="{{ route('exam.start', $exam->id) }}" class="btn btn-success btn-sm rounded-pill me-1 shadow-sm" title="Kerjakan Ujian">
+    <i class="fas fa-play"></i> <!-- icon "play" untuk mulai -->
+  </a>
+
+  <form action="{{ route('exams.destroy', $exam->id) }}" method="POST" class="d-inline">
+    @csrf
+    @method('DELETE')
+    <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm" onclick="confirmDelete(this.form)" title="Hapus">
+      <i class="fas fa-trash"></i>
+    </button>
+  </form>
+</td>
+
                       </tr>
                     @endforeach
                   </tbody>

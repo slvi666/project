@@ -96,4 +96,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
+    public function exams()
+{
+    return $this->hasOne(Siswa::class) ? $this->siswa->exams() : null;
+}
+
 }

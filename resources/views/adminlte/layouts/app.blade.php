@@ -264,7 +264,14 @@ body {
             <i class="fas fa-book nav-icon"></i>
             <p>Materi</p>
           </a>
-        </li>
+        </li>        
+<li class="nav-item">
+  <a href="{{ route('exam.list') }}" class="nav-link">
+    <i class="fas fa-book nav-icon"></i>
+    <p>Kerjakan Soal</p>
+  </a>
+</li>
+
 
         @if (in_array(auth()->user()->role_name, ['guru', 'siswa']))
         <li class="nav-item">
