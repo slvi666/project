@@ -290,14 +290,14 @@ body {
           </a>
         </li>
         @endif
-         @if (auth()->user()->role_name === 'Admin')
+
         <li class="nav-item">
           <a href="{{ route('exams.index') }}" class="nav-link">
             <i class="fas fa-book-reader nav-icon"></i>
-            <p>Data master Ujian</p>
+            <p>Data Ujian</p>
           </a>
         </li>
-        @endif
+
 
         @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin', 'Orang Tua']))
         <li class="nav-item">

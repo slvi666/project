@@ -24,9 +24,6 @@
           <div class="card shadow-lg rounded">
             <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
               <h3 class="card-title m-0">Daftar Jadwal Ujian</h3>
-              <a href="javascript:void(0);" class="btn btn-light text-primary fw-bold shadow-sm rounded-pill px-4 text-" onclick="confirmAddExam()">
-                Tambah jadwal Ujian
-              </a>
             </div>
 
             <div class="card-body">
@@ -42,9 +39,18 @@
                   });
                 </script>
               @endif
-
-              <div class="mb-3">
+             
+              {{-- Search --}}
+              <div class="mb-3 d-flex justify-content-between align-items-center">
                 <input type="text" id="search" placeholder="🔍 Cari Ujian..." class="form-control w-50 shadow-sm rounded-pill px-3">
+                
+                @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
+                <a href="javascript:void(0)" onclick="confirmAddExam()" 
+                  class="btn btn-primary fw-bold shadow-sm rounded-pill px-4 ms-3">
+                  <i class="fas fa-plus-circle me-1"></i> Tambah Jadwal Ujian
+                </a>
+                @endif
+              </div>
               </div>
 
               <div class="table-responsive">
@@ -71,31 +77,29 @@
                         <td>{{ $exam->duration }} menit</td>
                         <td>{{ $exam->start_time ? \Carbon\Carbon::parse($exam->start_time)->format('Y-m-d H:i') : '-' }}</td>
                         <td>{{ $exam->end_time ? \Carbon\Carbon::parse($exam->end_time)->format('Y-m-d H:i') : '-' }}</td>
-<td class="text-center">
-  <a href="{{ route('exams.show', $exam->id) }}" class="btn btn-info btn-sm rounded-pill me-1 shadow-sm" title="Lihat">
-    <i class="fas fa-eye"></i>
-  </a>
-
-  <a href="javascript:void(0);" onclick="confirmEdit('{{ route('exams.edit', $exam->id) }}')" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm" title="Edit">
-    <i class="fas fa-edit"></i>
-  </a>
-
-  <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-primary btn-sm rounded-pill me-1 shadow-sm" title="Kelola Soal">
-    <i class="fas fa-tasks"></i>
-  </a>
-
-  <a href="{{ route('exam.start', $exam->id) }}" class="btn btn-success btn-sm rounded-pill me-1 shadow-sm" title="Kerjakan Ujian">
-    <i class="fas fa-play"></i> <!-- icon "play" untuk mulai -->
-  </a>
-
-  <form action="{{ route('exams.destroy', $exam->id) }}" method="POST" class="d-inline">
-    @csrf
-    @method('DELETE')
-    <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm" onclick="confirmDelete(this.form)" title="Hapus">
-      <i class="fas fa-trash"></i>
-    </button>
-  </form>
-</td>
+                      <td class="text-center">
+                        <a href="{{ route('exams.show', $exam->id) }}" class="btn btn-info btn-sm rounded-pill me-1 shadow-sm" title="Lihat">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                                                <a href="{{ route('exam.start', $exam->id) }}" class="btn btn-success btn-sm rounded-pill me-1 shadow-sm" title="Kerjakan Ujian">
+                          <i class="fas fa-play"></i> <!-- icon "play" untuk mulai -->
+                        </a>
+                        @if (auth()->user()->role_name === 'Admin')
+                        <a href="javascript:void(0);" onclick="confirmEdit('{{ route('exams.edit', $exam->id) }}')" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm" title="Edit">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-primary btn-sm rounded-pill me-1 shadow-sm" title="Kelola Soal">
+                          <i class="fas fa-tasks"></i>
+                        </a>
+                        <form action="{{ route('exams.destroy', $exam->id) }}" method="POST" class="d-inline">
+                          @csrf
+                          @method('DELETE')
+                          <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm" onclick="confirmDelete(this.form)" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      </td>
+                              @endif
 
                       </tr>
                     @endforeach
