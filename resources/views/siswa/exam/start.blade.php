@@ -122,9 +122,8 @@
         color: white;
     }
 </style>
-@endsection
 
-@section('scripts')
+<!-- Scripts -->
 <script>
     const examId = {{ $exam->id }};
     const durationInMinutes = {{ $exam->duration }};
@@ -136,7 +135,7 @@
     const totalQuestions = {{ count($questions) }};
     let currentIndex = 1;
 
-    // Timer setup
+    // Timer
     let endTime = localStorage.getItem(storageKey);
     if (!endTime) {
         endTime = new Date().getTime() + totalTime;
@@ -158,18 +157,15 @@
             const minutes = Math.floor(remaining / (1000 * 60));
             const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
             countdownEl.innerHTML = `${minutes} menit ${seconds} detik`;
-
             const percent = (remaining / totalTime) * 100;
             progressBar.style.width = `${percent}%`;
         }
     }, 1000);
 
-    // Soal Navigation
     function showQuestion(index) {
         document.querySelectorAll('.question-card').forEach((el, i) => {
             el.style.display = (i + 1 === index) ? 'block' : 'none';
         });
-
         currentIndex = index;
         updateNavigationButtons();
     }
@@ -180,19 +176,6 @@
         document.getElementById('submitBtn').classList.toggle('d-none', currentIndex !== totalQuestions);
     }
 
-    document.getElementById('prevBtn').addEventListener('click', () => {
-        if (currentIndex > 1) {
-            showQuestion(currentIndex - 1);
-        }
-    });
-
-    document.getElementById('nextBtn').addEventListener('click', () => {
-        if (currentIndex < totalQuestions) {
-            showQuestion(currentIndex + 1);
-        }
-    });
-
-    // Mark answered
     function markAnswered(index) {
         const navBtn = document.getElementById('nav-btn-' + index);
         if (navBtn && !navBtn.classList.contains('answered')) {
@@ -201,7 +184,6 @@
         }
     }
 
-    // Initial setup
     document.addEventListener('DOMContentLoaded', () => {
         updateNavigationButtons();
 
@@ -217,6 +199,19 @@
                 const index = this.getAttribute('data-index');
                 markAnswered(index);
             });
+        });
+
+        // Tombol Navigasi
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentIndex > 1) {
+                showQuestion(currentIndex - 1);
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentIndex < totalQuestions) {
+                showQuestion(currentIndex + 1);
+            }
         });
     });
 </script>
