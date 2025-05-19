@@ -282,30 +282,44 @@ body {
             <i class="fas fa-book nav-icon"></i>
             <p>Materi</p>
           </a>
-        </li>           
-<li class="nav-item">
-    <a href="{{ route('student-exams.index') }}" class="nav-link">
-        <i class="fas fa-book nav-icon"></i>
-        <p>Hasil Ujian</p>
-    </a>
-</li>
-
-
-        @if (in_array(auth()->user()->role_name, ['guru', 'siswa']))
+        </li>  
+                @if (in_array(auth()->user()->role_name, ['guru', 'siswa']))
         <li class="nav-item">
           <a href="{{ route('tugas.index') }}" class="nav-link">
             <i class="fas fa-tasks nav-icon"></i>
             <p>Tugas</p>
           </a>
         </li>
-        @endif
+        @endif         
+<li class="nav-item has-treeview">
+  <a href="#" class="nav-link">
+    <i class="nav-icon fas fa-clipboard"></i>
+    <p>
+      Ujian
+      <i class="right fas fa-angle-left"></i>
+    </p>
+  </a>
+  <ul class="nav nav-treeview">
+    <li class="nav-item">
+      <a href="{{ route('exams.index') }}" class="nav-link">
+        <i class="fas fa-clipboard-list nav-icon"></i>
+        <p>Daftar Ujian</p>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ route('student-exams.index') }}" class="nav-link">
+        <i class="fas fa-book nav-icon"></i>
+        <p>Hasil Ujian</p>
+      </a>
+    </li>
+    
+  </ul>
+</li>
+
+
+
         
-        <li class="nav-item">
-          <a href="{{ route('exams.index') }}" class="nav-link">
-            <i class="fas fa-clipboard-list nav-icon"></i>
-            <p>Ujian</p>
-          </a>
-        </li>
+        
         
       </ul>
     </li>
@@ -377,6 +391,8 @@ body {
       </a>
     </li>
     @endif
+
+    @if (in_array(auth()->user()->role_name, ['siswa', 'guru', 'Admin']))
     <li class="nav-header mt-2 py-2">- Pesan </li>
     <li class="nav-item">
       <a href="{{ route('messages.index') }}" class="nav-link">
@@ -384,6 +400,7 @@ body {
         <p>Pesan</p>
       </a>
     </li>
+     @endif
     <li class="nav-header mt-2 py-2">- Logout</li>
     <li class="nav-item">
       <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">

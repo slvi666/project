@@ -42,16 +42,12 @@
                 @csrf
                 @method('PUT')
 
-                <div class="mb-3">
-                  <label for="user_id" class="form-label">Nama Siswa</label>
-                  <select name="user_id" class="form-control rounded-pill px-3 py-2" required>
-                    @foreach($users as $user)
-                      <option value="{{ $user->id }}" {{ $siswa->user_id == $user->id ? 'selected' : '' }}>
-                        {{ $user->name }} - {{ $user->email }}
-                      </option>
-                    @endforeach
-                  </select>
-                </div>
+<div class="mb-3">
+  <label for="user_id" class="form-label">Nama Siswa</label>
+  <input type="text" class="form-control rounded-pill px-3 py-2" value="{{ $siswa->user->name }} - {{ $siswa->user->email }}" readonly>
+  <input type="hidden" name="user_id" value="{{ $siswa->user_id }}">
+</div>
+
 
                 <div class="mb-3">
                   <label for="subject_id" class="form-label">Kelas</label>

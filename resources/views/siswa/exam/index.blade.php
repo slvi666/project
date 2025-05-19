@@ -38,6 +38,9 @@
                       <th>Dimulai</th>
                       <th>Selesai</th>
                       <th>Skor</th>
+                       @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
+                      <th>Aksi</th> <!-- Tambah kolom aksi -->
+                                            @endif
                     </tr>
                   </thead>
                   <tbody>
@@ -46,15 +49,22 @@
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td>{{ $exam->siswa->user->name ?? 'Nama tidak tersedia' }}</td>
                         <td>{{ $exam->exam->exam_title }}</td>
-<td>{{ \Carbon\Carbon::parse($exam->started_at)->translatedFormat('l, d F Y H:i') ?? '-' }}</td>
-<td>{{ \Carbon\Carbon::parse($exam->finished_at)->translatedFormat('l, d F Y H:i') ?? '-' }}</td>
-
+                        <td>{{ \Carbon\Carbon::parse($exam->started_at)->translatedFormat('l, d F Y H:i') ?? '-' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($exam->finished_at)->translatedFormat('l, d F Y H:i') ?? '-' }}</td>
                         <td>{{ $exam->score !== null ? $exam->score : 'Belum dinilai' }}</td>
+                         @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
+                        <td class="text-center">
+                          
+                          <a href="{{ route('siswa.exam.edit', $exam->id) }}" class="btn btn-sm btn-warning">
+                            Edit
+                          </a>
+                          @endif
+                        </td>
                       </tr>
                     @endforeach
                     @if(count($studentExams) === 0)
                       <tr>
-                        <td colspan="6" class="text-center">Tidak ada data hasil ujian.</td>
+                        <td colspan="7" class="text-center">Tidak ada data hasil ujian.</td>
                       </tr>
                     @endif
                   </tbody>

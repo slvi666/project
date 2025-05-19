@@ -34,39 +34,54 @@
             <form action="{{ route('mata-pelajaran.store') }}" method="POST">
               @csrf
               <div class="mb-3">
-                <label for="subject_id" class="form-label">Mata Pelajaran</label>
-                <select name="subject_id" class="form-control rounded-pill px-3 py-2" required>
-                  <option value="">-- Pilih --</option>
-                  @foreach ($subjects as $subject)
-                    <option value="{{ $subject->id }}">{{ $subject->subject_name }} ({{ $subject->class_name }})</option>
-                  @endforeach
-                </select>
+                  <label for="subject_id" class="form-label">Mata Pelajaran</label>
+                  <select name="subject_id" id="subject_id" class="form-control rounded-pill px-3 py-2 select2" required>
+                      <option value="">-- Pilih --</option>
+                      @foreach ($subjects as $subject)
+                          <option value="{{ $subject->id }}">{{ $subject->subject_name }} ({{ $subject->class_name }})</option>
+                      @endforeach
+                  </select>
               </div>
 
-              <div class="mb-3">
+
+                          <div class="mb-3">
                 <label for="guru_id" class="form-label">Guru</label>
-                <select name="guru_id" class="form-control rounded-pill px-3 py-2" required>
-                  <option value="">-- Pilih Guru --</option>
-                  @foreach ($gurus as $guru)
-                    <option value="{{ $guru->id }}">{{ $guru->name }}</option>
-                  @endforeach
+                <select name="guru_id" id="guru_id" class="form-control rounded-pill px-3 py-2 select2" required>
+                    <option value="">-- Pilih Guru --</option>
+                    @foreach ($gurus as $guru)
+                        <option value="{{ $guru->id }}">{{ $guru->name }}</option>
+                    @endforeach
                 </select>
-              </div>
+            </div>
 
-              <div class="mb-3">
-                <label for="siswa_ids" class="form-label">Siswa</label>
-                <div class="checkbox-group">
-                  @foreach ($siswa as $s)
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="siswa_ids[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
-                      <label class="form-check-label" for="siswa_{{ $s->id }}">
-                        {{ $s->user->name }} ({{ $s->subject->class_name }})
-                      </label>
-                    </div>
-                  @endforeach
-                </div>
-                <small class="text-muted">* Pilih satu atau lebih siswa</small>
-              </div>
+
+<div class="mb-3">
+    <label for="filter_kelas" class="form-label">Filter Kelas</label>
+    <select id="filter_kelas" class="form-control rounded-pill px-3 py-2">
+        <option value="all">-- Tampilkan Semua --</option>
+        @php
+            $kelas = $siswa->pluck('subject.class_name')->unique();
+        @endphp
+        @foreach ($kelas as $kelasItem)
+            <option value="{{ $kelasItem }}">{{ $kelasItem }}</option>
+        @endforeach
+    </select>
+</div>
+
+<div class="mb-3">
+    <label for="siswa_ids" class="form-label">Siswa</label>
+    <div class="checkbox-group">
+        @foreach ($siswa as $s)
+            <div class="form-check siswa-item" data-kelas="{{ $s->subject->class_name }}">
+                <input class="form-check-input" type="checkbox" name="siswa_ids[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
+                <label class="form-check-label" for="siswa_{{ $s->id }}">
+                    {{ $s->user->name }} ({{ $s->subject->class_name }})
+                </label>
+            </div>
+        @endforeach
+    </div>
+    <small class="text-muted">* Pilih satu atau lebih siswa</small>
+</div>
 
               <div class="mb-3">
                 <label for="waktu_mulai" class="form-label">Waktu Mulai</label>
@@ -103,3 +118,35 @@
   </section>
 </div>
 @endsection
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Inisialisasi -->
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "-- Pilih --",
+            allowClear: true
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterKelas = document.getElementById('filter_kelas');
+        const siswaItems = document.querySelectorAll('.siswa-item');
+
+        filterKelas.addEventListener('change', function () {
+            const selected = this.value;
+            siswaItems.forEach(function (item) {
+                const kelas = item.getAttribute('data-kelas');
+                if (selected === 'all' || kelas === selected) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>

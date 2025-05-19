@@ -7,6 +7,8 @@ use App\Models\Answer;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\StudentExam;
+
 
 class StudentExamController extends Controller
 {
@@ -109,5 +111,43 @@ class StudentExamController extends Controller
 
     return view('siswa.exam.index', compact('studentExams'));
 }
+
+
+    public function edit($id)
+{
+    $user = Auth::user();
+    $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
+
+    $studentExam = StudentExam::with('exam')
+        ->where('id', $id)
+        ->where('siswa_id', $siswa->id)
+        ->firstOrFail();
+
+    return view('siswa.exam.edit', compact('studentExam'));
+}
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'score' => 'required|numeric|min:0|max:100',
+    ]);
+
+    $user = Auth::user();
+    $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
+
+    $studentExam = StudentExam::where('id', $id)
+        ->where('siswa_id', $siswa->id)
+        ->firstOrFail();
+
+    $studentExam->update([
+        'score' => $request->score,
+    ]);
+
+return redirect('/student-exams')->with('success', 'Skor berhasil diperbarui.');
+
+
+}
+
+
+   
 
 }

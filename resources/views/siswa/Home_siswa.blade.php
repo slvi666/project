@@ -201,34 +201,36 @@
 </div>
 
 
-        @php
-        use App\Models\TugasSiswa;
-        $user = auth()->user();
-      
-        if($user->role_name === 'siswa') {
-          $openTugas = TugasSiswa::where('siswa_id', $user->siswa->id)
+@php
+    use App\Models\TugasSiswa;
+    $user = auth()->user();
+    $openTugas = collect(); // default koleksi kosong
+
+    if ($user->role_name === 'siswa' && $user->siswa) {
+        $openTugas = TugasSiswa::where('siswa_id', $user->siswa->id)
                         ->whereNull('file_jawaban')
                         ->get();
-        } else {
-          $openTugas = TugasSiswa::all();
-        }
-      @endphp
-      
-      @if($openTugas->isNotEmpty())
-        <div class="col-lg-6 mb-4">
-          <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
-            <div class="card-header">
-              <h5 class="m-0 font-weight-bold">Total Data Tugas</h5>
-            </div>
-            <div class="card-body">
-              <h6 class="card-title font-weight-bold">Jumlah Tugas Tersedia</h6>
-              <p class="card-text">Jumlah total tugas yang belum Anda upload jawabannya.</p>
-              <h3 class="display-4 text-primary">{{ $openTugas->count() }}</h3>
-              <hr class="divider">
-            </div>
-          </div>
+    } elseif ($user->role_name !== 'siswa') {
+        $openTugas = TugasSiswa::all();
+    }
+@endphp
+
+@if($openTugas->isNotEmpty())
+    <div class="col-lg-6 mb-4">
+      <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
+        <div class="card-header">
+          <h5 class="m-0 font-weight-bold">Total Data Tugas</h5>
         </div>
-      @endif
+        <div class="card-body">
+          <h6 class="card-title font-weight-bold">Jumlah Tugas Tersedia</h6>
+          <p class="card-text">Jumlah total tugas yang belum Anda upload jawabannya.</p>
+          <h3 class="display-4 text-primary">{{ $openTugas->count() }}</h3>
+          <hr class="divider">
+        </div>
+      </div>
+    </div>
+@endif
+
       
       </div>
     </div>

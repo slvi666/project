@@ -84,18 +84,31 @@
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#taskAccordion">
                   <div class="card-body">
-                    <div class="form-group">
-                      <label>Siswa</label><br>
-                      @foreach($siswa as $s)
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" name="siswa_id[]"
-                            value="{{ $s->id }}" id="siswa_{{ $s->id }}">
-                          <label class="form-check-label" for="siswa_{{ $s->id }}">
-                            {{ $s->user->name ?? '-' }} ({{ $s->subject->class_name }})
-                          </label>
-                        </div>
-                      @endforeach
-                    </div>
+<div class="form-group mb-3">
+  <label for="filter_kelas_2">Filter Kelas</label>
+  <select id="filter_kelas_2" class="form-control rounded-pill px-3 py-2">
+    <option value="all">-- Tampilkan Semua --</option>
+    @php
+      $kelas = $siswa->pluck('subject.class_name')->unique();
+    @endphp
+    @foreach ($kelas as $kelasItem)
+      <option value="{{ $kelasItem }}">{{ $kelasItem }}</option>
+    @endforeach
+  </select>
+</div>
+
+<div class="form-group">
+  <label>Siswa</label><br>
+  @foreach($siswa as $s)
+    <div class="form-check siswa-item-2" data-kelas="{{ $s->subject->class_name }}">
+      <input class="form-check-input" type="checkbox" name="siswa_id[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
+      <label class="form-check-label" for="siswa_{{ $s->id }}">
+        {{ $s->user->name ?? '-' }} ({{ $s->subject->class_name }})
+      </label>
+    </div>
+  @endforeach
+</div>
+
 
                     <div class="form-group">
                       <label>Guru</label>
@@ -168,4 +181,19 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const filterKelas2 = document.getElementById('filter_kelas_2');
+    const siswaItems2 = document.querySelectorAll('.siswa-item-2');
+
+    filterKelas2.addEventListener('change', function () {
+      const selected = this.value;
+      siswaItems2.forEach(function (item) {
+        const kelas = item.getAttribute('data-kelas');
+        item.style.display = (selected === 'all' || kelas === selected) ? 'block' : 'none';
+      });
+    });
+  });
+</script>
+
 @endsection

@@ -12,71 +12,65 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-
 class TugasSiswaController extends Controller
 {
     public function index()
-{
-    if (auth()->user()->role_name === 'siswa') {
-        $siswaId = auth()->user()->siswa->id;
-        $tugas = TugasSiswa::with('siswa', 'guru', 'subject')
-        ->where('siswa_id', $siswaId)
-        ->latest()
-        ->get();
-        // dd($siswaId);   
-    } elseif (auth()->user()->role_name === 'guru') {
-        $guruId = auth()->user()->guru->id;
-        $tugas = TugasSiswa::with('siswa', 'guru', 'subject')
-            ->where('guru_id', $guruId)
-            ->latest()
-            ->get();
-    } else {
-        $tugas = TugasSiswa::with('siswa', 'guru', 'subject')->latest()->get();
+    {
+        if (auth()->user()->role_name === 'siswa') {
+            $siswaId = auth()->user()->siswa->id;
+            $tugas = TugasSiswa::with('siswa', 'guru', 'subject')
+                ->where('siswa_id', $siswaId)
+                ->latest()
+                ->get();
+        } elseif (auth()->user()->role_name === 'guru') {
+            $guruId = auth()->user()->guru->id;
+            $tugas = TugasSiswa::with('siswa', 'guru', 'subject')
+                ->where('guru_id', $guruId)
+                ->latest()
+                ->get();
+        } else {
+            $tugas = TugasSiswa::with('siswa', 'guru', 'subject')->latest()->get();
+        }
+
+        return view('tugas.index', compact('tugas'));
     }
-    // dd($tugas);
 
-    return view('tugas.index', compact('tugas'));
-}
+    public function create()
+    {
+        $siswa = Siswa::all();
+        $guru = Guru::all();
+        $subject = Subject::all();
+        $authGuruId = Auth::user()->guru_id; // Pastikan user punya kolom guru_id
 
-public function create()
-{
-    $siswa = Siswa::all();
-    $guru = Guru::all();
-    $subject = Subject::all();
-    $authGuruId = Auth::user()->guru_id; // Assuming the user has a `guru_id` column
-
-    return view('tugas.create', compact('siswa', 'guru', 'subject', 'authGuruId'));
-}
-
+        return view('tugas.create', compact('siswa', 'guru', 'subject', 'authGuruId'));
+    }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'siswa_id' => 'required|array', // Memastikan siswa_id adalah array
-        'siswa_id.*' => 'exists:siswa,id', // Validasi ID siswa yang dipilih ada di database
-        'guru_id' => 'required',
-        'subject_id' => 'required',
-        'judul_tugas' => 'required',
-        'tanggal_diberikan' => 'required|date',
-        'deadline' => 'required|date',
-        'file_soal' => 'nullable|file|mimes:pdf,doc,docx',
-        'nilai_tugas' => 'nullable|integer',
-    ]);
+    {
+        $request->validate([
+            'siswa_id' => 'required|array', // siswa_id harus array
+            'siswa_id.*' => 'exists:siswa,id',
+            'guru_id' => 'required',
+            'subject_id' => 'required',
+            'judul_tugas' => 'required',
+            'tanggal_diberikan' => 'required|date',
+            'deadline' => 'required|date',
+            'file_soal' => 'nullable|file|mimes:pdf,doc,docx',
+            'nilai_tugas' => 'nullable|integer',
+        ]);
 
-    $data = $request->except('siswa_id'); // Menyimpan data selain siswa_id
+        $data = $request->except('siswa_id');
 
-    if ($request->hasFile('file_soal')) {
-        $data['file_soal'] = $request->file('file_soal')->store('tugas', 'public');
+        if ($request->hasFile('file_soal')) {
+            $data['file_soal'] = $request->file('file_soal')->store('tugas', 'public');
+        }
+
+        foreach ($request->siswa_id as $siswaId) {
+            TugasSiswa::create(array_merge($data, ['siswa_id' => $siswaId]));
+        }
+
+        return redirect()->route('tugas.index')->with('success', 'Tugas berhasil ditambahkan');
     }
-
-    foreach ($request->siswa_id as $siswaId) {
-        // Simpan tugas untuk setiap siswa
-        TugasSiswa::create(array_merge($data, ['siswa_id' => $siswaId]));
-    }
-
-    return redirect()->route('tugas.index')->with('success', 'Tugas berhasil ditambahkan');
-}
-
 
     public function edit($id)
     {
@@ -84,19 +78,71 @@ public function create()
         $siswa = Siswa::all();
         $guru = Guru::all();
         $subject = Subject::all();
+
         return view('tugas.edit', compact('tugas', 'siswa', 'guru', 'subject'));
     }
 
     public function update(Request $request, $id)
-{
-    $tugas = TugasSiswa::findOrFail($id);
-    $today = Carbon::now()->toDateString();
+    {
+        $tugas = TugasSiswa::findOrFail($id);
+        $today = Carbon::now()->toDateString();
 
-    // Jika role adalah siswa
-    if (auth()->user()->role_name === 'siswa') {
+        if (auth()->user()->role_name === 'siswa') {
+            // Validasi untuk siswa upload jawaban
+            $request->validate([
+                'file_jawaban' => 'nullable|file|mimes:pdf,doc,docx',
+            ]);
+
+            if ($request->hasFile('file_jawaban')) {
+                if ($today > $tugas->deadline) {
+                    return redirect()->back()->with('error', 'Deadline telah lewat. Upload jawaban tidak diperbolehkan.');
+                }
+
+                if ($tugas->file_jawaban) {
+                    Storage::disk('public')->delete($tugas->file_jawaban);
+                }
+
+                $path = $request->file('file_jawaban')->store('tugas', 'public');
+                $tugas->file_jawaban = $path;
+                $tugas->status = 'sudah_dikumpulkan';
+                $tugas->save();
+            }
+
+            return redirect()->route('tugas.index')->with('success', 'Jawaban berhasil diunggah');
+        }
+
+        // Validasi untuk guru update tugas
         $request->validate([
+            'judul_tugas' => 'required',
+            'tanggal_diberikan' => 'required|date',
+            'deadline' => 'required|date',
+            'file_soal' => 'nullable|file|mimes:pdf,doc,docx',
             'file_jawaban' => 'nullable|file|mimes:pdf,doc,docx',
+            'nilai_tugas' => 'nullable|integer',
         ]);
+
+        $data = $request->except('siswa_id'); // jangan langsung masukkan siswa_id
+
+        // Tangani siswa_id jika ada dan mungkin array atau string JSON
+        if ($request->has('siswa_id')) {
+            $siswaId = $request->siswa_id;
+
+            if (is_array($siswaId)) {
+                $siswaId = $siswaId[0]; // ambil elemen pertama
+            } elseif (is_string($siswaId)) {
+                $decoded = json_decode($siswaId, true);
+                $siswaId = is_array($decoded) ? $decoded[0] : $siswaId;
+            }
+
+            $data['siswa_id'] = $siswaId;
+        }
+
+        if ($request->hasFile('file_soal')) {
+            if ($tugas->file_soal) {
+                Storage::disk('public')->delete($tugas->file_soal);
+            }
+            $data['file_soal'] = $request->file('file_soal')->store('tugas', 'public');
+        }
 
         if ($request->hasFile('file_jawaban')) {
             if ($today > $tugas->deadline) {
@@ -107,53 +153,14 @@ public function create()
                 Storage::disk('public')->delete($tugas->file_jawaban);
             }
 
-            $path = $request->file('file_jawaban')->store('tugas', 'public');
-            $tugas->file_jawaban = $path;
-            $tugas->status = 'sudah_dikumpulkan';
-            $tugas->save();
+            $data['file_jawaban'] = $request->file('file_jawaban')->store('tugas', 'public');
+            $data['status'] = 'sudah_dikumpulkan';
         }
 
-        return redirect()->route('tugas.index')->with('success', 'Jawaban berhasil diunggah');
+        $tugas->update($data);
+
+        return redirect()->route('tugas.index')->with('success', 'Tugas berhasil diperbarui');
     }
-
-    // Jika role adalah guru
-    $request->validate([
-        'judul_tugas' => 'required',
-        'tanggal_diberikan' => 'required|date',
-        'deadline' => 'required|date',
-        'file_soal' => 'nullable|file|mimes:pdf,doc,docx',
-        'file_jawaban' => 'nullable|file|mimes:pdf,doc,docx',
-        'nilai_tugas' => 'nullable|integer',
-    ]);
-
-    $data = $request->all();
-
-    if ($request->hasFile('file_soal')) {
-        if ($tugas->file_soal) {
-            Storage::disk('public')->delete($tugas->file_soal);
-        }
-        $data['file_soal'] = $request->file('file_soal')->store('tugas', 'public');
-    }
-
-    if ($request->hasFile('file_jawaban')) {
-        if ($today > $tugas->deadline) {
-            return redirect()->back()->with('error', 'Deadline telah lewat. Upload jawaban tidak diperbolehkan.');
-        }
-
-        if ($tugas->file_jawaban) {
-            Storage::disk('public')->delete($tugas->file_jawaban);
-        }
-
-        $data['file_jawaban'] = $request->file('file_jawaban')->store('tugas', 'public');
-        $data['status'] = 'sudah_dikumpulkan';
-    }
-
-    $tugas->update($data);
-
-    return redirect()->route('tugas.index')->with('success', 'Tugas berhasil diperbarui');
-}
-
-
 
     public function destroy($id)
     {
@@ -185,11 +192,9 @@ public function create()
     }
 
     public function show($id)
-{
-    // Ambil tugas berdasarkan ID
-    $tugas = TugasSiswa::with(['siswa.user', 'guru', 'subject'])->findOrFail($id);
+    {
+        $tugas = TugasSiswa::with(['siswa.user', 'guru', 'subject'])->findOrFail($id);
 
-    // Kembalikan ke view 'tugas.show' dengan data tugas
-    return view('tugas.show', compact('tugas'));
-}
+        return view('tugas.show', compact('tugas'));
+    }
 }

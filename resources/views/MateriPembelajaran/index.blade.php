@@ -124,7 +124,7 @@
                       <th>Mata Pelajaran</th>
                       <th>Kelas</th>
                       <th>Deskripsi</th>
-                      <th>File</th>
+                      {{-- <th>File</th> --}}
                       <th style="width: 20%;">Aksi</th>
                     </tr>
                   </thead>
@@ -147,7 +147,7 @@
                         <td>{{ $m->subject->subject_name ?? '-' }}</td>
                         <td>{{ $m->subject->class_name ?? '-' }}</td>
                         <td class="text-truncate" style="max-width: 250px;">{{ Str::limit($m->deskripsi, 80, '...') }}</td>
-                        <td class="text-center">
+                        {{-- <td class="text-center">
                           @if ($m->file)
                           <a href="{{ asset('storage/' . $m->file) }}" target="_blank" class="btn btn-outline-danger btn-sm rounded-pill">
                             <i class="fas fa-file-pdf"></i> Lihat
@@ -155,7 +155,7 @@
                           @else
                           <span class="badge bg-secondary">Tidak Ada</span>
                           @endif
-                        </td>
+                        </td> --}}
                         <td class="text-center">
                           <a href="javascript:void(0);" 
                             onclick="confirmShow('{{ route('materi.show', $m->id) }}')" 
