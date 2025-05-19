@@ -177,3 +177,4 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::post('/exam/{exam}/submit', [StudentExamController::class, 'submit'])->name('exam.submit');
     Route::get('/exam-list', [StudentExamController::class, 'list'])->name('exam.list');
 });
+ Route::get('/student-exams', [StudentExamController::class, 'index'])->name('student-exams.index');

@@ -59,5 +59,10 @@ public function answers()
 {
     return $this->hasMany(Answer::class);
 }
+public function studentExams()
+{
+    return $this->hasMany(StudentExam::class, 'siswa_id');
+}
+
 
 }
