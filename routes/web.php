@@ -139,6 +139,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
 });
 Route::get('/messages/get-users', [MessageController::class, 'getUsers'])->name('messages.getUsers');
+Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
 
 
 use App\Http\Controllers\ExamController;
