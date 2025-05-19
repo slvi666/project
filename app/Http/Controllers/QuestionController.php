@@ -100,7 +100,7 @@ public function importExcel(Request $request, $exam_id)
 
     try {
         Excel::import(new QuestionImport($exam), $request->file('excel_file'));
-        return redirect()->back()->with('success', 'Soal berhasil diimpor.');
+        return redirect()->route('questions.index', $exam->id)->with('success', 'Soal berhasil diimpor.');
     } catch (\Exception $e) {
         \Log::error('Gagal impor soal: ' . $e->getMessage());
         return redirect()->back()->with('error', 'Gagal impor soal: ' . $e->getMessage());

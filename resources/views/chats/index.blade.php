@@ -22,23 +22,41 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="card shadow-lg rounded">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
               <h3 class="card-title m-0">Daftar Pesan</h3>
-              <a href="{{ route('messages.create') }}"
-                <i class="fas fa-plus me-1"></i> Pesan Baru
-              </a>
+
             </div>
 
             <div class="card-body">
+              @if(session('success'))
+              <script>
+                Swal.fire({
+                  title: 'Berhasil!',
+                  text: "{{ session('success') }}",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then(() => {
+                  window.location.reload();
+                });
+              </script>
+              @endif
+
+              <div class="mb-3 d-flex justify-content-between align-items-center">
+                <input type="text" id="search" placeholder="🔍 Cari ..." class="form-control w-50 shadow-sm rounded-pill px-3">
+                <a href="{{ route('messages.create') }}" class="btn btn-primary text-light fw-bold shadow-sm rounded-pill px-4">
+                  <i class="fas fa-plus-circle me-1"></i> Pesan Baru
+                </a>
+              </div>
+
               <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle">
+                <table id="pesanTable" class="table table-bordered table-striped align-middle">
                   <thead class="bg-primary text-white text-center">
                     <tr>
-                      <th style="width: 5%;">#</th>
+                      <th>No</th>
                       <th>Dengan</th>
                       <th>Pesan Terakhir</th>
                       <th>Waktu</th>
-                      <th style="width: 15%;">Aksi</th>
+                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -47,25 +65,26 @@
                         $receiver = $message->sender_id == auth()->id() ? $message->receiver : $message->sender;
                       @endphp
                       <tr>
-                        <td class="text-center">{{ $index + 1 }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $receiver->name }}</td>
                         <td>{{ Str::limit($message->message, 50) }}</td>
-                        <td>{{ $message->created_at->format('d M Y, H:i') }}</td>
+                        <td>{{ $message->created_at->format('d/m/Y H:i') }}</td>
                         <td class="text-center">
-                          <a href="{{ route('messages.show', ['receiver_id' => $receiver->id]) }}" class="btn btn-info btn-sm rounded-pill shadow-sm">
-                            <i class="fas fa-eye"></i> Lihat
+                          <a href="{{ route('messages.show', ['receiver_id' => $receiver->id]) }}" class="btn btn-success btn-sm rounded-pill shadow-sm text-white">
+                            <i class="fas fa-envelope-open-text"></i> Baca Pesan
                           </a>
                         </td>
                       </tr>
                     @empty
                       <tr>
-                        <td colspan="5" class="text-center">Belum ada percakapan.</td>
+                        <td colspan="5" class="text-center text-muted">Belum ada percakapan.</td>
                       </tr>
                     @endforelse
                   </tbody>
                 </table>
               </div>
-              {{-- Optional Pagination / Search can be added here --}}
+
+              <div id="pagination" class="mt-3 text-center"></div>
             </div>
           </div>
         </div>
@@ -73,4 +92,51 @@
     </div>
   </section>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.getElementById("pesanTable");
+    const searchInput = document.getElementById("search");
+    const rows = table.getElementsByTagName("tr");
+    const pagination = document.getElementById("pagination");
+    let currentPage = 1;
+    const rowsPerPage = 5;
+
+    function showPage(page) {
+      const start = (page - 1) * rowsPerPage + 1;
+      const end = start + rowsPerPage;
+      for (let i = 1; i < rows.length; i++) {
+        rows[i].style.display = (i >= start && i < end) ? "" : "none";
+      }
+    }
+
+    function setupPagination() {
+      pagination.innerHTML = "";
+      const pageCount = Math.ceil((rows.length - 1) / rowsPerPage);
+      for (let i = 1; i <= pageCount; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = "btn btn-sm btn-secondary mx-1";
+        btn.onclick = () => {
+          currentPage = i;
+          showPage(i);
+        };
+        pagination.appendChild(btn);
+      }
+    }
+
+    searchInput.addEventListener("keyup", function () {
+      const filter = searchInput.value.toLowerCase();
+      for (let i = 1; i < rows.length; i++) {
+        const text = rows[i].textContent.toLowerCase();
+        rows[i].style.display = text.includes(filter) ? "" : "none";
+      }
+    });
+
+    showPage(currentPage);
+    setupPagination();
+  });
+</script>
 @endsection

@@ -6,7 +6,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Daftar Soal - {{ $exam->exam_title }}</h1>
+          <h1 class="m-0 text-primary"><i class="fas fa-question-circle me-1"></i> Daftar Soal - {{ $exam->exam_title }}</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -21,11 +21,8 @@
   <section class="content">
     <div class="container-fluid">
       <div class="card shadow-lg rounded">
-        <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-          <h3 class="card-title m-0">Soal untuk Ujian: {{ $exam->exam_title }}</h3>
-          <a href="{{ route('questions.create', $exam->id) }}" class="btn btn-light btn-sm fw-bold shadow-sm">
-            <i class="fas fa-plus-circle me-1"></i> Tambah Soal
-          </a>
+        <div class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center">
+          <h3 class="card-title mb-0"><i class="fas fa-list me-2"></i>Soal untuk Ujian: {{ $exam->exam_title }}</h3>
         </div>
 
         <div class="card-body">
@@ -40,53 +37,140 @@
             </script>
           @endif
 
+          <div class="mb-4 d-flex justify-content-between align-items-center">
+            <input type="text" id="search" placeholder="🔍 Cari Soal..." class="form-control w-50 shadow-sm rounded-pill px-4 py-2">
+            <a href="javascript:void(0)" onclick="confirmAdd('{{ route('questions.create', $exam->id) }}')" class="btn btn-outline-primary fw-semibold shadow-sm rounded-pill px-4 py-2">
+              <i class="fas fa-plus me-1"></i> Tambah Soal
+            </a>
+          </div>
+
           <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle">
-              <thead class="bg-primary text-white text-center">
+            <table id="soalTable" class="table table-hover table-bordered table-striped align-middle">
+              <thead class="table-primary text-center">
                 <tr>
+                  <th style="width: 5%;">No</th>
                   <th>Soal</th>
-                  <th>Jenis Soal</th>
+                  <th>Jenis</th>
                   <th style="width: 20%;">Aksi</th>
                 </tr>
               </thead>
               <tbody>
-                @forelse($questions as $question)
+                @forelse($questions as $index => $question)
                   <tr>
-                    <td>{{ $question->question_text }}</td>
-                    <td>{{ ucfirst($question->type) }}</td>
+                    <td class="text-center">{{ $index + 1 }}</td>
+                    <td>{{ Str::limit($question->question_text, 80, '...') }}</td>
                     <td class="text-center">
-                      <a href="{{ route('questions.edit', [$exam->id, $question->id]) }}" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm" title="Edit">
+                    <span class="badge {{ $question->type == 'multiple' ? 'bg-primary' : 'bg-warning text-dark' }}">
+                      {{ ucfirst($question->type) }}
+                    </span>
+                  </td>
+                    <td class="text-center">
+                      <button onclick="confirmEdit('{{ route('questions.edit', [$exam->id, $question->id]) }}')" class="btn btn-sm btn-warning rounded-pill me-1">
                         <i class="fas fa-edit"></i>
-                      </a>
+                      </button>
                       <form action="{{ route('questions.destroy', [$exam->id, $question->id]) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm" onclick="confirmDelete(this.form)" title="Hapus">
-                          <i class="fas fa-trash"></i>
+                        <button type="button" class="btn btn-sm btn-danger rounded-pill" onclick="confirmDelete(this.form)">
+                          <i class="fas fa-trash-alt"></i>
                         </button>
                       </form>
                     </td>
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="3" class="text-center">Belum ada soal untuk ujian ini.</td>
+                    <td colspan="4" class="text-center text-muted">Belum ada soal untuk ujian ini.</td>
                   </tr>
                 @endforelse
               </tbody>
             </table>
           </div>
 
+          <div id="pagination" class="mt-3 text-center"></div>
         </div>
       </div>
     </div>
   </section>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.getElementById("soalTable");
+    const searchInput = document.getElementById("search");
+    const rows = table.getElementsByTagName("tr");
+    const pagination = document.getElementById("pagination");
+    let currentPage = 1;
+    const rowsPerPage = 5;
+
+    function showPage(page) {
+      const start = (page - 1) * rowsPerPage + 1;
+      const end = start + rowsPerPage;
+      for (let i = 1; i < rows.length; i++) {
+        rows[i].style.display = (i >= start && i < end) ? "" : "none";
+      }
+    }
+
+    function setupPagination() {
+      pagination.innerHTML = "";
+      const pageCount = Math.ceil((rows.length - 1) / rowsPerPage);
+      for (let i = 1; i <= pageCount; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = "btn btn-sm btn-outline-secondary mx-1 rounded-circle";
+        btn.onclick = () => {
+          currentPage = i;
+          showPage(i);
+        };
+        pagination.appendChild(btn);
+      }
+    }
+
+    searchInput.addEventListener("keyup", function () {
+      const filter = searchInput.value.toLowerCase();
+      for (let i = 1; i < rows.length; i++) {
+        const text = rows[i].textContent.toLowerCase();
+        rows[i].style.display = text.includes(filter) ? "" : "none";
+      }
+    });
+
+    showPage(currentPage);
+    setupPagination();
+  });
+
+  function confirmAdd(url) {
+    Swal.fire({
+      title: 'Tambah Soal Baru?',
+      text: "Anda akan diarahkan ke halaman tambah soal.",
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Lanjutkan',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  }
+
+  function confirmEdit(url) {
+    Swal.fire({
+      title: 'Edit Soal?',
+      text: "Anda akan diarahkan ke halaman edit soal.",
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Lanjutkan',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  }
+
   function confirmDelete(form) {
     Swal.fire({
-      title: 'Yakin ingin menghapus?',
+      title: 'Yakin ingin hapus?',
       text: "Soal ini akan dihapus secara permanen.",
       icon: 'warning',
       showCancelButton: true,

@@ -87,11 +87,14 @@
 </div>
 
         
-        <div class="col-lg-6 mb-4">
-          <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
+       {{-- JADWAL PELAJARAN --}}
+          <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-lg rounded-4 hover-effect">
+              <div class="card-header bg-gradient-primary text-white">
+                <h5 class="m-0 font-weight-bold">Jadwal Pelajaran</h5>
+              </div>
               <div class="card-body">
-                  <h5 class="card-title font-weight-bold mb-3">Jadwal Pelajaran</h5>
-      
+
                   @php
                       $user = auth()->user();
       
@@ -119,8 +122,9 @@
                   @if($data->isEmpty())
                       <p class="card-text">Tidak ada jadwal pelajaran untuk Anda.</p>
                   @else
-                      <table class="table table-striped table-bordered">
-                          <thead>
+                      <div class="table-responsive">
+                        <table class="table table-bordered table-hover mb-0">
+                          <thead class="text-center table-primary">
                               <tr>
                                   <th scope="col">Mata Pelajaran</th>
                                   <th scope="col">Guru</th>
@@ -141,9 +145,9 @@
                               @endforeach
                           </tbody>
                       </table>
+                    </div>
                   @endif
-      
-                  <hr class="divider">
+    
               </div>
           </div>
       </div>
@@ -169,6 +173,7 @@
             <tr>
               <th style="width: 5%;">No</th>
               <th>Judul</th>
+              <th>Kelas</th>
               <th>Mulai</th>
               <th>Selesai</th>
             </tr>
@@ -178,6 +183,7 @@
               <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
                 <td>{{ $exam->exam_title }}</td>
+                <td>{{ $exam->subject->class_name ?? '-' }}</td>
                 <td>{{ $exam->start_time ? \Carbon\Carbon::parse($exam->start_time)->format('d-m-Y H:i') : '-' }}</td>
                 <td>{{ $exam->end_time ? \Carbon\Carbon::parse($exam->end_time)->format('d-m-Y H:i') : '-' }}</td>
               </tr>

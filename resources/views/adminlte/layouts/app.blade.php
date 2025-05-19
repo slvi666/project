@@ -259,6 +259,24 @@ body {
         <p>Media Pembelajaran<i class="right fas fa-angle-left"></i></p>
       </a>
       <ul class="nav nav-treeview">
+      @if (auth()->user()->role_name === 'Admin')
+        <li class="nav-item">
+          <a href="{{ route('subjects.index') }}" class="nav-link">
+            <i class="fas fa-chalkboard-teacher nav-icon"></i>
+            <p>Kelas & Pelajaran</p>
+          </a>
+        </li>
+        @endif
+
+        @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin', 'Orang Tua']))
+        <li class="nav-item">
+          <a href="{{ route('mata-pelajaran.index') }}" class="nav-link">
+            <i class="fas fa-calendar-alt nav-icon"></i>
+            <p>Jadwal Pelajaran</p>
+          </a>
+        </li>
+        @endif
+
         <li class="nav-item">
           <a href="{{ route('materi.index') }}" class="nav-link">
             <i class="fas fa-book nav-icon"></i>
@@ -275,46 +293,28 @@ body {
           </a>
         </li>
         @endif
-
-        @if (auth()->user()->role_name === 'Admin')
-        <li class="nav-item">
-          <a href="{{ route('subjects.index') }}" class="nav-link">
-            <i class="fas fa-book-reader nav-icon"></i>
-            <p>Kelas & Pelajaran</p>
-          </a>
-        </li>
-        @endif
-
+        
         <li class="nav-item">
           <a href="{{ route('exams.index') }}" class="nav-link">
-            <i class="fas fa-book-reader nav-icon"></i>
-            <p>Data Ujian</p>
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <p>Ujian</p>
           </a>
         </li>
-
-
-        @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin', 'Orang Tua']))
-        <li class="nav-item">
-          <a href="{{ route('mata-pelajaran.index') }}" class="nav-link">
-            <i class="fas fa-clock nav-icon"></i>
-            <p>Jadwal Pelajaran</p>
-          </a>
-        </li>
-        @endif
+        
       </ul>
     </li>
     @endif
     @if (in_array(auth()->user()->role_name, ['siswa', 'guru', 'Admin']))
     <li class="nav-item">
       <a href="#" class="nav-link">
-        <i class="nav-icon fas fa-book"></i>
+        <i class="nav-icon fas fa-university"></i>
         <p>Perpustakaan<i class="right fas fa-angle-left"></i></p>
       </a>
       <ul class="nav nav-treeview">
         @if (auth()->user()->role_name === 'Admin')
         <li class="nav-item">
           <a href="{{ route('buku.index') }}" class="nav-link">
-            <i class="fas fa-bookmark nav-icon"></i>
+            <i class="fas fa-book nav-icon"></i>
             <p>Data Buku Admin</p>
           </a>
         </li>
@@ -366,7 +366,7 @@ body {
     <li class="nav-header mt-2 py-2">- FAQ </li>
     <li class="nav-item">
       <a href="{{ route('faq.index') }}" class="nav-link">
-        <i class="fas fa-file nav-icon"></i>
+        <i class="fas fa-question-circle nav-icon"></i>
         <p>FAQ</p>
       </a>
     </li>
@@ -374,7 +374,7 @@ body {
     <li class="nav-header mt-2 py-2">- Pesan </li>
     <li class="nav-item">
       <a href="{{ route('messages.index') }}" class="nav-link">
-        <i class="fas fa-file nav-icon"></i>
+        <i class="fas fa-envelope nav-icon"></i>
         <p>Pesan</p>
       </a>
     </li>

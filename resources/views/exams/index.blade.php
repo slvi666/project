@@ -77,19 +77,50 @@
                         <td>{{ $exam->subject->class_name }}</td>
                         <td>{{ ucfirst(str_replace('_', ' ', $exam->question_type)) }}</td>
                         <td>{{ $exam->duration }} menit</td>
-                        <td>{{ $exam->start_time ? \Carbon\Carbon::parse($exam->start_time)->format('Y-m-d H:i') : '-' }}</td>
-                        <td>{{ $exam->end_time ? \Carbon\Carbon::parse($exam->end_time)->format('Y-m-d H:i') : '-' }}</td>
-                      <td class="text-center">
-                        <a href="{{ route('exams.show', $exam->id) }}" class="btn btn-info btn-sm rounded-pill me-1 shadow-sm" title="Lihat">
+                        <td>
+                            {{ $exam->start_time 
+                                ? \Carbon\Carbon::parse($exam->start_time)->translatedFormat('d F Y H:i') 
+                                : '-' 
+                            }}
+                        </td>
+                        <td>
+                            {{ $exam->end_time 
+                                ? \Carbon\Carbon::parse($exam->end_time)->translatedFormat('d F Y H:i') 
+                                : '-' 
+                            }}
+                        </td>
+                        @php
+                            $userRole = auth()->user()->role_name;
+                        @endphp
+
+                        <td class="text-center">
+                        <a href="javascript:void(0);" 
+                          onclick="confirmViewExam('{{ route('exams.show', $exam->id) }}')" 
+                          class="btn btn-info btn-sm rounded-pill me-1 shadow-sm" 
+                          title="Lihat">
                           <i class="fas fa-eye"></i>
                         </a>
-                                                <a href="{{ route('exam.start', $exam->id) }}" class="btn btn-success btn-sm rounded-pill me-1 shadow-sm" title="Kerjakan Ujian">
-                          <i class="fas fa-play"></i> <!-- icon "play" untuk mulai -->
-                        </a>
- @if (in_array(auth()->user()->role_name, ['guru', 'Admin']))
-                        <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-primary btn-sm rounded-pill me-1 shadow-sm" title="Kelola Soal">
-                          <i class="fas fa-tasks"></i>
-                        </a>
+                         @if ($userRole === 'siswa')
+                       <a href="javascript:void(0);" 
+   onclick="confirmStartExam(
+       '{{ route('exam.start', $exam->id) }}', 
+       '{{ $exam->exam_title }}', 
+       '{{ $exam->duration }}', 
+       '{{ $exam->start_time }}', 
+       '{{ $exam->end_time }}'
+    )" 
+   class="btn btn-success btn-sm rounded-pill me-1 shadow-sm" 
+   title="Kerjakan Ujian">
+  <i class="fas fa-play"></i>
+</a>
+
+
+                        @endif
+                        @if (in_array(auth()->user()->role_name, ['guru', 'Admin']))
+                      <button type="button" class="btn btn-primary btn-sm rounded-pill me-1 shadow-sm" 
+                        onclick="confirmManageQuestions('{{ route('questions.index', $exam->id) }}')" title="Kelola Soal">
+                        <i class="fas fa-tasks"></i>
+                      </button>
                         @endif
                         @if (auth()->user()->role_name === 'Admin')
                         <a href="javascript:void(0);" onclick="confirmEdit('{{ route('exams.edit', $exam->id) }}')" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm" title="Edit">
@@ -103,7 +134,7 @@
                           </button>
                         </form>
                       </td>
-                              @endif
+                       @endif
 
                       </tr>
                     @endforeach
@@ -210,5 +241,107 @@
       }
     });
   }
+
+  function confirmManageQuestions(url) {
+  Swal.fire({
+    title: 'Kelola Soal?',
+    text: "Anda akan diarahkan ke halaman pengelolaan soal.",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Lanjutkan!',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+}
+
+function confirmViewExam(url) {
+  Swal.fire({
+    title: 'Lihat Ujian?',
+    text: "Anda akan diarahkan untuk melihat detail ujian ini.",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Lihat',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+}
+
+function confirmStartExam(url, examTitle, duration, startTime, endTime) {
+  const now = new Date();
+  const examStart = new Date(startTime);
+  const examEnd = new Date(endTime);
+
+  if (now < examStart) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Ujian Belum Dimulai',
+      text: `Ujian "${examTitle}" belum bisa dimulai. Waktu mulai ujian adalah ${examStart.toLocaleString()}.`,
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  if (now > examEnd) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Waktu Ujian Telah Berakhir',
+      text: `Maaf, ujian "${examTitle}" sudah tidak bisa diikuti karena sudah melewati tanggal selesai ujian.`,
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  // kalau sudah lewat pengecekan waktu, tampilkan konfirmasi mulai ujian seperti biasa
+  Swal.fire({
+    title: `<strong>Mulai Ujian: <u>${examTitle}</u></strong>`,
+    icon: 'info',
+    html: `
+      <div style="text-align: left; font-size: 16px; line-height: 1.5;">
+        <p><b>Durasi ujian:</b> <span style="color: #1e88e5;">${duration} menit</span></p>
+        <p>Pastikan Anda sudah siap dan berada di tempat yang nyaman serta tenang.</p>
+        <p><b>Tata cara ujian:</b></p>
+        <ul style="margin-left: 1em; color: #555;">
+          <li>Jangan keluar dari halaman ujian selama durasi.</li>
+          <li>Kerjakan soal dengan jujur dan penuh konsentrasi.</li>
+          <li>Pastikan koneksi internet Anda stabil.</li>
+          <li>Siapkan alat tulis jika diperlukan.</li>
+        </ul>
+        <label style="display: flex; align-items: center; margin-top: 1.5em; cursor: pointer; font-weight: 600; user-select: none;">
+          <input type="checkbox" id="confirmCheckbox" style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer;">
+          Saya sudah membaca dan memahami aturan ujian.
+        </label>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: '<i class="fas fa-play me-2"></i>Mulai Ujian',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#28a745',
+    cancelButtonColor: '#d33',
+    didOpen: () => {
+      const confirmBtn = Swal.getConfirmButton();
+      confirmBtn.disabled = true;
+
+      const checkbox = Swal.getPopup().querySelector('#confirmCheckbox');
+      checkbox.addEventListener('change', (e) => {
+        confirmBtn.disabled = !e.target.checked;
+      });
+    },
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+}
+
+
+
 </script>
 @endsection

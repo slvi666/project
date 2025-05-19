@@ -2,87 +2,158 @@
 
 @section('content')
 <style>
+    body {
+        background: #f0f2f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #2f3542;
+    }
+
     .form-container {
         max-width: 700px;
-        margin: 40px auto;
-        background: #ffffff;
-        padding: 30px 40px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin: 50px auto;
+        background: linear-gradient(145deg, #ffffff, #e6f0ff);
+        padding: 40px 50px;
+        border-radius: 25px;
+        box-shadow:
+            8px 8px 15px rgba(0, 0, 0, 0.1),
+            -8px -8px 15px rgba(255, 255, 255, 0.8);
+        transition: box-shadow 0.3s ease;
+    }
+
+    .form-container:hover {
+        box-shadow:
+            12px 12px 25px rgba(0, 0, 0, 0.15),
+            -12px -12px 25px rgba(255, 255, 255, 0.9);
     }
 
     .form-container h1 {
-        font-size: 1.8rem;
-        margin-bottom: 25px;
-        color: #2f3542;
-        font-weight: 600;
+        font-size: 2.2rem;
+        margin-bottom: 30px;
+        font-weight: 700;
+        text-align: center;
+        color: #1e3a8a;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 2px #a3bffa;
     }
 
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
 
     label {
         display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #2f3542;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: #1e3a8a;
+        letter-spacing: 0.03em;
     }
 
     select,
     textarea {
         width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #ccc;
-        border-radius: 12px;
-        font-size: 1rem;
-        transition: border 0.3s;
-        background: #f9f9f9;
+        padding: 14px 18px;
+        border: 2px solid #d0d7ff;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        background: #f9fbff;
+        color: #2f3542;
+        box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.7);
+        transition:
+            border-color 0.3s ease,
+            background-color 0.3s ease,
+            box-shadow 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     select:focus,
     textarea:focus {
         border-color: #4cd137;
         outline: none;
-        background-color: #fff;
-        box-shadow: 0 0 0 2px rgba(76, 209, 55, 0.1);
+        background-color: #ffffff;
+        box-shadow: 0 0 8px 2px rgba(76, 209, 55, 0.3);
+    }
+
+    /* Select2 overrides */
+    .select2-container--default .select2-selection--single {
+        border: none !important;
+        padding: 10px 15px !important;
+        border-radius: 15px !important;
+        background: #f9fbff !important;
+        box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.7);
+        font-size: 1.1rem;
+        color: #2f3542;
+        transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .select2-container--default .select2-selection--single:focus,
+    .select2-container--default .select2-selection--single.select2-container--focus {
+        border-color: #4cd137 !important;
+        box-shadow: 0 0 8px 2px rgba(76, 209, 55, 0.3) !important;
+        background-color: #ffffff !important;
+        outline: none;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #2f3542;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: #4cd137 transparent transparent transparent !important;
     }
 
     textarea {
         resize: vertical;
-        min-height: 100px;
+        min-height: 120px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    /* Button */
     .btn-send {
-        display: inline-block;
-        background-color: #4cd137;
-        color: #fff;
-        padding: 12px 30px;
+        display: block;
+        width: 100%;
+        background: linear-gradient(90deg, #4cd137, #44bd32);
+        color: white;
+        padding: 14px 0;
         border: none;
         border-radius: 30px;
-        font-weight: bold;
-        font-size: 1rem;
-        transition: background-color 0.3s ease;
+        font-weight: 700;
+        font-size: 1.2rem;
+        letter-spacing: 0.05em;
         cursor: pointer;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 6px 12px rgba(76, 209, 55, 0.6);
     }
 
-    .btn-send:hover {
-        background-color: #44bd32;
+    .btn-send:hover,
+    .btn-send:focus {
+        background: linear-gradient(90deg, #44bd32, #3a9c27);
+        box-shadow: 0 10px 20px rgba(58, 156, 39, 0.7);
+        outline: none;
     }
 
+    .btn-send i {
+        margin-right: 8px;
+        font-size: 1.2rem;
+        vertical-align: middle;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
         .form-container {
-            padding: 20px;
+            padding: 30px 25px;
+            margin: 30px 20px;
         }
 
         .btn-send {
-            width: 100%;
+            font-size: 1rem;
         }
     }
 </style>
 
 <div class="form-container">
-    <h1><i class="fas fa-paper-plane me-2 text-success"></i> Kirim Pesan</h1>
+    <h1><i class="fas fa-paper-plane me-2"></i> Kirim Pesan</h1>
 
     <form action="{{ route('messages.store') }}" method="POST">
         @csrf
@@ -108,7 +179,7 @@
 
         <!-- Tombol Kirim -->
         <button type="submit" class="btn-send">
-            <i class="fas fa-paper-plane me-1"></i> Kirim
+            <i class="fas fa-paper-plane"></i> Kirim
         </button>
     </form>
 </div>
@@ -116,7 +187,7 @@
 <!-- FontAwesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-<!-- jQuery (di load dulu sebelum Select2) -->
+<!-- jQuery (load before Select2) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Select2 -->
@@ -126,10 +197,9 @@
 <script>
     $(document).ready(function() {
         $('#receiver_id').select2({
-            placeholder: '-- Pilih Penerima --', // Placeholder text
-            allowClear: true  // Option to clear selection
+            placeholder: '-- Pilih Penerima --',
+            allowClear: true
         });
     });
 </script>
-
 @endsection
