@@ -99,18 +99,29 @@ class StudentExamController extends Controller
 
         return view('siswa.exam.list', compact('exams'));
     }
-    public function index()
+public function index()
 {
     $user = Auth::user();
-    $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
 
-    $studentExams = $siswa->studentExams()
-        ->with('exam')
-        ->latest('finished_at')
-        ->get();
+    // Coba ambil data siswa
+    $siswa = Siswa::where('user_id', $user->id)->first();
+
+    if ($siswa) {
+        // Kalau siswa, tampilkan hanya ujian milik dia
+        $studentExams = $siswa->studentExams()
+            ->with('exam')
+            ->latest('finished_at')
+            ->get();
+    } else {
+        // Kalau bukan siswa (guru, admin, dll), tampilkan semua data student exams
+        $studentExams = \App\Models\StudentExam::with('exam', 'siswa')
+            ->latest('finished_at')
+            ->get();
+    }
 
     return view('siswa.exam.index', compact('studentExams'));
 }
+
 
 
     public function edit($id)

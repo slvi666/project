@@ -35,6 +35,7 @@
                       <th style="width: 5%;">No</th>
                       <th>Nama Siswa</th>
                       <th>Judul Ujian</th>
+                      <th>Jenis Ujian</th>
                       <th>Dimulai</th>
                       <th>Selesai</th>
                       <th>Skor</th>
@@ -49,15 +50,18 @@
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td>{{ $exam->siswa->user->name ?? 'Nama tidak tersedia' }}</td>
                         <td>{{ $exam->exam->exam_title }}</td>
+                        <td>{{ $exam->exam->question_type}}</td>
                         <td>{{ \Carbon\Carbon::parse($exam->started_at)->translatedFormat('l, d F Y H:i') ?? '-' }}</td>
                         <td>{{ \Carbon\Carbon::parse($exam->finished_at)->translatedFormat('l, d F Y H:i') ?? '-' }}</td>
                         <td>{{ $exam->score !== null ? $exam->score : 'Belum dinilai' }}</td>
                          @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
                         <td class="text-center">
                           
-                          <a href="{{ route('siswa.exam.edit', $exam->id) }}" class="btn btn-sm btn-warning">
-                            Edit
-                          </a>
+                          @if($exam->exam->question_type === 'esai')
+    <a href="{{ route('siswa.exam.edit', $exam->id) }}" class="btn btn-sm btn-warning">
+      Edit
+    </a>
+  @endif
                           @endif
                         </td>
                       </tr>
