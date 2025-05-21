@@ -50,6 +50,15 @@
     @endforeach
   </select>
 </div>
+<div class="mb-3">
+  <label for="guru_id" class="form-label">Guru Pengampu</label>
+  <select name="guru_id" id="guru_id" class="form-control rounded-pill px-3 py-2" required>
+    <option value="" disabled selected>Pilih Guru</option>
+    @foreach($gurus as $guru)
+      <option value="{{ $guru->id }}">{{ $guru->name }}</option>
+    @endforeach
+  </select>
+</div>
 
 
             <div class="mb-3">

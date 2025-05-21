@@ -73,10 +73,7 @@
                         <button type="submit" class="btn btn-success shadow-sm rounded-pill px-4 mt-2">
                             <i class="fas fa-file-import mr-1"></i> Import Excel
                         </button>
-                        <p class="text-muted mt-2">* Format file Excel: Soal, Pilihan (pisah dengan titik koma), Jawaban Benar</p>
-                        <a href="{{ asset('format_soal.xlsx') }}" class="btn btn-link px-0">
-                            <i class="fas fa-download"></i> Download Format Excel
-                        </a>
+                        
                     </form>
                 </div>
             </div>

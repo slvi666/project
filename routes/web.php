@@ -46,6 +46,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::resource('registrasi', RegistrasiController::class);
 });
 
+
 Route::middleware(['auth'])->group(function () {
     Route::resource('buku', BukuController::class);
 });
@@ -86,6 +87,8 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::resource('mata-pelajaran', MataPelajaranController::class);
 });
+
+
 // web.php
 Route::middleware(['auth'])->group(function () {
     Route::get('/absensi/{id}/create', [AbsensiController::class, 'create'])->name('absensi.create');
@@ -144,7 +147,16 @@ Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('me
 
 use App\Http\Controllers\ExamController;
 
-Route::resource('exams', ExamController::class);
+Route::middleware(['auth', 'isAdmin'])->group(function () {
+ Route::get('exams/create', [ExamController::class, 'create'])->name('exams.create');   
+ Route::get('exams/{exam}/edit', [ExamController::class, 'edit'])->name('exams.edit');
+});
+Route::get('exams', [ExamController::class, 'index'])->name('exams.index');
+Route::post('exams', [ExamController::class, 'store'])->name('exams.store');
+Route::get('exams/{exam}', [ExamController::class, 'show'])->name('exams.show');
+Route::put('exams/{exam}', [ExamController::class, 'update'])->name('exams.update');
+Route::delete('exams/{exam}', [ExamController::class, 'destroy'])->name('exams.destroy');
+
 
 use App\Http\Controllers\QuestionController;
 

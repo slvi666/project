@@ -58,6 +58,7 @@
                   <thead class="bg-primary text-white text-center">
                     <tr>
                       <th>No</th>
+                       <th>Guru</th>  <!-- Tambahan kolom guru -->
                       <th>Nama Ujian</th>
                       <th>Mata Pelajaran</th>
                       <th>Kelas</th>
@@ -72,6 +73,7 @@
                     @foreach($exams as $index => $exam)
                       <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
+                         <td>{{ $exam->guru ? $exam->guru->name : '-' }}</td> <!-- Menampilkan nama guru -->
                         <td>{{ $exam->exam_title }}</td>
                         <td>{{ $exam->subject->subject_name }}</td>
                         <td>{{ $exam->subject->class_name }}</td>
