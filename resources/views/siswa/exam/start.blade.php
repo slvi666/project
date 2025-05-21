@@ -79,9 +79,10 @@
                                 <div class="d-flex justify-content-between mt-3">
                                     <button type="button" class="btn btn-secondary" id="prevBtn">Sebelumnya</button>
                                     <button type="button" class="btn btn-primary" id="nextBtn">Selanjutnya</button>
-                                    <button type="submit" class="btn btn-success d-none" id="submitBtn">
-                                        <i class="bi bi-send-check-fill me-1"></i> Kumpulkan Jawaban
+                                   <button type="button" class="btn btn-success d-none" id="submitBtn" disabled>
+                                        <i class="bi bi-send-check-fill me-1"></i> Akhiri Ujian
                                     </button>
+
                                 </div>
                             </form>
                         </div>
@@ -124,8 +125,10 @@
 </style>
 
 <!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    const examId = {{ $exam->id }};
+      const examId = {{ $exam->id }};
     const durationInMinutes = {{ $exam->duration }};
     const totalTime = durationInMinutes * 60 * 1000;
     const storageKey = `exam_end_time_${examId}`;
@@ -184,13 +187,35 @@
         }
     }
 
+    // ✅ Fungsi untuk mengecek semua soal sudah dijawab
+    function checkAllAnswered() {
+        let allAnswered = true;
+
+        @foreach ($questions as $question)
+            @if ($question->type === 'pilihan_ganda')
+                if (!document.querySelector('input[name="answers[{{ $question->id }}]"]:checked')) {
+                    allAnswered = false;
+                }
+            @elseif ($question->type === 'esai')
+                if (!document.querySelector('textarea[name="answers[{{ $question->id }}]"]').value.trim()) {
+                    allAnswered = false;
+                }
+            @endif
+        @endforeach
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = !allAnswered;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         updateNavigationButtons();
+        checkAllAnswered(); // Cek awal
 
         document.querySelectorAll('input[type="radio"]').forEach(input => {
             input.addEventListener('change', function () {
                 const index = this.getAttribute('data-index');
                 markAnswered(index);
+                checkAllAnswered();
             });
         });
 
@@ -198,10 +223,11 @@
             input.addEventListener('input', function () {
                 const index = this.getAttribute('data-index');
                 markAnswered(index);
+                checkAllAnswered();
             });
         });
 
-        // Tombol Navigasi
+
         document.getElementById('prevBtn').addEventListener('click', () => {
             if (currentIndex > 1) {
                 showQuestion(currentIndex - 1);
@@ -214,5 +240,23 @@
             }
         });
     });
+    
+    document.getElementById('submitBtn').addEventListener('click', function (e) {
+    Swal.fire({
+        title: 'Yakin ingin mengakhiri ujian?',
+        text: "Pastikan semua soal telah dijawab.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, kumpulkan!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            examForm.submit();
+        }
+    });
+});
+
 </script>
 @endsection

@@ -123,40 +123,83 @@ public function index()
 }
 
 
-
-    public function edit($id)
+public function edit($id)
 {
     $user = Auth::user();
-    $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
+    $studentExam = StudentExam::with(['exam.questions', 'siswa']) // hapus 'answers' disini
+        ->findOrFail($id);
 
-    $studentExam = StudentExam::with('exam')
-        ->where('id', $id)
-        ->where('siswa_id', $siswa->id)
-        ->firstOrFail();
+    if ($user->role === 'siswa') {
+        $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
 
-    return view('siswa.exam.edit', compact('studentExam'));
+        if ($studentExam->siswa_id !== $siswa->id) {
+            abort(403, 'Akses ditolak.');
+        }
+    }
+
+    // Ambil jawaban secara manual
+    $answers = Answer::where('exam_id', $studentExam->exam_id)
+        ->where('siswa_id', $studentExam->siswa_id)
+        ->get()
+        ->keyBy('question_id');
+
+    $exam = $studentExam->exam;
+    $questions = $exam->questions;
+
+    // Decode pilihan ganda agar bisa ditampilkan
+    $questions->transform(function ($question) {
+        if (is_string($question->choices)) {
+            $question->choices = json_decode($question->choices, true);
+        }
+        return $question;
+    });
+
+    return view('siswa.exam.edit', compact('studentExam', 'exam', 'questions', 'answers'));
 }
+
 public function update(Request $request, $id)
 {
     $request->validate([
-        'score' => 'required|numeric|min:0|max:100',
+        'score' => 'nullable|numeric|min:0|max:100',
+        'manual_scores.*' => 'nullable|numeric|min:0|max:100',
     ]);
 
     $user = Auth::user();
-    $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
+    $studentExam = StudentExam::findOrFail($id);
 
-    $studentExam = StudentExam::where('id', $id)
-        ->where('siswa_id', $siswa->id)
-        ->firstOrFail();
+    if ($user->role === 'siswa') {
+        $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
+        if ($studentExam->siswa_id !== $siswa->id) {
+            abort(403, 'Akses ditolak.');
+        }
+    }
+
+    if ($user->role !== 'siswa' && $request->has('manual_scores')) {
+        foreach ($request->manual_scores as $questionId => $score) {
+            Answer::where([
+                'exam_id' => $studentExam->exam_id,
+                'siswa_id' => $studentExam->siswa_id,
+                'question_id' => $questionId,
+            ])->update([
+                'score' => $score,
+            ]);
+        }
+    }
+
+    $total = Answer::where('exam_id', $studentExam->exam_id)
+                ->where('siswa_id', $studentExam->siswa_id)
+                ->whereNotNull('score')
+                ->avg('score');
 
     $studentExam->update([
-        'score' => $request->score,
+        'score' => round($total),
     ]);
 
-return redirect('/student-exams')->with('success', 'Skor berhasil diperbarui.');
-
-
+    // Redirect ke /student-exams dengan pesan sukses
+    return redirect('/student-exams')->with('success', 'Skor berhasil diperbarui.');
 }
+
+
 
 
    

@@ -96,7 +96,7 @@
               </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            {{-- <div class="col-md-6 mb-3">
               <strong><i class="fas fa-toggle-on me-1 text-muted"></i> Status:</strong>
               <div>
                 @php
@@ -118,7 +118,7 @@
                   }
                 @endphp
                 <span class="badge bg-{{ $badge }} px-3 py-1">{{ $status }}</span>
-              </div>
+              </div> --}}
             </div>
           </div>
         </div>

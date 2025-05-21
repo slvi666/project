@@ -43,17 +43,25 @@
                 @csrf
 
                 <div class="mb-3">
-                  <label for="user_id" class="form-label">Nama Guru</label>
-                  <select name="user_id" id="user_id" class="form-control rounded-pill px-3 py-2" required>
-                    <option value="">-- Pilih User --</option>
-                    @foreach ($users as $user)
-                      <option value="{{ $user->id }}" data-name="{{ $user->name }}">
-                        {{ $user->name }} ({{ $user->email }})
-                      </option>
-                    @endforeach
-                  </select>
+                <label for="user_id" class="form-label">Nama Guru</label>
+                <select name="user_id" id="user_id" class="form-control rounded-pill px-3 py-2"
+                  @if(auth()->user()->role_name === 'guru') disabled @endif required>
+                  <option value="">-- Pilih User --</option>
+                  @foreach ($users as $user)
+                    <option value="{{ $user->id }}" data-name="{{ $user->name }}"
+                      {{ auth()->user()->id == $user->id ? 'selected' : '' }}>
+                      {{ $user->name }} ({{ $user->email }})
+                    </option>
+                  @endforeach
+                </select>
+
+                @if(auth()->user()->role_name === 'guru')
+                  <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                  <input type="hidden" name="nama_guru" value="{{ auth()->user()->name }}">
+                @else
                   <input type="hidden" name="nama_guru" id="nama_guru">
-                </div>
+                @endif
+              </div>
 
                 <div class="mb-3">
                   <label for="nip" class="form-label">NIP</label>

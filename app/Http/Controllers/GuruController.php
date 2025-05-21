@@ -13,15 +13,17 @@ class GuruController extends Controller
     // Menampilkan daftar guru
     public function index()
     {
+        $guru = auth()->user()->role_name === 'guru'
+            ? Guru::with('user')->where('user_id', auth()->user()->id)->get()
+            : Guru::with('user')->get();
+
+        $hasGuruData = false;
+
         if (auth()->user()->role_name === 'guru') {
-            // Tampilkan hanya data guru yang sesuai dengan user yang login
-            $guru = Guru::with('user')->where('user_id', auth()->user()->id)->get();
-        } else {
-            // Tampilkan semua data untuk admin
-            $guru = Guru::with('user')->get();
+            $hasGuruData = Guru::where('user_id', auth()->user()->id)->exists();
         }
 
-        return view('guru.index', compact('guru'));
+        return view('guru.index', compact('guru', 'hasGuruData'));
     }
 
 

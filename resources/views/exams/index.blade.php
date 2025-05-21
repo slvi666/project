@@ -79,16 +79,17 @@
                         <td>{{ $exam->duration }} menit</td>
                         <td>
                             {{ $exam->start_time 
-                                ? \Carbon\Carbon::parse($exam->start_time)->translatedFormat('d F Y H:i') 
+                                ? \Carbon\Carbon::parse($exam->start_time)->translatedFormat('l, d F Y H:i') 
                                 : '-' 
                             }}
                         </td>
                         <td>
                             {{ $exam->end_time 
-                                ? \Carbon\Carbon::parse($exam->end_time)->translatedFormat('d F Y H:i') 
+                                ? \Carbon\Carbon::parse($exam->end_time)->translatedFormat('l, d F Y H:i') 
                                 : '-' 
                             }}
                         </td>
+
                         @php
                             $userRole = auth()->user()->role_name;
                         @endphp

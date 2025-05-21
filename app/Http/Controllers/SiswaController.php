@@ -12,17 +12,22 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class SiswaController extends Controller
 {
     public function index()
-    {
-        if (auth()->user()->role_name === 'siswa') {
-            // Ambil data siswa yang terkait dengan user yang sedang login
-            $siswa = Siswa::with('user', 'subject')->where('user_id', auth()->user()->id)->get();
-        } else {
-            // Admin bisa lihat semua data siswa
-            $siswa = Siswa::with('user', 'subject')->get();
-        }
+{
+    if (auth()->user()->role_name === 'siswa') {
+        $siswa = Siswa::with('user', 'subject')
+                      ->where('user_id', auth()->user()->id)
+                      ->get();
 
-        return view('profil_siswa.index', compact('siswa'));
+        // Cek apakah siswa sudah ada
+        $siswaExists = $siswa->isNotEmpty();
+    } else {
+        $siswa = Siswa::with('user', 'subject')->get();
+        $siswaExists = false; // admin bisa selalu menambahkan
     }
+
+    return view('profil_siswa.index', compact('siswa', 'siswaExists'));
+}
+
 
 
     public function create()

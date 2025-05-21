@@ -44,16 +44,11 @@
                 @method('PUT')
 
                 <div class="mb-3">
-                  <label for="user_id" class="form-label">Pengguna (Guru)</label>
-                  <select name="user_id" id="user_id" class="form-control rounded-pill px-3 py-2" required>
-                    @foreach ($users as $user)
-                      <option value="{{ $user->id }}" {{ $user->id == $guru->user_id ? 'selected' : '' }}>
-                        {{ $user->name }} ({{ $user->email }})
-                      </option>
-                    @endforeach
-                  </select>
+                  <label class="form-label">Pengguna (Guru)</label>
+                  <input type="hidden" name="user_id" value="{{ $guru->user_id }}">
+                  <input type="text" class="form-control rounded-pill px-3 py-2" value="{{ $guru->user->name }} ({{ $guru->user->email }})" readonly>
                 </div>
-
+                
                 <div class="mb-3">
                   <label for="nip" class="form-label">NIP</label>
                   <input type="text" name="nip" class="form-control rounded-pill px-3 py-2" value="{{ $guru->nip }}" required>

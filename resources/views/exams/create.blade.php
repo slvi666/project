@@ -58,13 +58,15 @@
             </div>
 
             <div class="mb-3">
-              <label for="question_type" class="form-label">Jenis Soal</label>
-              <select name="question_type" id="question_type" class="form-control rounded-pill px-3 py-2" required>
-                <option value="pilihan_ganda">Pilihan Ganda</option>
-                <option value="esai">Esai</option>
-                <option value="campuran">Campuran</option>
-              </select>
+                <label for="question_type" class="form-label fw-bold">Jenis Soal</label>
+                <select name="question_type" id="question_type" class="form-control rounded-pill px-3 py-2" required>
+                    <option value="" disabled selected>Pilih jenis soal</option>
+                    <option value="pilihan_ganda">Pilihan Ganda</option>
+                    <option value="esai">Esai</option>
+                    {{-- <option value="campuran">Campuran</option> --}}
+                </select>
             </div>
+
 
             <div class="mb-3">
               <label for="duration" class="form-label">Durasi (Menit)</label>

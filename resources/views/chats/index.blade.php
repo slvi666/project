@@ -24,9 +24,7 @@
           <div class="card shadow-lg rounded">
             <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
               <h3 class="card-title m-0">Daftar Pesan</h3>
-              <a href="{{ route('messages.create') }}" class="btn btn-primary text-light fw-bold shadow-sm rounded-pill px-4">
-                <i class="fas fa-plus-circle me-1"></i> Pesan Baru
-              </a>
+
             </div>
 
             <div class="card-body">
@@ -45,6 +43,9 @@
 
               <div class="mb-3 d-flex justify-content-between align-items-center">
                 <input type="text" id="search" placeholder="🔍 Cari ..." class="form-control w-50 shadow-sm rounded-pill px-3">
+                <button id="btnTambahPesan" class="btn btn-primary text-light fw-bold shadow-sm rounded-pill px-4">
+                  <i class="fas fa-plus-circle me-1"></i> Pesan Baru
+                </button>
               </div>
 
               <div class="table-responsive">
@@ -67,16 +68,17 @@
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $receiver->name }}</td>
                         <td>{{ Str::limit($message->message, 50) }}</td>
-                        <td>{{ $message->created_at->format('d/m/Y H:i') }}</td>
+                       <td>{{ $message->created_at->timezone('Asia/Jakarta')->format('d/m/Y H:i') }}</td>
                         <td class="text-center">
-                          <a href="{{ route('messages.show', ['receiver_id' => $receiver->id]) }}" class="btn btn-success btn-sm rounded-pill shadow-sm text-white me-2">
+                         <button class="btn btn-success btn-sm rounded-pill shadow-sm text-white me-2 btnBacaPesan" 
+                            data-url="{{ route('messages.show', ['receiver_id' => $receiver->id]) }}">
                             <i class="fas fa-envelope-open-text"></i> Baca Pesan
-                          </a>
+                        </button>
                        <form action="{{ route('messages.destroy', $message->id) }}" method="POST" class="d-inline">
-  @csrf
-  @method('DELETE')
-  <button type="submit" class="btn btn-danger btn-sm rounded-pill shadow-sm">Hapus</button>
-</form>
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm rounded-pill shadow-sm">Hapus</button>
+                      </form>
 
                         </td>
                       </tr>
@@ -143,5 +145,69 @@
     showPage(currentPage);
     setupPagination();
   });
+
+   // Tambah Pesan
+  document.getElementById("btnTambahPesan").addEventListener("click", function () {
+    Swal.fire({
+      title: 'Tambah Pesan Baru?',
+      text: "Anda akan diarahkan ke halaman pembuatan pesan.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Lanjut',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "{{ route('messages.create') }}";
+      }
+    });
+  });
+
+  // Baca Pesan
+  document.querySelectorAll(".btnBacaPesan").forEach(button => {
+    button.addEventListener("click", function () {
+      const url = this.getAttribute("data-url");
+      Swal.fire({
+        title: 'Baca Pesan?',
+        text: "Anda akan melihat isi percakapan.",
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Lanjut',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = url;
+        }
+      });
+    });
+  });
+
+  // Konfirmasi sebelum hapus
+document.querySelectorAll("form").forEach(form => {
+  const deleteButton = form.querySelector('button[type="submit"]');
+  if (deleteButton && deleteButton.textContent.includes("Hapus")) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: "Pesan akan dihapus permanen.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.submit(); // baru submit kalau sudah konfirmasi
+        }
+      });
+    });
+  }
+});
+
 </script>
 @endsection

@@ -73,7 +73,7 @@
         box-shadow: 0 0 8px 2px rgba(76, 209, 55, 0.3);
     }
 
-    /* Select2 overrides */
+
     .select2-container--default .select2-selection--single {
         border: none !important;
         padding: 10px 15px !important;
@@ -82,7 +82,7 @@
         box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.7);
         font-size: 1.1rem;
         color: #2f3542;
-        transition: box-shadow 0.3s ease, border-color 0.3s ease;
+
     }
 
     .select2-container--default .select2-selection--single:focus,
@@ -106,10 +106,10 @@
     textarea {
         resize: vertical;
         min-height: 120px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
     }
 
-    /* Button */
+
     .btn-send {
         display: block;
         width: 100%;
@@ -139,11 +139,11 @@
         vertical-align: middle;
     }
 
-    /* Responsive */
+
     @media (max-width: 768px) {
         .form-container {
             padding: 30px 25px;
-            margin: 30px 20px;
+            margin: 30px 15px;
         }
 
         .btn-send {
@@ -152,42 +152,48 @@
     }
 </style>
 
-<div class="form-container">
-    <h1><i class="fas fa-paper-plane me-2"></i> Kirim Pesan</h1>
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container">
+            <div class="form-container">
+                <h1><i class="fas fa-paper-plane me-2"></i> Kirim Pesan</h1>
 
-    <form action="{{ route('messages.store') }}" method="POST">
-        @csrf
+                <form action="{{ route('messages.store') }}" method="POST">
+                    @csrf
 
-        <!-- Penerima -->
-        <div class="form-group">
-            <label for="receiver_id">Pilih Penerima</label>
-            <select name="receiver_id" id="receiver_id" class="select2" required>
-                <option value="">-- Pilih Penerima --</option>
-                @foreach ($users as $user)
-                    @if ($user->id != auth()->user()->id)
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endif
-                @endforeach
-            </select>
+                    <!-- Penerima -->
+                    <div class="form-group">
+                        <label for="receiver_id">Pilih Penerima</label>
+                        <select name="receiver_id" id="receiver_id" class="select2" required>
+                            <option value="">-- Pilih Penerima --</option>
+                            @foreach ($users as $user)
+                                @if ($user->id != auth()->user()->id)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Pesan -->
+                    <div class="form-group">
+                        <label for="message">Pesan</label>
+                        <textarea name="message" id="message" required placeholder="Tulis pesan di sini..."></textarea>
+                    </div>
+
+                    <!-- Tombol Kirim -->
+                    <button type="submit" class="btn-send">
+                        <i class="fas fa-paper-plane"></i> Kirim
+                    </button>
+                </form>
+            </div>
         </div>
-
-        <!-- Pesan -->
-        <div class="form-group">
-            <label for="message">Pesan</label>
-            <textarea name="message" id="message" required placeholder="Tulis pesan di sini..."></textarea>
-        </div>
-
-        <!-- Tombol Kirim -->
-        <button type="submit" class="btn-send">
-            <i class="fas fa-paper-plane"></i> Kirim
-        </button>
-    </form>
+    </section>
 </div>
 
-<!-- FontAwesome for icons -->
+<!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-<!-- jQuery (load before Select2) -->
+<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Select2 -->
@@ -195,7 +201,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#receiver_id').select2({
             placeholder: '-- Pilih Penerima --',
             allowClear: true
