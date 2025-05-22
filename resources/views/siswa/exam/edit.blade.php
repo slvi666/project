@@ -11,7 +11,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="card shadow">
-        <div class="card-header bg-warning text-white">
+        <div class="card-header bg-primary text-white">
           <h3 class="card-title">Detail Ujian</h3>
         </div>
         <div class="card-body">
@@ -81,7 +81,7 @@
             @endforeach
 
             <div class="d-flex justify-content-between">
-              <a href="{{ route('siswa.exam.index') }}" class="btn btn-secondary">Kembali</a>
+              <a href="{{ route('student-exams.index') }}" class="btn btn-secondary">Kembali</a>
               <button type="submit" class="btn btn-success">Simpan Perubahan</button>
             </div>
           </form>

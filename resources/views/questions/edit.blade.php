@@ -52,9 +52,14 @@
                             <input type="text" name="correct_answer" id="correct_answer" class="form-control" value="{{ old('correct_answer', $question->correct_answer) }}">
                         </div>
 
-                        <button type="submit" class="btn btn-primary shadow-sm rounded-pill px-4 mt-3">
-                            <i class="fas fa-save mr-1"></i> Perbarui Soal
-                        </button>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary shadow-sm rounded-pill px-4">
+                                <i class="fas fa-save mr-1"></i> Perbarui Soal
+                            </button>
+                            <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-secondary shadow-sm rounded-pill px-4 ml-2">
+                                <i class="fas fa-times mr-1"></i> Batal
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>

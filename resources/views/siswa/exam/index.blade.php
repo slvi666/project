@@ -16,7 +16,6 @@
       </div>
     </div>
   </div>
-
   <section class="content">
     <div class="container-fluid">
       <div class="row">
@@ -39,7 +38,6 @@
                     return ucfirst(str_replace('_', ' ', $exam->exam->question_type));
                   });
                 @endphp
-
                 @if($studentExams->count() > 0)
                   @foreach($groupedExams as $questionType => $exams)
                     <h5 class="mt-4 mb-2">{{ $questionType }}</h5>
@@ -100,7 +98,6 @@
     </div>
   </section>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {

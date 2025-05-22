@@ -49,9 +49,15 @@
                             <input type="text" name="correct_answer" id="correct_answer" class="form-control" placeholder="Contoh: A">
                         </div>
 
-                        <button type="submit" class="btn btn-primary shadow-sm rounded-pill px-4 mt-3">
+                       <div class="mt-3">
+                        <button type="submit" class="btn btn-primary shadow-sm rounded-pill px-4">
                             <i class="fas fa-save mr-1"></i> Simpan Soal
                         </button>
+                        <a href="{{ route('questions.index', $exam->id) }}" class="btn btn-secondary shadow-sm rounded-pill px-4 ml-2">
+                            <i class="fas fa-times mr-1"></i> Batal
+                        </a>
+                    </div>
+
                     </form>
                 </div>
             </div>

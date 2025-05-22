@@ -80,6 +80,8 @@
             <div class="col-md-6 mb-3">
               <strong><i class="fas fa-book-open me-1 text-muted"></i> Mata Pelajaran:</strong>
               <div>{{ $exam->subject->subject_name }} ({{ $exam->subject->class_name }})</div>
+                            <strong><i class="fas fa-book-open me-1 text-muted"></i> Guru Pengampu:</strong>
+<div>{{ $exam->guru->name ?? '-' }}</div>
             </div>
 
             <div class="col-md-6 mb-3">

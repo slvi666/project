@@ -44,47 +44,50 @@
             </a>
           </div>
 
-          <div class="table-responsive">
-            <table id="soalTable" class="table table-hover table-bordered table-striped align-middle">
-              <thead class="table-primary text-center">
+         <div class="table-responsive">
+          <table id="soalTable" class="table table-hover table-bordered table-striped align-middle">
+            <thead class="table-primary text-center align-middle">
+              <tr>
+                <th style="width: 5%;">No</th>
+                <th style="width: 35%;">Soal</th>
+                <th style="width: 15%;">Jenis</th>
+                <th style="width: 25%;">Jawaban Benar</th>
+                <th style="width: 20%;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              @forelse($questions as $index => $question)
                 <tr>
-                  <th style="width: 5%;">No</th>
-                  <th>Soal</th>
-                  <th>Jenis</th>
-                  <th style="width: 20%;">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                @forelse($questions as $index => $question)
-                  <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ Str::limit($question->question_text, 80, '...') }}</td>
-                    <td class="text-center">
-                    <span class="badge {{ $question->type == 'multiple' ? 'bg-primary' : 'bg-warning text-dark' }}">
+                  <td class="text-center">{{ $index + 1 }}</td>
+                  <td>{{ Str::limit($question->question_text, 80, '...') }}</td>
+                  <td class="text-center">
+                    <span class="badge {{ $question->type === 'multiple' ? 'bg-primary' : 'bg-warning text-dark' }}">
                       {{ ucfirst($question->type) }}
                     </span>
                   </td>
-                    <td class="text-center">
-                      <button onclick="confirmEdit('{{ route('questions.edit', [$exam->id, $question->id]) }}')" class="btn btn-sm btn-warning rounded-pill me-1">
-                        <i class="fas fa-edit"></i>
+                  <td>{{ Str::limit($question->correct_answer, 50, '...') }}</td>
+                  <td class="text-center">
+                    <button onclick="confirmEdit('{{ route('questions.edit', [$exam->id, $question->id]) }}')" class="btn btn-sm btn-warning rounded-pill me-1">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <form action="{{ route('questions.destroy', [$exam->id, $question->id]) }}" method="POST" class="d-inline">
+                      @csrf
+                      @method('DELETE')
+                      <button type="button" class="btn btn-sm btn-danger rounded-pill" onclick="confirmDelete(this.form)">
+                        <i class="fas fa-trash-alt"></i>
                       </button>
-                      <form action="{{ route('questions.destroy', [$exam->id, $question->id]) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" class="btn btn-sm btn-danger rounded-pill" onclick="confirmDelete(this.form)">
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                @empty
-                  <tr>
-                    <td colspan="4" class="text-center text-muted">Belum ada soal untuk ujian ini.</td>
-                  </tr>
-                @endforelse
-              </tbody>
-            </table>
-          </div>
+                    </form>
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="5" class="text-center text-muted">Belum ada soal untuk ujian ini.</td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+
 
           <div id="pagination" class="mt-3 text-center"></div>
         </div>

@@ -172,26 +172,41 @@
             <p class="text-muted">Tidak ada pengumuman terbaru.</p>
           @endif
 
-          <p><strong>Untuk Bagian Ujian:</strong> $7,650</p>
+@php
+  use App\Models\Exam;
 
-          <div class="table-responsive mt-3">
-            <table class="table table-bordered table-sm">
-              <thead class="table-light">
-                <tr>
-                  <th>Hari</th>
-                  <th>Income ($)</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($days as $i => $day)
-                  <tr>
-                    <td>{{ $day }}</td>
-                    <td>${{ number_format($income[$i], 0) }}</td>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
+  $exams = Exam::with(['subject', 'guru'])->get(); // Tambahkan relasi bila diperlukan
+@endphp
+
+<p><strong>Untuk Bagian Ujian:</strong></p>
+
+<div class="table-responsive mt-3">
+  <table class="table table-bordered table-sm">
+    <thead class="table-light">
+      <tr>
+        <th>Judul Ujian</th>
+        <th>Mata Pelajaran</th>
+        <th>Guru</th>
+        <th>Durasi (menit)</th>
+        <th>Waktu Mulai</th>
+        <th>Waktu Selesai</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($exams as $exam)
+        <tr>
+          <td>{{ $exam->exam_title }}</td>
+          <td>{{ $exam->subject->subject_name ?? '-' }}</td>
+          <td>{{ $exam->guru->name ?? '-' }}</td>
+          <td>{{ $exam->duration }}</td>
+          <td>{{ \Carbon\Carbon::parse($exam->start_time)->format('H:i') }}</td>
+          <td>{{ \Carbon\Carbon::parse($exam->end_time)->format('H:i') }}</td>
+        </tr>
+      @endforeach
+    </tbody>
+  </table>
+</div>
+
         </div>
       </div>
 
