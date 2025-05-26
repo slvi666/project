@@ -194,11 +194,12 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::post('/exam/{exam}/submit', [StudentExamController::class, 'submit'])->name('exam.submit');
     Route::get('/exam-list', [StudentExamController::class, 'list'])->name('exam.list');
 });
+
+Route::middleware(['auth'])->group(function () {
 Route::get('/student-exams', [StudentExamController::class, 'index'])->name('student-exams.index');
-
-
 Route::get('/siswa/exam', [StudentExamController::class, 'index'])->name('siswa.exam.index');
 Route::get('/siswa/exam/{id}/edit', [StudentExamController::class, 'edit'])->name('siswa.exam.edit');
 Route::put('/siswa/exam/{id}', [StudentExamController::class, 'update'])->name('siswa.exam.update');
-
 Route::get('/student-exams/{id}', [StudentExamController::class, 'show'])->name('siswa.exam.show');
+  
+});
