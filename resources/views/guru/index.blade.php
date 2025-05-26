@@ -42,7 +42,7 @@
 
               <div class="mb-3 d-flex justify-content-between align-items-center">
                 <input type="text" id="search" placeholder="🔍 Cari guru..." class="form-control w-50 shadow-sm rounded-pill px-3">
-                @if (auth()->user()->role_name === 'guru' && !$hasGuruData)
+                 @if ((auth()->user()->role_name === 'guru' && !$hasGuruData) || auth()->user()->role_name === 'Admin')
                 <a href="javascript:void(0)" onclick="confirmAdd('{{ route('guru.create') }}')" 
                   class="btn btn-primary fw-bold shadow-sm rounded-pill px-4 ms-3">
                   <i class="fas fa-plus-circle me-1"></i> Tambah Guru

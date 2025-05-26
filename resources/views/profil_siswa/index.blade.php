@@ -42,76 +42,85 @@
 
               <div class="mb-3 d-flex justify-content-between align-items-center">
                 <input type="text" id="searchInput" placeholder="🔍 Cari siswa..." class="form-control w-50 shadow-sm rounded-pill px-3">
-               @if (auth()->user()->role_name === 'siswa'  && !$siswaExists)
-              <a href="javascript:void(0)" onclick="confirmAdd('{{ route('profil_siswa.create') }}')" 
-                class="btn btn-primary fw-bold shadow-sm rounded-pill px-4">
-                <i class="fas fa-plus-circle me-1"></i> Tambah Siswa
-              </a>
-              @endif
+                @if ((auth()->user()->role_name === 'siswa' && !$siswaExists) || auth()->user()->role_name === 'Admin')
+                <a href="javascript:void(0)" onclick="confirmAdd('{{ route('profil_siswa.create') }}')" 
+                  class="btn btn-primary fw-bold shadow-sm rounded-pill px-4">
+                  <i class="fas fa-plus-circle me-1"></i> Tambah Siswa
+                </a>
+                @endif
               </div>
 
-              <div class="table-responsive">
-                <table id="studentsTable" class="table table-bordered table-striped align-middle">
-                  <thead class="bg-primary text-white text-center">
-                    <tr>
-                      <th style="width: 5%;">No</th>
-                      <th>Nama</th>
-                      <th>Email</th>
-                      <th>NISN</th>
-                      <th>Kelas</th>
-                      <th>Foto</th>
-                      <th style="width: 25%;">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach($siswa as $index => $data)
-                    <tr>
-                      <td class="text-center">{{ $index + 1 }}</td>
-                      <td>{{ $data->user->name }}</td>
-                      <td>{{ $data->user->email }}</td>
-                      <td>{{ $data->nisn }}</td>
-                      <td>{{ $data->subject->class_name ?? '-' }}</td>
-                      <td class="text-center">
-                        @if($data->poto)
-                          <img src="{{ asset('storage/' . $data->poto) }}" width="50" class="rounded-circle">
-                        @else
-                          <span class="text-muted">Tidak ada foto</span>
-                        @endif
-                      </td>
-                      <td class="text-center">
-                        <a href="javascript:void(0)" onclick="confirmView('{{ route('profil_siswa.show', $data->id) }}')" 
-                          class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
-                          <i class="fas fa-eye"></i>
-                        </a>
-                        @if (auth()->user()->role_name === 'Admin' || auth()->user()->role_name === 'siswa')
-                        <button class="btn btn-warning btn-sm rounded-pill shadow-sm me-1"
-                                onclick="confirmEdit('{{ route('profil_siswa.edit', $data->id) }}')">
-                          <i class="fas fa-edit"></i>
-                        </button>
-                        @endif
-                        @if (auth()->user()->role_name === 'Admin')
-                        <form action="{{ route('profil_siswa.destroy', $data->id) }}" method="POST" class="d-inline">
-                          @csrf
-                          @method('DELETE')
-                          <button type="button"
-                                  class="btn btn-danger btn-sm rounded-pill shadow-sm me-1"
-                                  onclick="confirmDelete(this.form)">
-                            <i class="fas fa-trash"></i>
+              @php
+                $grouped = $siswa->groupBy(function($item) {
+                    return $item->subject->class_name ?? 'Tidak Diketahui';
+                });
+              @endphp
+
+              @foreach($grouped as $className => $students)
+              <div class="mb-4 student-group">
+                <h5 class="fw-bold text-primary mt-4 mb-2 pb-2 border-bottom border-primary">Kelas {{ $className }}</h5>
+
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped align-middle student-table">
+                    <thead class="bg-primary text-white text-center">
+                      <tr>
+                        <th style="width: 5%;">No</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>NISN</th>
+                        <th>Foto</th>
+                        <th style="width: 25%;">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach($students as $index => $data)
+                      <tr>
+                        <td class="text-center">{{ $index + 1 }}</td>
+                        <td>{{ $data->user->name }}</td>
+                        <td>{{ $data->user->email }}</td>
+                        <td>{{ $data->nisn }}</td>
+                        <td class="text-center">
+                          @if($data->poto)
+                            <img src="{{ asset('storage/' . $data->poto) }}" width="50" class="rounded-circle">
+                          @else
+                            <span class="text-muted">Tidak ada foto</span>
+                          @endif
+                        </td>
+                        <td class="text-center">
+                          <a href="javascript:void(0)" onclick="confirmView('{{ route('profil_siswa.show', $data->id) }}')" 
+                            class="btn btn-info btn-sm rounded-pill shadow-sm me-1">
+                            <i class="fas fa-eye"></i>
+                          </a>
+                          @if (auth()->user()->role_name === 'Admin' || auth()->user()->role_name === 'siswa')
+                          <button class="btn btn-warning btn-sm rounded-pill shadow-sm me-1"
+                                  onclick="confirmEdit('{{ route('profil_siswa.edit', $data->id) }}')">
+                            <i class="fas fa-edit"></i>
                           </button>
-                        </form>
-                        @endif
-                        <a href="{{ route('siswa.print', $data->id) }}" target="_blank"
-                          class="btn btn-success btn-sm rounded-pill shadow-sm">
-                          <i class="fas fa-print"></i>
-                        </a>
-                      </td>
-                    </tr>
-                    @endforeach
-                  </tbody>
-                </table>
+                          @endif
+                          @if (auth()->user()->role_name === 'Admin')
+                          <form action="{{ route('profil_siswa.destroy', $data->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button"
+                                    class="btn btn-danger btn-sm rounded-pill shadow-sm me-1"
+                                    onclick="confirmDelete(this.form)">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </form>
+                          @endif
+                          <a href="{{ route('siswa.print', $data->id) }}" target="_blank"
+                            class="btn btn-success btn-sm rounded-pill shadow-sm">
+                            <i class="fas fa-print"></i>
+                          </a>
+                        </td>
+                      </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
               </div>
+              @endforeach
 
-              <div id="paginationContainer" class="mt-3 text-center"></div>
             </div>
           </div>
         </div>
@@ -123,48 +132,33 @@
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 
+<!-- Pencarian Global -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const table = document.getElementById("studentsTable");
     const searchInput = document.getElementById("searchInput");
-    const rows = table.getElementsByTagName("tr");
-    const pagination = document.getElementById("paginationContainer");
-    let currentPage = 1;
-    const rowsPerPage = 5;
-
-    function showPage(page) {
-      const start = (page - 1) * rowsPerPage + 1;
-      const end = start + rowsPerPage;
-      for (let i = 1; i < rows.length; i++) {
-        rows[i].style.display = (i >= start && i < end) ? "" : "none";
-      }
-    }
-
-    function setupPagination() {
-      pagination.innerHTML = "";
-      const pageCount = Math.ceil((rows.length - 1) / rowsPerPage);
-      for (let i = 1; i <= pageCount; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.className = "btn btn-sm btn-secondary mx-1";
-        btn.onclick = () => {
-          currentPage = i;
-          showPage(i);
-        };
-        pagination.appendChild(btn);
-      }
-    }
+    const tables = document.querySelectorAll(".student-table");
 
     searchInput.addEventListener("keyup", function () {
-      const filter = searchInput.value.toLowerCase();
-      for (let i = 1; i < rows.length; i++) {
-        const text = rows[i].textContent.toLowerCase();
-        rows[i].style.display = text.includes(filter) ? "" : "none";
-      }
-    });
+      const filter = this.value.toLowerCase();
 
-    showPage(currentPage);
-    setupPagination();
+      tables.forEach(table => {
+        const rows = table.querySelectorAll("tbody tr");
+        let hasVisibleRow = false;
+
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          const match = text.includes(filter);
+          row.style.display = match ? "" : "none";
+          if (match) hasVisibleRow = true;
+        });
+
+        // Tampilkan atau sembunyikan seluruh grup kelas jika tidak ada baris yang cocok
+        const groupContainer = table.closest('.student-group');
+        if (groupContainer) {
+          groupContainer.style.display = hasVisibleRow ? "" : "none";
+        }
+      });
+    });
   });
 
   function confirmAdd(url) {

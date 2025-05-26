@@ -43,7 +43,7 @@
               @endif
 
               <div class="mb-3 d-flex justify-content-between align-items-center">
-                <input type="text" id="search" placeholder="🔍 Cari Mata Pelajaran..." class="form-control w-50 shadow-sm rounded-pill px-3">
+                <input type="text" id="search" placeholder="🔍 Cari ..." class="form-control w-50 shadow-sm rounded-pill px-3">
                 <a href="javascript:void(0);" class="btn btn-primary fw-bold shadow-sm rounded-pill px-4" onclick="confirmAdd()">
                   <i class="fas fa-plus-circle me-1"></i> Tambah Kelas & Pelajaran
                 </a>

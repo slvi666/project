@@ -103,17 +103,36 @@ public function index()
 {
     $user = Auth::user();
 
-    // Coba ambil data siswa
-    $siswa = Siswa::where('user_id', $user->id)->first();
+    // Cek role user
+    $role = $user->role_name;
 
-    if ($siswa) {
-        // Kalau siswa, tampilkan hanya ujian milik dia
-        $studentExams = $siswa->studentExams()
-            ->with('exam')
+    if ($role === 'siswa') {
+        // Ambil data siswa
+        $siswa = Siswa::where('user_id', $user->id)->first();
+
+        if ($siswa) {
+            // Tampilkan hanya ujian milik siswa ini
+            $studentExams = $siswa->studentExams()
+                ->with('exam')
+                ->latest('finished_at')
+                ->get();
+        } else {
+            // Tidak ada data siswa, kosongkan
+            $studentExams = collect();
+        }
+    } elseif ($role === 'guru') {
+        // Tampilkan hanya data yang berkaitan dengan guru tersebut
+        // Misalnya, ujian yang dibuat oleh guru ini
+        // Asumsikan relasi Exam punya `guru_id` yang merujuk ke user
+
+        $studentExams = \App\Models\StudentExam::whereHas('exam', function ($query) use ($user) {
+                $query->where('guru_id', $user->id);
+            })
+            ->with('exam', 'siswa')
             ->latest('finished_at')
             ->get();
     } else {
-        // Kalau bukan siswa (guru, admin, dll), tampilkan semua data student exams
+        // Admin atau role lainnya, tampilkan semua data
         $studentExams = \App\Models\StudentExam::with('exam', 'siswa')
             ->latest('finished_at')
             ->get();
@@ -121,6 +140,7 @@ public function index()
 
     return view('siswa.exam.index', compact('studentExams'));
 }
+
 
 
 public function edit($id)
@@ -199,6 +219,39 @@ public function update(Request $request, $id)
     return redirect('/student-exams')->with('success', 'Skor berhasil diperbarui.');
 }
 
+public function show($id)
+{
+    $user = Auth::user();
+    $studentExam = StudentExam::with(['exam.questions', 'siswa'])->findOrFail($id);
+
+    // Validasi akses jika siswa
+    if ($user->role === 'siswa') {
+        $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
+
+        if ($studentExam->siswa_id !== $siswa->id) {
+            abort(403, 'Akses ditolak.');
+        }
+    }
+
+    // Ambil jawaban siswa
+    $answers = Answer::where('exam_id', $studentExam->exam_id)
+        ->where('siswa_id', $studentExam->siswa_id)
+        ->get()
+        ->keyBy('question_id');
+
+    $exam = $studentExam->exam;
+    $questions = $exam->questions;
+
+    // Decode pilihan ganda (jika masih dalam bentuk string)
+    $questions->transform(function ($question) {
+        if (is_string($question->choices)) {
+            $question->choices = json_decode($question->choices, true);
+        }
+        return $question;
+    });
+
+    return view('siswa.exam.show', compact('studentExam', 'exam', 'questions', 'answers'));
+}
 
 
 

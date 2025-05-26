@@ -81,20 +81,7 @@
                                 <i class="fas fa-arrow-left"></i> Kembali
                             </a>
 
-                            @if (auth()->user()->role_name === 'Admin')
-                                <a href="{{ route('mata-pelajaran.edit', $data->id) }}" class="btn btn-warning btn-sm shadow-sm rounded-pill">
-                                    <i class="fas fa-edit me-1"></i> Edit
-                                </a>
-
-                                <button type="button" class="btn btn-danger btn-sm shadow-sm rounded-pill" onclick="hapusData({{ $data->id }})">
-                                    <i class="fas fa-trash me-1"></i> Hapus
-                                </button>
-
-                                <form id="delete-form-{{ $data->id }}" action="{{ route('mata-pelajaran.destroy', $data->id) }}" method="POST" style="display: none;">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            @endif
+                           
                         </div>
                     </div>
                 </div>

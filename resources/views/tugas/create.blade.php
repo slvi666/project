@@ -1,4 +1,3 @@
-
 @extends('adminlte.layouts.app')
 
 @section('content')
@@ -58,13 +57,13 @@
                   data-parent="#taskAccordion">
                   <div class="card-body">
                     <div class="form-group">
-                      <label>Judul Tugas</label>
-                      <input type="text" name="judul_tugas"
+                      <label for="judul_tugas">Judul Tugas</label>
+                      <input type="text" name="judul_tugas" id="judul_tugas"
                         class="form-control rounded-pill px-3 py-2 shadow-sm" required>
                     </div>
                     <div class="form-group">
-                      <label>Deskripsi</label>
-                      <textarea name="deskripsi"
+                      <label for="deskripsi">Deskripsi</label>
+                      <textarea name="deskripsi" id="deskripsi"
                         class="form-control rounded-4 px-3 py-2 shadow-sm"
                         rows="4"></textarea>
                     </div>
@@ -84,31 +83,31 @@
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#taskAccordion">
                   <div class="card-body">
-<div class="form-group mb-3">
-  <label for="filter_kelas_2">Filter Kelas</label>
-  <select id="filter_kelas_2" class="form-control rounded-pill px-3 py-2">
-    <option value="all">-- Tampilkan Semua --</option>
-    @php
-      $kelas = $siswa->pluck('subject.class_name')->unique();
-    @endphp
-    @foreach ($kelas as $kelasItem)
-      <option value="{{ $kelasItem }}">{{ $kelasItem }}</option>
-    @endforeach
-  </select>
-</div>
 
-<div class="form-group">
-  <label>Siswa</label><br>
-  @foreach($siswa as $s)
-    <div class="form-check siswa-item-2" data-kelas="{{ $s->subject->class_name }}">
-      <input class="form-check-input" type="checkbox" name="siswa_id[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
-      <label class="form-check-label" for="siswa_{{ $s->id }}">
-        {{ $s->user->name ?? '-' }} ({{ $s->subject->class_name }})
-      </label>
-    </div>
-  @endforeach
-</div>
+                    <div class="form-group mb-3">
+                      <label for="filter_kelas_2">Filter Kelas</label>
+                      <select id="filter_kelas_2" class="form-control rounded-pill px-3 py-2">
+                        <option value="all">-- Tampilkan Semua --</option>
+                        @php
+                          $kelas = $siswa->pluck('subject.class_name')->unique();
+                        @endphp
+                        @foreach ($kelas as $kelasItem)
+                          <option value="{{ $kelasItem }}">{{ $kelasItem }}</option>
+                        @endforeach
+                      </select>
+                    </div>
 
+                    <div class="form-group">
+                      <label>Siswa</label><br>
+                      @foreach($siswa as $s)
+                        <div class="form-check siswa-item-2" data-kelas="{{ $s->subject->class_name }}">
+                          <input class="form-check-input" type="checkbox" name="siswa_id[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
+                          <label class="form-check-label" for="siswa_{{ $s->id }}">
+                            {{ $s->user->name ?? '-' }} ({{ $s->subject->class_name }})
+                          </label>
+                        </div>
+                      @endforeach
+                    </div>
 
                     <div class="form-group">
                       <label>Guru</label>
@@ -118,8 +117,8 @@
                     </div>
 
                     <div class="form-group">
-                      <label>Mata Pelajaran</label>
-                      <select name="subject_id" class="form-control rounded-pill px-3 py-2 shadow-sm" required>
+                      <label for="subject_id">Mata Pelajaran</label>
+                      <select name="subject_id" id="subject_id" class="form-control select2 rounded-pill px-3 py-2 shadow-sm" required>
                         <option value="">-- Pilih Mapel --</option>
                         @foreach($subject as $sub)
                           <option value="{{ $sub->id }}">{{ $sub->subject_name }} - {{ $sub->class_name }}</option>
@@ -143,22 +142,24 @@
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#taskAccordion">
                   <div class="card-body">
                     <div class="form-group">
-                      <label>Tanggal Diberikan</label>
-                      <input type="date" name="tanggal_diberikan"
+                      <label for="tanggal_diberikan">Tanggal Diberikan</label>
+                      <input type="date" name="tanggal_diberikan" id="tanggal_diberikan"
                         class="form-control rounded-pill px-3 py-2 shadow-sm" required>
                     </div>
 
                     <div class="form-group">
-                      <label>Deadline</label>
-                      <input type="date" name="deadline"
+                      <label for="deadline">Deadline</label>
+                      <input type="date" name="deadline" id="deadline"
                         class="form-control rounded-pill px-3 py-2 shadow-sm" required>
                     </div>
 
                     <div class="form-group">
-                      <label>File Soal</label>
-                      <input type="file" name="file_soal"
-                        class="form-control rounded-4 px-3 py-2 shadow-sm">
+                      <label for="file_soal">File Soal</label>
+                      <input type="file" name="file_soal" id="file_soal"
+                        class="form-control rounded-4 px-3 py-2 shadow-sm"
+                        required>
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -180,9 +181,38 @@
   </section>
 </div>
 
+<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Include jQuery & Select2 JS (pastikan sudah include jQuery di layout utama) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style>
+  /* Select2 full width with rounded-pill style */
+  .select2-container--default .select2-selection--single {
+    height: 42px !important;
+    padding: 8px 12px;
+    border-radius: 25px;
+    border: 1px solid #ced4da;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px;
+    right: 10px;
+  }
+
+  /* Margin bawah antar form */
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // Filter kelas untuk checkbox siswa
     const filterKelas2 = document.getElementById('filter_kelas_2');
     const siswaItems2 = document.querySelectorAll('.siswa-item-2');
 
@@ -193,7 +223,13 @@
         item.style.display = (selected === 'all' || kelas === selected) ? 'block' : 'none';
       });
     });
+
+    // Initialize Select2
+    $('.select2').select2({
+      placeholder: "-- Pilih Mapel --",
+      allowClear: true,
+      width: '100%'
+    });
   });
 </script>
-
 @endsection

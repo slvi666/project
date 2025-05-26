@@ -41,13 +41,19 @@
 
                         <div class="form-group" id="choices" style="display:none;">
                             <label for="choices_input">Pilihan Jawaban <small class="text-muted">(format JSON)</small></label>
+                                <pre class="bg-light text-muted rounded p-2 mt-1" style="font-size: 0.9rem; white-space: pre-wrap;">
+                                Contoh: ["A. Pilihan 1", "B. Pilihan 2", "C. Pilihan 3", "D. Pilihan 4"]
+                                </pre>
                             <textarea name="choices" id="choices_input" class="form-control" rows="3" placeholder='Contoh: ["A. Pilihan 1", "B. Pilihan 2", "C. Pilihan 3", "D. Pilihan 4"]'></textarea>
                         </div>
 
+                       {{-- Tambahkan ini tepat sebelum bagian input jawaban benar --}}
+                        @if ($exam->question_type !== 'esai')
                         <div class="form-group">
                             <label for="correct_answer">Jawaban Benar</label>
-                            <input type="text" name="correct_answer" id="correct_answer" class="form-control" placeholder="Contoh: A">
+                            <input type="text" name="correct_answer" id="correct_answer" class="form-control" placeholder="Contoh: A" required>
                         </div>
+                        @endif
 
                        <div class="mt-3">
                         <button type="submit" class="btn btn-primary shadow-sm rounded-pill px-4">
@@ -88,14 +94,28 @@
 </div>
 
 <script>
+
     document.addEventListener('DOMContentLoaded', function () {
-        const typeValue = document.getElementById('type').value;
+        const typeInput = document.getElementById('type');
         const choicesSection = document.getElementById('choices');
-        if (typeValue === 'pilihan_ganda') {
-            choicesSection.style.display = 'block';
-        } else {
-            choicesSection.style.display = 'none';
+        const choicesInput = document.getElementById('choices_input');
+        const correctAnswerInput = document.getElementById('correct_answer');
+
+        function toggleRequiredFields() {
+            if (typeInput.value === 'pilihan_ganda') {
+                choicesSection.style.display = 'block';
+                choicesInput.setAttribute('required', 'required');
+                correctAnswerInput.setAttribute('required', 'required');
+            } else {
+                choicesSection.style.display = 'none';
+                choicesInput.removeAttribute('required');
+                // Kalau jenis soal bukan pilihan ganda, tetap wajib isi jawaban benar
+                correctAnswerInput.setAttribute('required', 'required');
+            }
         }
+
+        toggleRequiredFields();
     });
+
 </script>
 @endsection

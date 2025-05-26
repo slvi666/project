@@ -145,19 +145,23 @@ Route::get('/messages/get-users', [MessageController::class, 'getUsers'])->name(
 Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
 
 
+
 use App\Http\Controllers\ExamController;
 
 Route::middleware(['auth', 'isAdmin'])->group(function () {
  Route::get('exams/create', [ExamController::class, 'create'])->name('exams.create');   
  Route::get('exams/{exam}/edit', [ExamController::class, 'edit'])->name('exams.edit');
 });
-Route::get('exams', [ExamController::class, 'index'])->name('exams.index');
+
+Route::middleware(['auth'])->group(function () {
+ Route::get('exams', [ExamController::class, 'index'])->name('exams.index');
 Route::post('exams', [ExamController::class, 'store'])->name('exams.store');
 Route::get('exams/{exam}', [ExamController::class, 'show'])->name('exams.show');
 Route::put('exams/{exam}', [ExamController::class, 'update'])->name('exams.update');
 Route::delete('exams/{exam}', [ExamController::class, 'destroy'])->name('exams.destroy');
-
-
+   
+    
+});
 use App\Http\Controllers\QuestionController;
 
 Route::prefix('exams/{examId}')->group(function () {
@@ -196,3 +200,5 @@ Route::get('/student-exams', [StudentExamController::class, 'index'])->name('stu
 Route::get('/siswa/exam', [StudentExamController::class, 'index'])->name('siswa.exam.index');
 Route::get('/siswa/exam/{id}/edit', [StudentExamController::class, 'edit'])->name('siswa.exam.edit');
 Route::put('/siswa/exam/{id}', [StudentExamController::class, 'update'])->name('siswa.exam.update');
+
+Route::get('/student-exams/{id}', [StudentExamController::class, 'show'])->name('siswa.exam.show');

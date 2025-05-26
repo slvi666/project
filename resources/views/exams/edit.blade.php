@@ -20,17 +20,6 @@
 
   <section class="content">
     <div class="container-fluid">
-      @if ($errors->any())
-        <script>
-          Swal.fire({
-            title: 'Kesalahan!',
-            html: `<ul>{!! implode('', $errors->all('<li>:message</li>')) !!}</ul>`,
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        </script>
-      @endif
-
       <div class="card shadow-sm border-0 rounded-lg">
         <div class="card-header bg-primary text-white">
           <h5 class="mb-0">Form Edit Ujian</h5>
@@ -50,6 +39,35 @@
                 @endforeach
               </select>
             </div>
+
+
+            {{-- <div class="mb-3">
+              <label for="guru_id" class="form-label">Guru Pengampu</label>
+              <select name="guru_id" id="guru_id" class="form-control select2 rounded-pill px-3 py-2" required>
+                <option value="" disabled {{ !$exam->guru_id ? 'selected' : '' }}>Pilih Guru</option>
+                @foreach ($gurus as $guru)
+                  <option value="{{ $guru->id }}" {{ $exam->guru_id == $guru->id ? 'selected' : '' }}>
+                    {{ $guru->name }}
+                  </option>
+                @endforeach
+              </select>
+            </div> --}}
+
+
+          <div class="mb-3">
+            <label for="guru_id" class="form-label">Guru Pengampu</label>
+            <select name="guru_id_disabled" id="guru_id" class="form-control select2 rounded-pill px-3 py-2" disabled>
+              @foreach ($gurus as $guru)
+                <option value="{{ $guru->id }}" {{ $exam->guru_id == $guru->id ? 'selected' : '' }}>
+                  {{ $guru->name }}
+                </option>
+              @endforeach
+            </select>
+            <!-- Hidden input tetap kirimkan nilai guru_id -->
+            <input type="hidden" name="guru_id" value="{{ $exam->guru_id }}">
+          </div>
+
+
 
             <div class="mb-3">
               <label for="exam_title" class="form-label">Judul Ujian</label>
@@ -90,7 +108,6 @@
                 <i class="fas fa-save me-1"></i> Perbarui
               </button>
             </div>
-
           </form>
         </div>
       </div>
@@ -98,5 +115,19 @@
   </section>
 </div>
 
+<!-- Load SweetAlert2 script BEFORE kamu pakai Swal -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Cek error dan tampilkan SweetAlert -->
+@if ($errors->any())
+<script>
+  Swal.fire({
+    title: 'Kesalahan!',
+    html: `<ul>{!! implode('', $errors->all('<li>:message</li>')) !!}</ul>`,
+    icon: 'error',
+    confirmButtonText: 'OK'
+  });
+</script>
+@endif
+
 @endsection

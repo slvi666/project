@@ -128,13 +128,20 @@
                       <th style="width: 20%;">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody>
+                <tbody>
+                  @if($materi->isEmpty())
+                    <tr>
+                      <td colspan="6" class="text-center text-muted py-4">
+                        <i class="fas fa-info-circle fa-lg me-2"></i> Data materi masih kosong.
+                      </td>
+                    </tr>
+                  @else
                     @foreach($materi as $index => $m)
                       @if(auth()->user()->role_name === 'guru' && $m->guru_id !== auth()->user()->id)
-                        <!-- Skip this materi if the logged-in user is a guru and the guru_id doesn't match -->
+
                         @continue
                       @endif
-                      
+
                       <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td class="text-center">
@@ -147,37 +154,29 @@
                         <td>{{ $m->subject->subject_name ?? '-' }}</td>
                         <td>{{ $m->subject->class_name ?? '-' }}</td>
                         <td class="text-truncate" style="max-width: 250px;">{{ Str::limit($m->deskripsi, 80, '...') }}</td>
-                        {{-- <td class="text-center">
-                          @if ($m->file)
-                          <a href="{{ asset('storage/' . $m->file) }}" target="_blank" class="btn btn-outline-danger btn-sm rounded-pill">
-                            <i class="fas fa-file-pdf"></i> Lihat
-                          </a>
-                          @else
-                          <span class="badge bg-secondary">Tidak Ada</span>
-                          @endif
-                        </td> --}}
+                        
                         <td class="text-center">
-                          <a href="javascript:void(0);" 
-                            onclick="confirmShow('{{ route('materi.show', $m->id) }}')" 
-                            class="btn btn-info btn-sm rounded-pill me-1 shadow-sm">
+                          <a href="javascript:void(0);" onclick="confirmShow('{{ route('materi.show', $m->id) }}')" class="btn btn-info btn-sm rounded-pill me-1 shadow-sm">
                             <i class="fas fa-eye"></i>
                           </a>
                           @if (auth()->user()->role_name === 'guru' || auth()->user()->role_name === 'Admin')
-                          <a href="javascript:void(0);" onclick="confirmEdit('{{ route('materi.edit', $m->id) }}')" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm">
-                            <i class="fas fa-edit"></i>
-                          </a>
-                          <form action="{{ route('materi.destroy', $m->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm" onclick="confirmDelete(this.form)">
-                              <i class="fas fa-trash"></i>
-                            </button>
-                          </form>
+                            <a href="javascript:void(0);" onclick="confirmEdit('{{ route('materi.edit', $m->id) }}')" class="btn btn-warning btn-sm rounded-pill me-1 shadow-sm">
+                              <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('materi.destroy', $m->id) }}" method="POST" class="d-inline">
+                              @csrf
+                              @method('DELETE')
+                              <button type="button" class="btn btn-danger btn-sm rounded-pill shadow-sm" onclick="confirmDelete(this.form)">
+                                <i class="fas fa-trash"></i>
+                              </button>
+                            </form>
                           @endif
                         </td>
                       </tr>
                     @endforeach
-                  </tbody>
+                  @endif
+                </tbody>
+
                   
                 </table>
               </div>

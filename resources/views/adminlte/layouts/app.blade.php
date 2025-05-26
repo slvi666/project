@@ -217,7 +217,7 @@ body {
       </ul>
     </li>
 
-    @if (in_array(auth()->user()->role_name, ['guru', 'siswa', 'Admin']))
+    @if (in_array(auth()->user()->role_name, ['siswa', 'Admin']))
     <li class="nav-item">
       <a href="#" class="nav-link">
         <i class="nav-icon fas fa-calendar-check"></i>

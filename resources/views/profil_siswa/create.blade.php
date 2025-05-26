@@ -1,6 +1,32 @@
 @extends('adminlte.layouts.app')
 
 @section('content')
+<!-- Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<!-- Optional Styling for Select2 -->
+<style>
+.select2-container .select2-selection--single {
+  height: 38px !important;
+  border-radius: 50px !important;
+  padding: 6px 12px !important;
+  border: 1px solid #ced4da !important;
+  font-size: 14px;
+  background-color: #fff !important;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+}
+
+.select2-selection__rendered {
+  line-height: 24px !important;
+}
+
+.select2-selection__arrow {
+  height: 36px !important;
+  top: 1px !important;
+  right: 10px;
+}
+</style>
+
 <div class="content-wrapper">
   <div class="content-header">
     <div class="container-fluid">
@@ -38,10 +64,14 @@
 
             <div class="mb-3">
               <label for="user_id" class="form-label">Nama Siswa</label>
-              <select name="user_id" class="form-control rounded-pill px-3 py-2"
+              <select name="user_id" class="form-control rounded-pill px-3 py-2 select2"
                 @if(auth()->user()->role_name === 'siswa') disabled @endif required>
+
+                <option value="">-- Pilih Siswa --</option>
+
                 @foreach ($users as $user)
-                  <option value="{{ $user->id }}" {{ auth()->user()->id == $user->id ? 'selected' : '' }}>
+                  <option value="{{ $user->id }}"
+                    {{ (old('user_id', $siswa->user_id ?? auth()->user()->id) == $user->id) ? 'selected' : '' }}>
                     {{ $user->name }} - {{ $user->email }}
                   </option>
                 @endforeach
@@ -62,7 +92,7 @@
               <input type="file" name="poto" class="form-control rounded-pill px-3 py-2">
             </div>
 
-            <div class="d-flex justify-content-start  gap-2">
+            <div class="d-flex justify-content-start gap-2">
               <a href="{{ route('profil_siswa.index') }}" class="btn btn-secondary rounded-pill px-4 shadow-sm">
                 <i class="fas fa-arrow-left me-1"></i> Batal
               </a>
@@ -77,5 +107,20 @@
   </section>
 </div>
 
+<!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- jQuery & Select2 JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<!-- Initialize Select2 -->
+<script>
+  $(document).ready(function () {
+    $('.select2').select2({
+      placeholder: "-- Pilih Siswa --",
+      allowClear: true
+    });
+  });
+</script>
 @endsection

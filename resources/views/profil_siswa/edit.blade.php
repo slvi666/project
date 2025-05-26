@@ -49,16 +49,19 @@
 </div>
 
 
-                <div class="mb-3">
+               <div class="mb-3">
                   <label for="subject_id" class="form-label">Kelas</label>
-                  <select name="subject_id" class="form-control rounded-pill px-3 py-2">
+                  <select name="subject_id" class="form-control rounded-pill px-3 py-2" required>
+                    <option value="">-- Pilih Kelas --</option>
                     @foreach($subjects as $subject)
-                      <option value="{{ $subject->id }}" {{ $siswa->subject_id == $subject->id ? 'selected' : '' }}>
+                      <option value="{{ $subject->id }}"
+                        {{ (old('subject_id', $siswa->subject_id ?? '') == $subject->id) ? 'selected' : '' }}>
                         {{ $subject->class_name }}
                       </option>
                     @endforeach
                   </select>
                 </div>
+
 
                 <div class="mb-3">
                   <label for="nisn" class="form-label">NISN</label>

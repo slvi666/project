@@ -36,10 +36,8 @@
 
                         <div class="form-group">
                             <label for="type">Jenis Soal</label>
-                            <select name="type" id="type" class="form-control" required>
-                                <option value="pilihan_ganda" {{ $question->type === 'pilihan_ganda' ? 'selected' : '' }}>Pilihan Ganda</option>
-                                <option value="esai" {{ $question->type === 'esai' ? 'selected' : '' }}>Esai</option>
-                            </select>
+                            <input type="text" class="form-control" value="{{ ucfirst(str_replace('_', ' ', $question->type)) }}" disabled>
+                            <input type="hidden" name="type" value="{{ $question->type }}">
                         </div>
 
                         <div class="form-group" id="choices" style="{{ $question->type === 'pilihan_ganda' ? 'display:block;' : 'display:none;' }}">
@@ -47,10 +45,11 @@
                             <textarea name="choices" id="choices_input" class="form-control" rows="3">{{ old('choices', json_encode(json_decode($question->choices), JSON_PRETTY_PRINT)) }}</textarea>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="correct_answer_group" style="{{ $question->type === 'pilihan_ganda' ? 'display:block;' : 'display:none;' }}">
                             <label for="correct_answer">Jawaban Benar</label>
                             <input type="text" name="correct_answer" id="correct_answer" class="form-control" value="{{ old('correct_answer', $question->correct_answer) }}">
                         </div>
+
 
                         <div class="mt-3">
                             <button type="submit" class="btn btn-primary shadow-sm rounded-pill px-4">
@@ -68,22 +67,21 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+   document.addEventListener('DOMContentLoaded', function () {
         const typeSelect = document.getElementById('type');
         const choicesDiv = document.getElementById('choices');
+        const correctAnswerDiv = document.getElementById('correct_answer_group');
 
-        function toggleChoices() {
-            if (typeSelect.value === 'pilihan_ganda') {
-                choicesDiv.style.display = 'block';
-            } else {
-                choicesDiv.style.display = 'none';
-            }
+        function toggleFields() {
+            const isMultipleChoice = typeSelect.value === 'pilihan_ganda';
+            choicesDiv.style.display = isMultipleChoice ? 'block' : 'none';
+            correctAnswerDiv.style.display = isMultipleChoice ? 'block' : 'none';
         }
 
-        typeSelect.addEventListener('change', toggleChoices);
+        typeSelect.addEventListener('change', toggleFields);
 
-        // Inisialisasi tampilan sesuai nilai saat ini
-        toggleChoices();
+        // Inisialisasi saat pertama kali dimuat
+        toggleFields();
     });
 </script>
 @endsection

@@ -11,13 +11,18 @@ use App\Imports\QuestionImport;
 class QuestionController extends Controller
 {
     // Menampilkan daftar soal berdasarkan exam
-    public function index($examId)
-    {
-        $exam = Exam::findOrFail($examId);
-        $questions = $exam->questions;
+   public function index($examId)
+{
+    $exam = Exam::findOrFail($examId);
+    $questions = $exam->questions;
 
-        return view('questions.index', compact('exam', 'questions'));
-    }
+    // Tambahan: cek apakah ada soal pilihan ganda
+    $hasMultipleChoice = $questions->contains(function ($question) {
+        return in_array($question->type, ['multiple', 'pilihan_ganda']);
+    });
+
+    return view('questions.index', compact('exam', 'questions', 'hasMultipleChoice'));
+}
 
     // Menampilkan form untuk membuat soal baru
     public function create($examId)
@@ -42,7 +47,7 @@ class QuestionController extends Controller
             'exam_id' => $exam->id,
             'question_text' => $request->question_text,
             'type' => $exam->question_type,
-            'choices' => $request->choices ? json_encode($request->choices) : null,
+           'choices' => $request->choices ? $request->choices : null,
             'correct_answer' => $request->correct_answer,
         ]);
 
@@ -73,7 +78,7 @@ class QuestionController extends Controller
         $question->update([
             'question_text' => $request->question_text,
             'type' => $request->type,
-            'choices' => $request->choices ? json_encode($request->choices) : null,
+            'choices' => $request->choices ? $request->choices : null,
             'correct_answer' => $request->correct_answer,
         ]);
 

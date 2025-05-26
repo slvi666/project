@@ -51,13 +51,16 @@
                 <th style="width: 5%;">No</th>
                 <th style="width: 35%;">Soal</th>
                 <th style="width: 15%;">Jenis</th>
-                <th style="width: 25%;">Jawaban Benar</th>
+                {{-- <th style="width: 25%;">Jawaban Benar</th> --}}
+                  @if($hasMultipleChoice)
+                    <th style="width: 25%;">Jawaban Benar</th>
+                  @endif
                 <th style="width: 20%;">Aksi</th>
               </tr>
             </thead>
             <tbody>
               @forelse($questions as $index => $question)
-                <tr>
+                 <tr>
                   <td class="text-center">{{ $index + 1 }}</td>
                   <td>{{ Str::limit($question->question_text, 80, '...') }}</td>
                   <td class="text-center">
@@ -65,7 +68,16 @@
                       {{ ucfirst($question->type) }}
                     </span>
                   </td>
-                  <td>{{ Str::limit($question->correct_answer, 50, '...') }}</td>
+                  @if($hasMultipleChoice)
+                    <td>
+                      @if(in_array($question->type, ['multiple', 'pilihan_ganda']))
+                        {{ Str::limit($question->correct_answer, 50, '...') }}
+                      @else
+                        <span class="text-muted">-</span>
+                      @endif
+                    </td>
+                  @endif
+                  </td>
                   <td class="text-center">
                     <button onclick="confirmEdit('{{ route('questions.edit', [$exam->id, $question->id]) }}')" class="btn btn-sm btn-warning rounded-pill me-1">
                       <i class="fas fa-edit"></i>

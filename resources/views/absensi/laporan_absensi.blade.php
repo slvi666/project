@@ -28,6 +28,7 @@
           </div>
           <div class="card-body">
             <form method="GET" action="{{ route('absensi.laporan') }}" class="mb-4">
+              @if(auth()->user()->role_name === 'Admin')
               <div class="row">
                 <div class="col-md-3">
                   <label><i class="fas fa-calendar-alt"></i> Tanggal Mulai</label>
@@ -37,6 +38,7 @@
                   <label><i class="fas fa-calendar-alt"></i> Tanggal Akhir</label>
                   <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="form-control">
                 </div>
+                @endif
                 <div class="col-md-3">
                   <label><i class="fas fa-check-circle"></i> Status</label>
                   <select name="status" class="form-control">
@@ -75,7 +77,7 @@
             </form>
 
             {{-- Pencarian client-side --}}
-            <input type="text" id="search" placeholder="Cari Nama Siswa atau Mata Pelajaran" class="form-control mb-3">
+            <input type="text" id="search" placeholder="Cari..." class="form-control mb-3">
             {{-- Filter Kelas --}}
             <form method="GET" action="{{ route('absensi.laporan') }}" class="d-flex align-items-center gap-2 mb-3">
               <div class="input-group shadow-sm rounded-pill" style="overflow: hidden; max-width: 300px;">
