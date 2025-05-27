@@ -14,10 +14,14 @@ class SubjectController extends Controller
     }
 
     // Menampilkan form tambah mata pelajaran
-    public function create()
-    {
-        return view('subjeck.create');
-    }
+public function create()
+{
+    // Ambil class_name yang unik untuk dropdown
+    $classNames = Subject::select('class_name')->distinct()->pluck('class_name');
+
+    return view('subjeck.create', compact('classNames'));
+}
+
 
     // Menyimpan mata pelajaran baru
     public function store(Request $request)
@@ -39,11 +43,15 @@ class SubjectController extends Controller
     }
 
     // Menampilkan form edit mata pelajaran
-    public function edit($id)
-    {
-        $subject = Subject::findOrFail($id);
-        return view('subjeck.edit', compact('subject'));
-    }
+public function edit($id)
+{
+    $subject = Subject::findOrFail($id);
+    $classNames = Subject::select('class_name')->distinct()->pluck('class_name');
+
+    return view('subjeck.edit', compact('subject', 'classNames'));
+}
+
+
 
     // Mengupdate data mata pelajaran
     public function update(Request $request, $id)

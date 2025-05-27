@@ -129,10 +129,10 @@ public function create()
     {
         $message = Message::findOrFail($id);
 
-        // Pastikan hanya pengirim yang bisa menghapus pesan
-        if ($message->sender_id != auth()->user()->id) {
-            return redirect()->route('messages.index')->with('error', 'Anda tidak memiliki izin untuk menghapus pesan ini.');
-        }
+        // // Pastikan hanya pengirim yang bisa menghapus pesan
+        // if ($message->sender_id != auth()->user()->id) {
+        //     return redirect()->route('messages.index')->with('error', 'Anda tidak memiliki izin untuk menghapus pesan ini.');
+        // }
 
         $message->delete();
         return redirect()->route('messages.index')->with('success', 'Pesan berhasil dihapus!');

@@ -76,13 +76,13 @@
                               data-url="{{ route('messages.show', ['receiver_id' => $receiver->id]) }}">
                               <i class="fas fa-envelope-open-text me-1"></i> Baca
                             </button>
-                            <form action="{{ route('messages.destroy', $message->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pesan ini?')">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger btn-sm shadow-sm">
-        <i class="fas fa-trash-alt me-1"></i> Hapus
-    </button>
-</form>
+                            <form action="{{ route('messages.destroy', $message->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm shadow-sm">
+                                    <i class="fas fa-trash-alt me-1"></i> Hapus
+                                </button>
+                            </form>
 
                             </form>
                           </div>

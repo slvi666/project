@@ -1,69 +1,106 @@
-@extends('layouts.app')
-
-@section('title', 'Detail Hasil Ujian')
+@extends('adminlte.layouts.app')
 
 @section('content')
-<div class="container">
-    <h2 class="mb-4">Detail Hasil Ujian</h2>
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h4 class="card-title">{{ $exam->title }}</h4>
-            <p><strong>Siswa:</strong> {{ $studentExam->siswa->nama }}</p>
-            <p><strong>Waktu Mulai:</strong> 
-            {{ $studentExam->started_at ? \Carbon\Carbon::parse($studentExam->started_at)->format('d-m-Y H:i') : '-' }}
-            </p>
-            <p><strong>Waktu Selesai:</strong> 
-                {{ $studentExam->finished_at ? \Carbon\Carbon::parse($studentExam->finished_at)->format('d-m-Y H:i') : '-' }}
-            </p>
-            <p><strong>Skor Akhir:</strong> {{ $studentExam->score ?? 'Belum dinilai' }}</p>
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Detail Hasil Ujian</h1>
         </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('student-exams.index') }}">Hasil Ujian</a></li>
+            <li class="breadcrumb-item active">Detail</li>
+          </ol>
+        </div>
+      </div>
     </div>
+  </div>
 
-    @foreach ($questions as $index => $question)
-<div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Soal {{ $index + 1 }}</h5>
-        <p><strong>Pertanyaan:</strong> {!! nl2br(e($question->question_text)) !!}</p>
+  <section class="content">
+    <div class="container-fluid">
 
-        @if ($question->type === 'pilihan_ganda')
-            <p><strong>Pilihan:</strong></p>
-            <ul>
-                @foreach ($question->choices as $key => $choice)
-                    <li 
-                        @if(isset($answers[$question->id]) && $answers[$question->id]->answer == $key)
-                            style="font-weight:bold;"
-                        @endif
-                    >
-                        {{ $key }}. {{ $choice }}
-                        @if($question->correct_answer === $key)
-                            <span class="badge bg-success">Kunci</span>
-                        @endif
-                    </li>
-                @endforeach
-            </ul>
-        @endif
+      {{-- Info Ujian --}}
+      <div class="card shadow rounded mb-4">
+        <div class="card-header bg-primary text-white">
+          <h3 class="card-title m-0">Informasi Ujian</h3>
+        </div>
+        <div class="card-body">
+          <dl class="row">
+            <dt class="col-sm-3">Judul Ujian</dt>
+            <dd class="col-sm-9">{{ $studentExam->exam->exam_title }}</dd>
 
-        <p><strong>Jawaban Siswa:</strong>
-            @if(isset($answers[$question->id]))
-                {{ $answers[$question->id]->answer }}
-            @else
-                <span class="text-muted">Belum dijawab</span>
-            @endif
-        </p>
+            <dt class="col-sm-3">Siswa</dt>
+           <dd class="col-sm-9">{{ $studentExam->siswa->user->name ?? 'Nama tidak tersedia' }}</dd>
 
-        <p><strong>Skor:</strong>
-            @if(isset($answers[$question->id]) && $answers[$question->id]->score !== null)
-                {{ $answers[$question->id]->score }}
-            @else
+            <dt class="col-sm-3">Waktu Mulai</dt>
+            <dd class="col-sm-9">{{ $studentExam->started_at ? \Carbon\Carbon::parse($studentExam->started_at)->translatedFormat('d F Y H:i') : '-' }}</dd>
+
+            <dt class="col-sm-3">Waktu Selesai</dt>
+            <dd class="col-sm-9">{{ $studentExam->finished_at ? \Carbon\Carbon::parse($studentExam->finished_at)->translatedFormat('d F Y H:i') : '-' }}</dd>
+
+            <dt class="col-sm-3">Skor Akhir</dt>
+            <dd class="col-sm-9">
+              @if($studentExam->score !== null)
+                <span class="badge bg-success fs-6">{{ $studentExam->score }}</span>
+              @else
                 <span class="text-muted">Belum dinilai</span>
-            @endif
-        </p>
+              @endif
+            </dd>
+          </dl>
+        </div>
+      </div>
+
+      {{-- List Soal --}}
+      @foreach ($questions as $index => $question)
+        <div class="card mb-3 shadow-sm border">
+          <div class="card-header bg-light">
+            <strong>Soal {{ $index + 1 }}</strong>
+          </div>
+          <div class="card-body">
+            <p><strong>Pertanyaan:</strong><br> {!! nl2br(e($question->question_text)) !!}</p>
+
+             @foreach ($question->choices as $key => $choice)
+            <li class="list-group-item d-flex justify-content-between align-items-center
+              @if(isset($answers[$question->id]) && $answers[$question->id]->answer == $key) list-group-item-info @endif">
+              <span>
+                {{ $choice }}
+                @if ($question->correct_answer === $key)
+                  <span class="badge bg-success ms-2">Kunci</span>
+                @endif
+                @if(isset($answers[$question->id]) && $answers[$question->id]->answer === $key)
+                  <span class="badge bg-primary ms-2">Jawaban Siswa</span>
+                @endif
+              </span>
+            </li>
+          @endforeach
+
+
+            <p><strong>Jawaban Siswa:</strong>
+              @if(isset($answers[$question->id]))
+                <span>{{ $answers[$question->id]->answer }}</span>
+              @else
+                <span class="text-muted">Belum dijawab</span>
+              @endif
+            </p>
+
+            <p><strong>Skor:</strong>
+              @if(isset($answers[$question->id]) && $answers[$question->id]->score !== null)
+                <span class="badge bg-info">{{ $answers[$question->id]->score }}</span>
+              @else
+                <span class="text-muted">Belum dinilai</span>
+              @endif
+            </p>
+          </div>
+        </div>
+      @endforeach
+
+      <a href="{{ route('student-exams.index') }}" class="btn btn-secondary mt-4">
+        <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar
+      </a>
+
     </div>
-</div>
-
-    @endforeach
-
-    <a href="{{ route('student-exams.index') }}" class="btn btn-secondary mt-4">Kembali</a>
+  </section>
 </div>
 @endsection

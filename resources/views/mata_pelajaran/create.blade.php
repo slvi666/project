@@ -95,15 +95,16 @@
             <div class="mb-3">
               <label class="form-label">Siswa</label>
               <div class="checkbox-group">
-                @foreach ($siswa as $s)
-                  <div class="form-check siswa-item" data-kelas="{{ $s->subject->class_name }}">
-                    <input class="form-check-input" type="checkbox" name="siswa_ids[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
-                    <label class="form-check-label" for="siswa_{{ $s->id }}">
-                      {{ $s->user->name }} ({{ $s->subject->class_name }})
-                    </label>
-                  </div>
-                @endforeach
-              </div>
+  @foreach ($siswa as $s)
+    <div class="form-check siswa-item" data-kelas="{{ $s->subject ? $s->subject->class_name : 'Unknown' }}">
+      <input class="form-check-input" type="checkbox" name="siswa_ids[]" value="{{ $s->id }}" id="siswa_{{ $s->id }}">
+      <label class="form-check-label" for="siswa_{{ $s->id }}">
+        {{ $s->user->name }} ({{ $s->subject ? $s->subject->class_name : 'Unknown' }})
+      </label>
+    </div>
+  @endforeach
+</div>
+
               <small class="text-muted">* Pilih satu atau lebih siswa</small>
             </div>
 

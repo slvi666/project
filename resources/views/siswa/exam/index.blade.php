@@ -30,7 +30,7 @@
             <div class="card-body">
               {{-- Search Bar --}}
               <div class="mb-3 d-flex justify-content-between align-items-center">
-                <input type="text" id="search" placeholder="🔍 Cari berdasarkan nama, judul, atau skor..." class="form-control w-50 shadow-sm rounded-pill px-3">
+                <input type="text" id="search" placeholder="🔍 Cari ..." class="form-control w-50 shadow-sm rounded-pill px-3">
                 <button id="clearSearch" class="btn btn-outline-danger rounded-pill px-3" style="display: none;">
                   <i class="fas fa-times me-1"></i> Bersihkan
                 </button>
@@ -97,9 +97,10 @@
                                   <i class="fas fa-pen-to-square me-1"></i> Review
                                 </a>
                                @endif
-                                 <a href="{{ route('siswa.exam.show', $exam->id) }}" class="btn btn-info btn-sm rounded-pill shadow-sm">
-        <i class="fas fa-eye me-1"></i> Show
-    </a>
+                                <button onclick="confirmShow('{{ route('siswa.exam.show', $exam->id) }}')" class="btn btn-info btn-sm rounded-pill shadow-sm">
+                                  <i class="fas fa-eye me-1"></i> Show
+                                </button>
+
                               </td>
 
                           </tr>
@@ -183,5 +184,26 @@
       }
     });
   }
+
+  function confirmShow(url) {
+  Swal.fire({
+    title: 'Lihat Detail Ujian?',
+    text: 'Anda akan melihat detail hasil ujian siswa.',
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Lihat Sekarang',
+    cancelButtonText: 'Batal',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-secondary'
+    },
+    buttonsStyling: false
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+}
+
 </script>
 @endsection

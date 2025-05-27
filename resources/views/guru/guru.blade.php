@@ -173,9 +173,25 @@
           @endif
 
 @php
-  use App\Models\Exam;
+    use App\Models\Exam;
+    use Illuminate\Support\Facades\Auth;
 
-  $exams = Exam::with(['subject', 'guru'])->get(); // Tambahkan relasi bila diperlukan
+    $user = Auth::user();
+    $query = Exam::with('subject');
+
+    if ($user->role_name === 'siswa') {
+        $siswa = \App\Models\Siswa::where('user_id', $user->id)->first();
+        $className = optional($siswa->subject)->class_name;
+
+        $query->whereHas('subject', function ($q) use ($className) {
+            $q->where('class_name', $className);
+        });
+
+    } elseif ($user->role_name === 'guru') {
+        $query->where('guru_id', $user->id);
+    }
+
+    $exams = $query->latest()->take(5)->get();
 @endphp
 
 <p><strong>Untuk Bagian Ujian:</strong></p>

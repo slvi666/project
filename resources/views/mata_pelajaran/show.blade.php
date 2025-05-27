@@ -60,7 +60,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Right Column -->
+                               <!-- Right Column -->
                                 {{-- <div class="col-md-6">
                                     <div class="mb-4">
                                         <h5 class="fw-bold text-dark">
@@ -81,7 +81,7 @@
                                 <i class="fas fa-arrow-left"></i> Kembali
                             </a>
 
-                           
+                            
                         </div>
                     </div>
                 </div>

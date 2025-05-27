@@ -146,6 +146,27 @@
       </div>
       
         
+@php
+    use App\Models\Exam;
+    use Illuminate\Support\Facades\Auth;
+
+    $user = Auth::user();
+    $query = Exam::with('subject');
+
+    if ($user->role_name === 'siswa') {
+        $siswa = \App\Models\Siswa::where('user_id', $user->id)->first();
+        $className = optional($siswa->subject)->class_name;
+
+        $query->whereHas('subject', function ($q) use ($className) {
+            $q->where('class_name', $className);
+        });
+
+    } elseif ($user->role_name === 'guru') {
+        $query->where('guru_id', $user->id);
+    }
+
+    $exams = $query->latest()->take(5)->get();
+@endphp
 
 <!-- Jadwal Ujian - Tabel langsung pakai Model -->
 <div class="col-lg-6 mb-4">
@@ -154,41 +175,32 @@
       <h5 class="m-0 font-weight-bold">Jadwal Ujian</h5>
     </div>
     <div class="card-body">
-
-      @php
-          use App\Models\Exam;
-          $exams = Exam::with('subject')->latest()->take(5)->get(); // ambil 5 ujian terbaru
-      @endphp
-
       <div class="table-responsive">
         <table class="table table-bordered table-hover mb-0">
-          <thead class="text-center table-primary">
-            <tr>
-              <th style="width: 5%;">No</th>
-              <th>Judul</th>
-              <th>Kelas</th>
-              <th>Mulai</th>
-              <th>Selesai</th>
-            </tr>
-          </thead>
-          <tbody>
-            @forelse($exams as $index => $exam)
-              <tr>
-                <td class="text-center">{{ $index + 1 }}</td>
-                <td>{{ $exam->exam_title }}</td>
-                <td>{{ $exam->subject->class_name ?? '-' }}</td>
-                <td>{{ $exam->start_time ? \Carbon\Carbon::parse($exam->start_time)->format('d-m-Y H:i') : '-' }}</td>
-                <td>{{ $exam->end_time ? \Carbon\Carbon::parse($exam->end_time)->format('d-m-Y H:i') : '-' }}</td>
-              </tr>
-            @empty
-              <tr>
-                <td colspan="4" class="text-center text-muted">Tidak ada jadwal ujian.</td>
-              </tr>
-            @endforelse
-          </tbody>
+    <thead class="table-light">
+      <tr>
+        <th>Judul Ujian</th>
+        <th>Mata Pelajaran</th>
+        <th>Guru</th>
+        <th>Durasi (menit)</th>
+        <th>Waktu Mulai</th>
+        <th>Waktu Selesai</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($exams as $exam)
+        <tr>
+          <td>{{ $exam->exam_title }}</td>
+          <td>{{ $exam->subject->subject_name ?? '-' }}</td>
+          <td>{{ $exam->guru->name ?? '-' }}</td>
+          <td>{{ $exam->duration }}</td>
+          <td>{{ \Carbon\Carbon::parse($exam->start_time)->format('H:i') }}</td>
+          <td>{{ \Carbon\Carbon::parse($exam->end_time)->format('H:i') }}</td>
+        </tr>
+      @endforeach
+    </tbody>
         </table>
       </div>
-
     </div>
   </div>
 </div>
