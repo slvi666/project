@@ -1,15 +1,15 @@
 @extends('adminlte.layouts.app')
 
 @section('content')
-<style>
-  
-</style>
+
+<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
+  <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2 align-items-center">
         <div class="col-sm-6">
-          <h1 class="m-0 text-primary font-weight-bold">Selamat datang di Halaman {{ auth()->user()->role_name }}</h1>
+
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -20,158 +20,132 @@
       </div>
     </div>
   </div>
+  <!-- /.content-header -->
 
-  <section class="content">
-    <div class="col-md-6 offset-md-3">
-      <div class="card p-4 shadow-lg" style="border-radius: 10px;">
-        <div class="card-body text-center ">
-          <h4 class="card-title display-4 fw-bold text-primary text-center py-2 px-2">Selamat Datang!</h4>
-          <p class="card-text text-muted fs-5">Halo, <strong>{{ auth()->user()->name }}</strong>! Semoga hari Anda menyenankan. Selamat bekerja dan sukses selalu! Terus semangat belajar, karena setiap langkah kecil akan membawa Anda lebih dekat ke tujuan besar. Jangan pernah ragu untuk terus berusaha dan berkembang. Setiap usaha pasti membuahkan hasil yang luar biasa!</p>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Tambahkan CSS Kustom untuk Bayangan dan Hover -->
- <style>
-  body {
-    background-color: #f4f6f9;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  .card {
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    background-color: #ffffff;
-    border: none;
-  }
-
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-  }
-
-  .card-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #1e88e5;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-  }
-
-  .card-text {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-  }
-
-  .badge {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    border-radius: 20px;
-  }
-
-  table.table {
-    font-size: 0.95rem;
-  }
-
-  .table th {
-    background-color: #e3f2fd;
-    color: #0d47a1;
-  }
-
-  .breadcrumb {
-    background: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  h1.text-primary {
-    font-size: 1.8rem;
-  }
-
-  .shadow-lg {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07) !important;
-  }
-
-  .text-muted {
-    color: #6c757d !important;
-  }
-
-  .display-4 {
-    font-size: 2.5rem;
-  }
-
-  .fw-bold {
-    font-weight: 700 !important;
-  }
-
-  .table-sm th,
-  .table-sm td {
-    padding: 0.5rem;
-  }
-</style>
-
-  
-  
-<!-- Main content -->
-<section class="content">
-  <div class="container-fluid">
-    <!-- Unique Visitor and Income Overview -->
-    <div class="row mb-4">
-
-      <!-- Kolom Pengumuman Aktif -->
-      <div class="col-md-8">
-        <div class="card p-4 shadow-sm">
-          <h5 class="card-title text-primary mb-4">📢 Pengumuman Aktif</h5>
-
-          @php
-              $pengumumans = \App\Models\Pengumuman::where('status', 'Aktif')->get();
-          @endphp
-
-          @if($pengumumans->count())
-            @foreach($pengumumans as $pengumuman)
-              <div class="mb-4">
-                <h6 class="text-secondary">{{ $pengumuman->judul_pengumuman }}</h6>
-                <p>{{ $pengumuman->deskripsi_pengumuman }}</p>
-
-                <p>
-                  <strong>Status:</strong>
-                  <span class="badge bg-success">{{ $pengumuman->status }}</span>
-                </p>
-
-                <div class="row">
-                  <div class="col-6">
-                    <p><strong>Tanggal Mulai:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_mulai)->format('d M Y') }}</p>
-                  </div>
-                  <div class="col-6">
-                    <p><strong>Tanggal Berakhir:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_berakhir)->format('d M Y') }}</p>
-                  </div>
-                </div>
+  <!-- Main content -->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Total Kegiatan Card -->
+        <div class="col-lg-6 mb-4">
+          <div class="card shadow-lg rounded-4 border-0 bg-gradient-primary text-white hover-effect">
+            <div class="card-body text-center py-5">
+              <div class="icon-container mb-4">
+              <i class="fas fa-handshake fa-4x animate__animated animate__pulse animate__infinite"></i>
               </div>
-              <hr>
-            @endforeach
-          @else
-            <p class="text-muted">Tidak ada pengumuman aktif saat ini.</p>
-          @endif
+              <h3 class="display-4 font-weight-bold"></h3>
+              <h3>Halo, selamat datang {{ auth()->user()->name }} ({{ auth()->user()->role_name }})</h3>
+              <hr class="divider">
+            </div>
+          </div>
         </div>
+
+<!-- Card Example -->
+<div class="col-lg-6 mb-4">
+  <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
+    <div class="card-body">
+      <!-- Judul Pengumuman -->
+      <h5 class="card-title font-weight-bold mb-3 text-center text-primary">Pengumuman Terbaru</h5>
+
+      @php
+        // Mengambil 3 pengumuman terbaru yang berstatus 'aktif'
+        $pengumumanAktif = \App\Models\Pengumuman::where('status', 'aktif')->latest()->take(3)->get();
+      @endphp
+
+      @forelse($pengumumanAktif as $pengumuman)
+        <!-- Judul Pengumuman -->
+        <p class="display-6 text-primary text-center mb-2">
+          {{ $pengumuman->judul_pengumuman }}
+        </p>
+
+        <!-- Deskripsi Pengumuman -->
+        <p class="card-text mb-3">
+          {{ $pengumuman->deskripsi_pengumuman }}
+        </p>
+
+        <!-- Tanggal Pengumuman -->
+        <div class="d-flex justify-content-between text-muted mb-4">
+          <p><strong>Mulai:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_mulai)->format('d M Y') }}</p>
+          <p><strong>Berakhir:</strong> {{ \Carbon\Carbon::parse($pengumuman->tanggal_berakhir)->format('d M Y') }}</p>
+        </div>
+
+        <hr class="divider">
+      @empty
+        <p class="text-center text-muted">Tidak ada pengumuman aktif saat ini.</p>
+      @endforelse
+
+    </div>
+  </div>
+</div>
+
+
+        
+       {{-- JADWAL PELAJARAN --}}
+          <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-lg rounded-4 hover-effect">
+              <div class="card-header bg-gradient-primary text-white">
+                <h5 class="m-0 font-weight-bold">Jadwal Pelajaran</h5>
+              </div>
+              <div class="card-body">
+
+                  @php
+                      $user = auth()->user();
+      
+                      // Initialize empty collection for jadwal data
+                      $data = collect();
+      
+                      if ($user->role_name === 'siswa') {
+                          // Ambil ID siswa dari relasi user
+                          $siswaId = $user->siswa->id ?? null;
+                          // Ambil mata pelajaran yang memiliki siswa_id sesuai user login
+                          $data = \App\Models\MataPelajaran::with(['subject', 'guru'])
+                              ->whereJsonContains('siswa_ids', (string) $siswaId)
+                              ->get();
+                      } elseif ($user->role_name === 'guru') {
+                          // Guru bisa lihat data berdasarkan guru_id yang sama dengan user->id
+                          $data = \App\Models\MataPelajaran::with(['subject', 'guru'])
+                              ->where('guru_id', $user->id)
+                              ->get();
+                      } else {
+                          // Role admin atau lainnya melihat semua data
+                          $data = \App\Models\MataPelajaran::with(['subject', 'guru'])->get();
+                      }
+                  @endphp
+      
+                  @if($data->isEmpty())
+                      <p class="card-text">Tidak ada jadwal pelajaran untuk Anda.</p>
+                  @else
+                      <div class="table-responsive">
+                        <table class="table table-bordered table-hover mb-0">
+                          <thead class="text-center table-primary">
+                              <tr>
+                                  <th scope="col">Mata Pelajaran</th>
+                                  <th scope="col">Guru</th>
+                                  <th scope="col">Hari</th>
+                                  <th scope="col">Waktu Mulai</th>
+                                  <th scope="col">Waktu Berakhir</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              @foreach ($data as $jadwal)
+                                  <tr>
+                                      <td>{{ $jadwal->subject->subject_name }}</td>
+                                      <td>{{ $jadwal->guru->name }}</td>
+                                      <td>{{ $jadwal->hari }}</td>
+                                      <td>{{ \Carbon\Carbon::parse($jadwal->waktu_mulai)->format('H:i') }}</td>
+                                      <td>{{ \Carbon\Carbon::parse($jadwal->waktu_berakhir)->format('H:i') }}</td>
+                                  </tr>
+                              @endforeach
+                          </tbody>
+                      </table>
+                    </div>
+                  @endif
+    
+              </div>
+          </div>
       </div>
-
-      <!-- Kolom Income & Pengumuman Terbaru -->
-      <div class="col-md-4">
-        <div class="card p-4 shadow-sm">
-          @php
-              $pengumuman = \App\Models\Pengumuman::latest()->first();
-              $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-              $income = [1000, 1300, 950, 600, 850, 780, 1170];
-          @endphp
-
-          @if($pengumuman)
-            <h6 class="text-primary">{{ $pengumuman->judul_pengumuman }}</h6>
-            <p>{{ $pengumuman->deskripsi_pengumuman }}</p>
-          @else
-            <p class="text-muted">Tidak ada pengumuman terbaru.</p>
-          @endif
-
+      
+        
 @php
     use App\Models\Exam;
     use Illuminate\Support\Facades\Auth;
@@ -194,10 +168,15 @@
     $exams = $query->latest()->take(5)->get();
 @endphp
 
-<p><strong>Untuk Bagian Ujian:</strong></p>
-
-<div class="table-responsive mt-3">
-  <table class="table table-bordered table-sm">
+<!-- Jadwal Ujian - Tabel langsung pakai Model -->
+<div class="col-lg-6 mb-4">
+  <div class="card border-0 shadow-lg rounded-4 hover-effect">
+    <div class="card-header bg-gradient-primary text-white">
+      <h5 class="m-0 font-weight-bold">Jadwal Ujian</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover mb-0">
     <thead class="table-light">
       <tr>
         <th>Judul Ujian</th>
@@ -215,74 +194,141 @@
           <td>{{ $exam->subject->subject_name ?? '-' }}</td>
           <td>{{ $exam->guru->name ?? '-' }}</td>
           <td>{{ $exam->duration }}</td>
-          <td>{{ \Carbon\Carbon::parse($exam->start_time)->format('H:i') }}</td>
-          <td>{{ \Carbon\Carbon::parse($exam->end_time)->format('H:i') }}</td>
+         <td>
+                            {{ $exam->start_time 
+                                ? \Carbon\Carbon::parse($exam->start_time)->translatedFormat('l, d F Y H:i') 
+                                : '-' 
+                            }}
+                        </td>
+                        <td>
+                            {{ $exam->end_time 
+                                ? \Carbon\Carbon::parse($exam->end_time)->translatedFormat('l, d F Y H:i') 
+                                : '-' 
+                            }}
+                        </td>
         </tr>
       @endforeach
     </tbody>
-  </table>
-</div>
-
-        </div>
+        </table>
       </div>
-
     </div>
   </div>
-</section>
-
 </div>
+
+
+{{-- @php
+    use App\Models\TugasSiswa;
+    $user = auth()->user();
+    $openTugas = collect(); // default koleksi kosong
+
+    if ($user->role_name === 'siswa' && $user->siswa) {
+        $openTugas = TugasSiswa::where('siswa_id', $user->siswa->id)
+                        ->whereNull('file_jawaban')
+                        ->get();
+    } elseif ($user->role_name !== 'siswa') {
+        $openTugas = TugasSiswa::all();
+    }
+@endphp
+
+@if($openTugas->isNotEmpty())
+    <div class="col-lg-6 mb-4">
+      <div class="card card-outline card-primary h-100 hover-effect rounded-4 shadow-lg">
+        <div class="card-header">
+          <h5 class="m-0 font-weight-bold">Total Data Tugas</h5>
+        </div>
+        <div class="card-body">
+          <h6 class="card-title font-weight-bold">Jumlah Tugas Tersedia</h6>
+          <p class="card-text">Jumlah total tugas yang belum Anda upload jawabannya.</p>
+          <h3 class="display-4 text-primary">{{ $openTugas->count() }}</h3>
+          <hr class="divider">
+        </div>
+      </div>
+    </div>
+@endif --}}
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@push('css')
+<style>
+  /* Efek Hover pada Kartu */
+  .hover-effect:hover {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px);
+    transition: all 0.3s ease-in-out;
+  }
 
-<script>
-// Analytics Chart
-var ctx = document.getElementById('analyticsChart').getContext('2d');
-var analyticsChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [{
-      label: 'Income ($)',
-      data: [1000, 1300, 950, 600, 850, 780, 1170],
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 2,
-      fill: false
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true
-      }
+  /* Gradien Kartu */
+  .bg-gradient-primary {
+    background: linear-gradient(145deg, #6a11cb 0%, #2575fc 100%);
+  }
+
+  /* Animasi pada ikon */
+  .icon-container i {
+    color: white;
+    transition: color 0.3s ease;
+  }
+
+  .icon-container:hover i {
+    color: #ffcc00;
+  }
+
+  /* Styling angka */
+  .display-4 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .display-4:hover {
+    transform: scale(1.1);
+    color: #f8f9fa;
+  }
+
+  /* Menambah padding pada konten kartu */
+  .card-body {
+    padding: 2rem;
+  }
+
+  /* Header pada kartu */
+  .card-header {
+    background-color: #6a11cb;
+    color: white;
+  }
+
+  /* Styling Sudut dan Bayangan pada Kartu */
+  .card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Divider Antara Bagian Teks */
+  .divider {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* Animasi untuk ikon */
+  .animate__pulse {
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
     }
   }
-});
-
-// Risk Chart
-var riskCtx = document.getElementById('riskChart').getContext('2d');
-var riskChart = new Chart(riskCtx, {
-  type: 'pie',
-  data: {
-    labels: ['Low Risk', 'Medium Risk', 'High Risk'],
-    datasets: [{
-      label: 'Risk Analysis',
-      data: [65, 25, 10],
-      backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 99, 132, 0.2)'],
-      borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 99, 132, 1)'],
-      borderWidth: 1
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      }
-    }
-  }
-});
-</script>
+</style>
 @endpush

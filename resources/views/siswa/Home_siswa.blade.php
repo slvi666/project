@@ -194,8 +194,18 @@
           <td>{{ $exam->subject->subject_name ?? '-' }}</td>
           <td>{{ $exam->guru->name ?? '-' }}</td>
           <td>{{ $exam->duration }}</td>
-          <td>{{ \Carbon\Carbon::parse($exam->start_time)->format('H:i') }}</td>
-          <td>{{ \Carbon\Carbon::parse($exam->end_time)->format('H:i') }}</td>
+           <td>
+                            {{ $exam->start_time 
+                                ? \Carbon\Carbon::parse($exam->start_time)->translatedFormat('l, d F Y H:i') 
+                                : '-' 
+                            }}
+                        </td>
+                        <td>
+                            {{ $exam->end_time 
+                                ? \Carbon\Carbon::parse($exam->end_time)->translatedFormat('l, d F Y H:i') 
+                                : '-' 
+                            }}
+                        </td>
         </tr>
       @endforeach
     </tbody>

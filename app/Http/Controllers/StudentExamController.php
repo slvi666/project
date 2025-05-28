@@ -245,7 +245,10 @@ public function show($id)
     // Decode pilihan ganda (jika masih dalam bentuk string)
     $questions->transform(function ($question) {
         if (is_string($question->choices)) {
-            $question->choices = json_decode($question->choices, true);
+            $decoded = json_decode($question->choices, true);
+            $question->choices = is_array($decoded) ? $decoded : [];
+        } elseif (is_null($question->choices)) {
+            $question->choices = [];
         }
         return $question;
     });

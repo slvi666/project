@@ -61,22 +61,24 @@
           <div class="card-body">
             <p><strong>Pertanyaan:</strong><br> {!! nl2br(e($question->question_text)) !!}</p>
 
-             @foreach ($question->choices as $key => $choice)
-            <li class="list-group-item d-flex justify-content-between align-items-center
-              @if(isset($answers[$question->id]) && $answers[$question->id]->answer == $key) list-group-item-info @endif">
-              <span>
-                {{ $choice }}
-                @if ($question->correct_answer === $key)
-                  <span class="badge bg-success ms-2">Kunci</span>
-                @endif
-                @if(isset($answers[$question->id]) && $answers[$question->id]->answer === $key)
-                  <span class="badge bg-primary ms-2">Jawaban Siswa</span>
-                @endif
-              </span>
-            </li>
-          @endforeach
-
-
+            @if (is_array($question->choices))
+              @foreach ($question->choices as $key => $choice)
+                <li class="list-group-item d-flex justify-content-between align-items-center
+                  @if(isset($answers[$question->id]) && $answers[$question->id]->answer == $key) list-group-item-info @endif">
+                  <span>
+                    {{ $choice }}
+                    @if ($question->correct_answer === $key)
+                      <span class="badge bg-success ms-2">Kunci</span>
+                    @endif
+                    @if(isset($answers[$question->id]) && $answers[$question->id]->answer === $key)
+                      <span class="badge bg-primary ms-2">Jawaban Siswa</span>
+                    @endif
+                  </span>
+                </li>
+              @endforeach
+            @else
+              <p class="text-danger">Pilihan tidak tersedia.</p>
+            @endif
             <p><strong>Jawaban Siswa:</strong>
               @if(isset($answers[$question->id]))
                 <span>{{ $answers[$question->id]->answer }}</span>
@@ -97,7 +99,7 @@
       @endforeach
 
       <a href="{{ route('student-exams.index') }}" class="btn btn-secondary mt-4">
-        <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar
+        <i class="fas fa-arrow-left me-1"></i> Kembali
       </a>
 
     </div>
